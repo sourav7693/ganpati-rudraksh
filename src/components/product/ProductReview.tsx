@@ -1,0 +1,81 @@
+import { FaStar } from "react-icons/fa";
+import { FaRegCircleCheck } from "react-icons/fa6";
+
+const formatDate = (dateString: string | Date) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-IN", {
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const ReviewCard = ({
+  review,
+}: {
+  review: {
+    user: { name?: string };
+    rating: number;
+    description: string;
+    createdAt: string;
+    title: string;
+    supporting_files: { url: string; public_id: string }[];
+  };
+}) => {
+  return (
+    <div className="p-4">
+      {/* Top Section: Rating and Title */}
+      <div className="flex items-center gap-4 mb-2">
+        <div className="flex items-center gap-1 bg-[#388e3c] text-white px-1.5 py-0.5 rounded text-sm font-bold">
+          <FaStar size={14} fill="currentColor" />
+          <span>{review.rating.toFixed(1)}</span>
+        </div>
+        <h3 className="text-gray-800 font-medium text-lg">{review.title}</h3>
+      </div>
+
+      {/* Description */}
+      <div className="mb-2">
+        <p className="text-gray-700 text-[15px] leading-relaxed whitespace-pre-line">
+          {review.description}
+        </p>
+      </div>
+
+      {/* Supporting Files (Images) */}
+      {review.supporting_files?.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4 overflow-x-auto">
+          {review.supporting_files.map((file) => (
+            <div
+              key={file.public_id}
+              className="w-20 h-20 flex-shrink-0 border border-gray-200 rounded-sm overflow-hidden"
+            >
+              <img
+                src={file.url}
+                alt="Review Attachment"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Footer Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-1.5 text-sm text-gray-500">
+          <span className="font-semibold text-gray-700">
+            {review.user?.name || "Certified Customer"}
+          </span>
+
+          <div className="flex items-center gap-1">
+            <FaRegCircleCheck
+              size={14}
+              className="text-green-600 fill-green-50"
+            />
+          </div>
+
+          <span className="text-[12px]">{formatDate(review.createdAt)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ReviewCard;
