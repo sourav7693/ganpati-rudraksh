@@ -1,0 +1,20 @@
+{
+  "/(protected)/manage-address/page": "/manage-address",
+  "/(protected)/my-account/page": "/my-account",
+  "/(protected)/my-cart/page": "/my-cart",
+  "/(protected)/my-orders/page": "/my-orders",
+  "/(protected)/my-reviews/page": "/my-reviews",
+  "/(protected)/my-wishlist/page": "/my-wishlist",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/categories/page": "/categories",
+  "/checkout/page": "/checkout",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/page": "/",
+  "/product/[slug]/page": "/product/[slug]",
+  "/products/page": "/products",
+  "/review/[id]/page": "/review/[id]",
+  "/review/page": "/review",
+  "/thank-you/page": "/thank-you"
+}

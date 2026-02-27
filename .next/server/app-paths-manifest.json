@@ -1,0 +1,20 @@
+{
+  "/(protected)/manage-address/page": "app/(protected)/manage-address/page.js",
+  "/(protected)/my-account/page": "app/(protected)/my-account/page.js",
+  "/(protected)/my-cart/page": "app/(protected)/my-cart/page.js",
+  "/(protected)/my-orders/page": "app/(protected)/my-orders/page.js",
+  "/(protected)/my-reviews/page": "app/(protected)/my-reviews/page.js",
+  "/(protected)/my-wishlist/page": "app/(protected)/my-wishlist/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/categories/page": "app/categories/page.js",
+  "/checkout/page": "app/checkout/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/product/[slug]/page": "app/product/[slug]/page.js",
+  "/products/page": "app/products/page.js",
+  "/review/[id]/page": "app/review/[id]/page.js",
+  "/review/page": "app/review/page.js",
+  "/thank-you/page": "app/thank-you/page.js"
+}

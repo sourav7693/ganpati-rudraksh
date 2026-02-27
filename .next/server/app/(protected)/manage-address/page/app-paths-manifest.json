@@ -1,0 +1,3 @@
+{
+  "/(protected)/manage-address/page": "app/(protected)/manage-address/page.js"
+}
