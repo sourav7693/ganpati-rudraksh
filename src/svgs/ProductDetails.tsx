@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, ShoppingBag, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
-import HelpIcon from "../svg/Help";
-import EasyReturn from "../svg/EasyReturn";
-import Original from "../svg/Original";
-import MakeIndia from "../svg/MakeIndia";
+import HelpIcon from "./Help";
+import EasyReturn from "./EasyReturn";
+import Original from "./Original";
+import MakeIndia from "./MakeIndia";
+import { CgShoppingCart } from "react-icons/cg";
+import { BiShoppingBag } from "react-icons/bi";
+import { IoMdStar } from "react-icons/io";
 
 type ProductType = {
   id: number;
@@ -96,7 +98,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
 
                 <div className="hidden sm:flex flex-col sm:flex-row gap-3 mt-3">
                   <button className="flex-1 bg-[#FFBB00] hover:bg-yellow-500 py-2 rounded font-medium flex items-center justify-center gap-2">
-                    <ShoppingCart size={16} />
+                    <CgShoppingCart size={16} />
                     Add to Cart
                   </button>
 
@@ -104,7 +106,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
                     onClick={handleBuyNow}
                     className="flex-1 bg-define-brown  text-white py-2 rounded font-medium flex items-center justify-center gap-2"
                   >
-                    <ShoppingBag size={18} />
+                    <BiShoppingBag size={18} />
                     Buy Now
                   </button>
                 </div>
@@ -127,7 +129,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
 
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="flex items-center gap-1 bg-define-brown text-yellow-500 px-2 py-[2px] rounded text-sm">
-                4.9 <Star size={14} fill="white" />
+                4.9 <IoMdStar size={14} fill="white" />
               </span>
               <span className="text-sm md:text-[16px] text-[#555555]">
                 6,426 Ratings & 477 Reviews
@@ -380,7 +382,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
 
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white  p-2 flex gap-3 sm:hidden">
         <button className="flex-1 bg-[#FFBB00] hover:bg-yellow-500 py-3 rounded font-medium flex items-center justify-center gap-2">
-          <ShoppingCart size={16} />
+          <CgShoppingCart size={16} />
           Add to Cart
         </button>
 
@@ -388,7 +390,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
           onClick={handleBuyNow}
           className="flex-1 bg-define-brown hover:bg-green-700 text-white py-3 rounded font-medium flex items-center justify-center gap-2"
         >
-          <ShoppingBag size={18} />
+          <BiShoppingBag size={18} />
           Buy Now
         </button>
       </div>

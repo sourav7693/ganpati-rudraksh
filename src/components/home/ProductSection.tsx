@@ -82,7 +82,11 @@ export default function ProductSection({
               discount={p.discount}
               slug={p.slug}
               // category={p.categoryLevels?.[0] ? { name: p.categoryLevels[0] } : { name: "" }}
-              category={p.categoryLevels?.[0]}
+              category={
+                p.categoryLevels?.[0]
+                  ? { name: p.categoryLevels[0] }
+                  : undefined
+              }
               height="h-[12rem] md:h-[12rem] lg:h-[14rem] xxl:h-[16rem]"
             />
           ))}
