@@ -26,7 +26,7 @@ type Product = {
     public_id: string;
   };
   height?: string;
-  category?: { name: string };
+  category?: string;
 };
 
 export default function ProductCard({
@@ -168,7 +168,7 @@ export default function ProductCard({
 
   return (
     <>
-      <div className="relative rounded bg-white p-1 md:p-2 shadow-md hover:shadow-lg w-full h-auto flex flex-col justify-between">
+      <div className="relative rounded bg-white p-1 md:p-2 shadow-md hover:shadow-lg w-full flex flex-col justify-between">
         <Link
           href={`/product/${slug}`}
           className="absolute inset-0 z-10 "
@@ -194,7 +194,7 @@ export default function ProductCard({
           </button>
 
           <div
-            className={`h-[10rem] md:h-[10rem] lg:h-[12rem] xxl:h-[14rem] ${height}`}
+            className={` ${height}`}
           >
             <Image
               src={coverImage.url}
@@ -237,7 +237,7 @@ export default function ProductCard({
           <div>
             {category && (
               <span className="rounded-full bg-define-pink px-3 py-1 text-define-red text-[9px] md:text-sm ">
-                {category.name}
+                {category}
               </span>
             )}
           </div>

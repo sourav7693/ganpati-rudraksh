@@ -11,7 +11,7 @@ export default async function Layout({
   const cookieStore = await cookies();
 
   const token = cookieStore.get("token")?.value;
-
+  console.log("token", token);
   if (!token) {
     redirect("/");
   }

@@ -59,7 +59,7 @@ export default function HomeCategory({
     <section className="pb-2">
       <div className="mx-auto max-w-300 px-4 flex flex-col gap-4 lg:gap-8">
         <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">{title}</h2>
-        <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-7 xxl:grid-cols-8 place-items-stretch justify-items-stretch">
+        <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 xxl:grid-cols-9 place-items-stretch justify-items-stretch gap-3">
           {categories.map((cat, index) => (           
             <React.Fragment key={`${cat.parent.id}-${index}`}>
               <Link

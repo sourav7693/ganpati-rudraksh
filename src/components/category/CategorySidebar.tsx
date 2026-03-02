@@ -18,7 +18,7 @@ export default function CategorySidebar({
   };
 
   return (
-    <aside className="sticky top-24  overflow-hidden flex flex-col">
+    <aside className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden flex flex-col">
       <h1 className="text-define-black font-semibold text-center py-2 hidden lg:block">
         {activeCategory}
       </h1>
@@ -28,10 +28,10 @@ export default function CategorySidebar({
             {/* Parent Category */}
             <div
               onClick={() => handleClick(group.parent.name)}
-              className={`w-full lg:w-full flex flex-col max-md:justify-center items-center md:gap-1 gap-1 text-left cursor-pointer
+              className={`w-full lg:w-full flex flex-col max-md:justify-center items-center md:gap-1 gap-1 text-left cursor-pointer py-2
               ${
                 activeCategory === group.parent.name
-                  ? "border-r-3 border-define-red"
+                  ? "bg-define-red/20"
                   : "hover:bg-gray-100"
               }
             `}
@@ -44,7 +44,7 @@ export default function CategorySidebar({
                   className="object-cover rounded-xl"
                 />
               </div>
-              <span className="text-xs">{group.parent.name}</span>
+              <span className="text-xs text-center">{group.parent.name}</span>
             </div>
 
             {/* Subcategories */}

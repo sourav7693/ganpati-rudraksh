@@ -80,12 +80,9 @@ export default function ProductSection({
               coverImage={p.coverImage}
               mrp={p.mrp}
               discount={p.discount}
-              slug={p.slug}
-              // category={p.categoryLevels?.[0] ? { name: p.categoryLevels[0] } : { name: "" }}
+              slug={p.slug}           
               category={
-                p.categoryLevels?.[0]
-                  ? { name: p.categoryLevels[0] }
-                  : undefined
+                p.categoryLevels?.[0]?.name                 
               }
               height="h-[12rem] md:h-[12rem] lg:h-[14rem] xxl:h-[16rem]"
             />

@@ -24,11 +24,6 @@ import Original from "@/svgs/Original";
 import MakeIndia from "@/svgs/MakeIndia";
 import { checkPinCodeServiceability } from "@/api/product";
 
-type TrustProps = {
-  icon: string;
-  label: string;
-};
-
 export interface ProductVariantResponse {
   selectedProduct: ProductType;
   variants: ProductType[];
@@ -676,53 +671,56 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
               </div>
             )}
 
-            {product.specifications && product.specifications.length > 0 && (
-              <div className="pt-6  relative">
-                {/* ================= MASKED CONTENT ================= */}
-                <div
-                  className={`relative overflow-hidden transition-all  duration-500 ${
-                    open ? "max-h-[5000px]" : "max-h-[120px]"
-                  }`}
-                >
-                  <div className="w-full">
-                    <h2 className="text-lg font-semibold text-define-brown mb-3">
-                      Specifications
-                    </h2>
+            {Array.isArray(product.specifications) &&
+              product.specifications.filter(
+                (spec) => spec?.name && spec?.details,
+              ).length > 0 && (
+                <div className="pt-6 relative">
+                  {/* ================= MASKED CONTENT ================= */}
+                  <div
+                    className={`relative overflow-hidden transition-all  duration-500 ${
+                      open ? "max-h-[5000px]" : "max-h-[120px]"
+                    }`}
+                  >
+                    <div className="w-full">
+                      <h2 className="text-lg font-semibold text-define-brown mb-3">
+                        Specifications
+                      </h2>
 
-                    <table className="w-full">
-                      <tbody>
-                        {product.specifications.map(
-                          (spec: any, index: number) => (
-                            <tr key={index} className="odd:bg-gray-50">
-                              <td className="border border-gray-200 px-4 py-2 font-semibold text-xs lg:text-sm text-define-brown w-1/3">
-                                {spec.name}
-                              </td>
-                              <td className="border border-gray-200 px-4 py-2 text-xs lg:text-sm text-gray-700">
-                                {spec.details}
-                              </td>
-                            </tr>
-                          ),
-                        )}
-                      </tbody>
-                    </table>
+                      <table className="w-full">
+                        <tbody>
+                          {product.specifications.map(
+                            (spec: any, index: number) => (
+                              <tr key={index} className="odd:bg-gray-50">
+                                <td className="border border-gray-200 px-4 py-2 font-semibold text-xs lg:text-sm text-define-brown w-1/3">
+                                  {spec.name}
+                                </td>
+                                <td className="border border-gray-200 px-4 py-2 text-xs lg:text-sm text-gray-700">
+                                  {spec.details}
+                                </td>
+                              </tr>
+                            ),
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {!open && (
+                      <div className="absolute bottom-0 left-0 w-full h-14 bg-linear-to-t from-white/50 to-transparent pointer-events-none" />
+                    )}
                   </div>
-
-                  {!open && (
-                    <div className="absolute bottom-0 left-0 w-full h-14 bg-linear-to-t from-white/50 to-transparent pointer-events-none" />
+                  {product.specifications.length > 1 && (
+                    <div className={`relative mt-2`}>
+                      <button
+                        onClick={() => setOpen(!open)}
+                        className="pl-4 text-green-600 text-xs font-medium  hover:text-green-900 cursor-pointer z-10"
+                      >
+                        {open ? "Read Less" : "Read More"}
+                      </button>
+                    </div>
                   )}
                 </div>
-                {product.specifications.length > 1 && (
-                  <div className={`relative mt-2`}>
-                    <button
-                      onClick={() => setOpen(!open)}
-                      className="pl-4 text-green-600 text-xs font-medium  hover:text-green-900 cursor-pointer z-10"
-                    >
-                      {open ? "Read Less" : "Read More"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+              )}
 
             {product.longDescription && (
               <div className="pt-6">

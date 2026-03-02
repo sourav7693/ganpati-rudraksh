@@ -169,9 +169,8 @@ export type ProductType = {
   coverImage: ImageType;
   images?: ImageType[];
   video?: ImageType;
-
-  category?: {name: string};
-  categoryLevels?: string[];
+  
+  categoryLevels?: {name: string}[];
   subCategory: string;
   brand: {
     brandId: string;

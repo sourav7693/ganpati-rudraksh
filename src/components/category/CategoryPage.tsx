@@ -168,16 +168,16 @@ export default function CategoryPage({
     }`;
 
   return (
-    <section className="md:py-8 max-w-300 px-4 mx-auto flex flex-col">
-      <div className="flex justify-between items-start mb-4 p-2 min-h-[50rem]">
+    <section className="md:py-8 max-w-300 mx-auto flex flex-col">
+      <div className="flex justify-between items-start mb-4 p-2 ">
         {/* SIDEBAR */}
         <div className="w-[20%] lg:w-[10%] bg-white h-full">
           <CategorySidebar categories={categories} />
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="w-[90%] flex flex-col h-full">
-          <div className="md:hidden flex  items-center  md:px-0">
+        <div className="w-[90%] flex flex-col h-[calc(100vh-6rem)]">
+          <div className="md:hidden flex  items-center   md:px-0">
             <div className="relative w-fit rounded border border-gray-200 bg-white">
               {/* 1. Icons are now visually 'under' the select, but visible because select is transparent */}
 
@@ -225,7 +225,7 @@ export default function CategoryPage({
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-1 md:gap-4  lg:grid-cols-4 xxl:grid-cols-4 bg-white">
+          <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-1 md:gap-4 lg:grid-cols-4 xxl:grid-cols-4 bg-white lg:px-4 px-2 py-4 items-start ">
             {loading ? (
               <>
                 <CardSkeleton />

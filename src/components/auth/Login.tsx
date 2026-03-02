@@ -192,7 +192,7 @@ export default function Login() {
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
                 onKeyDown={allowOnlyNumbers}
-                className="w-full border border-gray-300 rounded-sm px-4 py-3 text-sm outline-none focus:border-[#5a1d0c]"
+                className="w-full border text-define-brown border-gray-300 rounded-sm px-4 py-3 text-sm outline-none focus:border-define-brown"
               />
 
               <p className="text-xs text-gray-600 mt-4 leading-relaxed">
@@ -255,10 +255,11 @@ export default function Login() {
               )}
 
               <input
-                type="number"
+                type="tel"
                 maxLength={6}
                 placeholder="Enter 6-digit OTP"
                 value={otp}
+                onKeyDown={allowOnlyNumbers}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                 className="w-full border border-gray-300 rounded-sm px-4 py-3 text-sm outline-none focus:border-[#5a1d0c]"
               />
