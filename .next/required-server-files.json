@@ -108,6 +108,9 @@
       }
     },
     "outputFileTracingRoot": "D:\\aniket_workspace\\rudraksh\\site",
+    "allowedDevOrigins": [
+      "10.165.218.213"
+    ],
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -303,7 +306,17 @@
     "turbopack": {
       "root": "D:\\aniket_workspace\\rudraksh\\site"
     },
-    "distDirRoot": ".next"
+    "distDirRoot": ".next",
+    "_originalRewrites": {
+      "beforeFiles": [],
+      "afterFiles": [
+        {
+          "source": "/api/:path*",
+          "destination": "https://api.ganpatirudraakshaam.com/api/:path*"
+        }
+      ],
+      "fallback": []
+    }
   },
   "appDir": "D:\\aniket_workspace\\rudraksh\\site",
   "relativeAppDir": "",
