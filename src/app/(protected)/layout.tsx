@@ -8,13 +8,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  // const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
-  // const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("token")?.value;
   // console.log("token", token);
-  // if (!token) {
-  //   redirect("/");
-  // }
+  if (!token) {
+    redirect("/");
+  }
 
   return (
     <MainTemplate>

@@ -21,7 +21,7 @@ export type ApiErrorResponse = {
 };
 
 export const api = axios.create({
-  baseURL: API,
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
@@ -47,12 +47,12 @@ export const verifyOtp = async (
   otp: string,  
 ): Promise<VerifyOtpResponse> => {
   try {
-    const { data } = await api.post<VerifyOtpResponse>("/customer/verify-otp", {
+    const res = await api.post<VerifyOtpResponse>("/customer/verify-otp", {
       mobile,
       otp,      
     });
-    // console.log("verify otp wala data",data);
-    return data;
+    console.log("verify otp wala data",res);
+    return res.data;
   } catch (error) {
     const err = error as AxiosError<ApiErrorResponse>;
     throw new Error(err.response?.data?.message ?? "OTP verify failed");
@@ -83,7 +83,7 @@ export const verifyOtpUpdateMobile = async (
 export const getMe = async (): Promise<Customer> => {
   try {
     const { data } = await api.get<Customer>("/customer/me");
-    console.log("getMe wala data",data);
+    // console.log("getMe wala data",data);
     return data;
   } catch (error) {
     const err = error as AxiosError<ApiErrorResponse>;
