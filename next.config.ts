@@ -6,13 +6,12 @@ const nextConfig: NextConfig = {
   return [
     {
       source: "/api/:path*",
-      destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
+      destination: "https://api.ganpatirudraakshaam.com/api/:path*",
     },
   ];
 },
   reactCompiler: true,
   output: "standalone",
-  allowedDevOrigins: ["10.165.218.213"],
   images: {
     remotePatterns: [
       {

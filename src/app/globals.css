@@ -30,6 +30,20 @@
   width: 0.5px;
 }
 
+@keyframes shake {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(-3px); }
+  20% { transform: translateX(3px); }
+  30% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  50% { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+
+.animate-shake {
+  animation: shake 1.5s ease-in-out infinite;
+}
+
 .custom-scroll::-webkit-scrollbar-track {
   background: transparent;
 }

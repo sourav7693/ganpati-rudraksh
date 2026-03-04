@@ -7,6 +7,14 @@ import { BiChevronDown } from "react-icons/bi";
 import Link from "next/link";
 import { useCustomer } from "@/context/CustomerContext";
 import AccountPageRenderer from "./AccountPageRenderer";
+ const hour = new Date().getHours();
+
+ const getGreeting = () => {
+   if (hour < 12) return "Good Morning";
+   if (hour < 17) return "Good Afternoon";
+   if (hour < 21) return "Good Evening";
+   return "Good Night";
+ };
 
 const Sidebar = () => {
   const { customer } = useCustomer();
@@ -130,8 +138,8 @@ const Sidebar = () => {
           </div>
 
           <div>
-            <p className="text-xs opacity-90">Good Morning</p>
-            <p className="font-medium leading-tight">{customer?.name}</p>
+            <p className="text-xs opacity-90">{getGreeting()}</p>
+            <p className="font-medium leading-tight">{customer?.name || "User"}</p>
           </div>
         </div>
 

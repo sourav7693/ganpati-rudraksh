@@ -9,27 +9,52 @@ const Header = () => {
         { name: "1 Mukhi", href: "#" },
         { name: "5 Mukhi", href: "#" },
         { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
+        { name: "7 Mukhi", href: "#" },
       ],
     },
     {
       label: "Puja Services",
       dropdown: [
-        { name: "Rudraksha Puja", href: "#" },
-        { name: "Grah Shanti", href: "#" },
+        { name: "Special Puja", href: "#" },
+        { name: "Path and Katha", href: "#" },
+        { name: "Festival & Occassions", href: "#" },
+        { name: "Health", href: "#" },
+        { name: "Wealth", href: "#" },
+        { name: "Protection", href: "#" },
+        { name: "Marital Bliss", href: "#" },
+        { name: "Children", href: "#" },
+        { name: "Planets", href: "#" },
       ],
     },
     {
       label: "Rudraksha Anushthan",
       dropdown: [
         { name: "Rudraksha Archya", href: "#" },
-        { name: "Grah Shanti", href: "#" },
+        { name: "", href: "#" },
       ],
     },
     {
       label: "Accessories",
       dropdown: [
-        { name: "Chains", href: "#" },
-        { name: "Bracelets", href: "#" },
+        { name: "Rashi Collection", href: "#" },
+        { name: "Rudraksh Bracelets", href: "#" },
+        { name: "Rudraksh Rossaries", href: "#" },
+        { name: "Rudraksh in Gold", href: "#" },
+        { name: "Other Rossaries", href: "#" },
+        { name: "Shaligram", href: "#" },
       ],
     },
     {
@@ -40,11 +65,7 @@ const Header = () => {
       ],
     },
     {
-      label: "Free Consultation",
-      dropdown: [
-        { name: "Astrology", href: "#" },
-        { name: "Vastu", href: "#" },
-      ],
+      label: "Free Consultation",     
     },
   ];
   return (
@@ -59,33 +80,36 @@ const Header = () => {
               >
                 {item.label}
 
-                <FaChevronDown className="text-xs transition-transform duration-300 group-hover:rotate-180" />
+                {item.dropdown && item.dropdown.length > 0 && (
+                  <FaChevronDown className="text-xs transition-transform duration-300 group-hover:rotate-180" />
+                )}
               </Link>
-
               {/* DROPDOWN */}
-              <div
-                className="
-                  absolute left-0 top-full mt-3 w-56
+              {item.dropdown && item.dropdown.length > 0 && (
+                <div
+                  className="
+                  absolute left-0 top-full mt-3 w-[500px]
                   bg-white border border-gray-200 shadow-lg rounded-md
                   opacity-0 invisible translate-y-2
                   group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
                   transition-all duration-300 ease-in-out
                   z-50
                 "
-              >
-                <ul className="py-2 text-sm">
-                  {item.dropdown.map((dropItem, dropIdx) => (
-                    <li key={dropIdx}>
-                      <Link
-                        href={dropItem.href}
-                        className="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200"
-                      >
-                        {dropItem.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                >
+                  <ul className="py-2 text-sm grid grid-cols-3">
+                    {item.dropdown.map((dropItem, dropIdx) => (
+                      <li key={dropIdx}>
+                        <Link
+                          href={dropItem.href}
+                          className="block px-4 py-2 hover:bg-gray-100 transition-colors duration-200"
+                        >
+                          {dropItem.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </nav>
