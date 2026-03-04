@@ -1,5 +1,5 @@
 "use client";
-
+import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -13,6 +13,7 @@ import { useCustomer } from "@/context/CustomerContext";
 import toast from "react-hot-toast";
 import { useGlobalUI } from "@/context/GlobalUIContext";
 import LoadingAnimation from "@/ui/LoadingAnimation";
+import { NavLinkType } from "./Header";
 
 type SearchItem = {
   type: "product" | "category" | "brand" | "attribute";
@@ -21,208 +22,208 @@ type SearchItem = {
   image?: string;
 };
 
-const TopHeader = () => {  
-    const pathname = usePathname();    
+const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+
+  const toggleAccordion = (index: number) => {
+    setOpenAccordion(openAccordion === index ? null : index);
+  };
+  const pathname = usePathname();
   const words = ["Products", "Brands", "Categories"];
-    const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
   const [activeWord, setActiveWord] = useState(0);
-   const { customer, loading, logoutCustomer, clearCustomer } = useCustomer();
+  const { customer, loading, logoutCustomer, clearCustomer } = useCustomer();
   // console.log("Customer in TopHeader:", customer);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);  
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const debouncedQuery = useDebounce(query, 400);
-    const [results, setResults] = useState<any[]>([]);
-    const [show, setShow] = useState(false);
-    const [suggestions, setSuggestions] = useState<any[]>([]);
-    const router = useRouter();    
-    const [accountOpen, setAccountOpen] = useState(false);
-const [isLoggingOut, setIsLoggingOut] = useState(false);
-    const inputRef = useRef<HTMLDivElement>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+  const [results, setResults] = useState<any[]>([]);
+  const [show, setShow] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const router = useRouter();
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const inputRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-useEffect(() => {
-  if (query) return; // stop animation if user types
+  useEffect(() => {
+    if (query) return; // stop animation if user types
 
-  const interval = setInterval(() => {
-    setActiveWord((prev) => (prev + 1) % words.length);
-  }, 2000);
+    const interval = setInterval(() => {
+      setActiveWord((prev) => (prev + 1) % words.length);
+    }, 2000);
 
-  return () => clearInterval(interval);
-}, [query]);
-    const fetchSuggestions = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/search/suggestions`,
-      );
+    return () => clearInterval(interval);
+  }, [query]);
+  const fetchSuggestions = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/search/suggestions`,
+    );
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (data.success) {
-        setSuggestions(data.results);
+    if (data.success) {
+      setSuggestions(data.results);
+    }
+  };
+
+  const rankResults = (items: SearchItem[]) => {
+    const priority = {
+      product: 1,
+      category: 2,
+      brand: 3,
+      attribute: 4,
+    } as Record<string, number>;
+
+    return [...items].sort((a, b) => priority[a.type] - priority[b.type]);
+  };
+
+  const handleSearchClick = (item: any) => {
+    console.log(item);
+    setShow(false);
+    if (!item) {
+      router.push(`/products?query=${query}`);
+      setQuery("");
+      return;
+    }
+    setQuery("");
+
+    setTimeout(() => {
+      switch (item.type) {
+        case "product":
+          router.push(`/product/${item.slug}`);
+          break;
+        case "category":
+          router.push(`/products?category=${encodeURIComponent(item.name)}`);
+          break;
+        case "brand":
+          router.push(`/products?brand=${encodeURIComponent(item.name)}`);
+          break;
+        case "attribute":
+          router.push(`/products?attribute=${encodeURIComponent(item.name)}`);
+          break;
       }
-    };
+    }, 0);
+  };
 
-     const rankResults = (items: SearchItem[]) => {
-       const priority = {
-         product: 1,
-         category: 2,
-         brand: 3,
-         attribute: 4,
-       } as Record<string, number>;
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!show) return;
 
-       return [...items].sort((a, b) => priority[a.type] - priority[b.type]);
-     };
+    const list = query ? results : suggestions;
+    if (!list.length) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSearchClick(null);
+      }
+      return;
+    }
 
-      const handleSearchClick = (item: any) => {
-        console.log(item);
-        setShow(false);
-        if (!item) {
-          router.push(`/products?query=${query}`);
-          setQuery("");
-          return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev + 1) % list.length);
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev - 1 + list.length) % list.length);
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearchClick(list[activeIndex]);
+    }
+
+    if (e.key === "Escape") {
+      setShow(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      setResults([]);
+      return;
+    }
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?q=${debouncedQuery}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setResults(data.results);
+          setShow(true);
         }
-        setQuery("");
+      });
+  }, [debouncedQuery]);
 
-        setTimeout(() => {
-          switch (item.type) {
-            case "product":
-              router.push(`/product/${item.slug}`);
-              break;
-            case "category":
-              router.push(
-                `/products?category=${encodeURIComponent(item.name)}`,
-              );
-              break;
-            case "brand":
-              router.push(`/products?brand=${encodeURIComponent(item.name)}`);
-              break;
-            case "attribute":
-              router.push(
-                `/products?attribute=${encodeURIComponent(item.name)}`,
-              );
-              break;
-          }
-        }, 0);
-      };
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
 
-      const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!show) return;
-
-        const list = query ? results : suggestions;
-        if (!list.length) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            handleSearchClick(null);
-          }
-          return;
-        }
-
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
-          setActiveIndex((prev) => (prev + 1) % list.length);
-        }
-
-        if (e.key === "ArrowUp") {
-          e.preventDefault();
-          setActiveIndex((prev) => (prev - 1 + list.length) % list.length);
-        }
-
-        if (e.key === "Enter") {
-          e.preventDefault();
-          handleSearchClick(list[activeIndex]);
-        }
-
-        if (e.key === "Escape") {
-          setShow(false);
-        }
-      };
-
-
-    useEffect(() => {
-      if (!debouncedQuery) {
-        setResults([]);
+      if (
+        inputRef.current?.contains(target) ||
+        dropdownRef.current?.contains(target)
+      ) {
         return;
       }
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?q=${debouncedQuery}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setResults(data.results);
-            setShow(true);
-          }
-        });
-    }, [debouncedQuery]);
+      setShow(false);
+    };
 
-    useEffect(() => {
-      const handler = (e: MouseEvent) => {
-        const target = e.target as Node;
+    document.addEventListener("mousedown", handler);
 
-        if (
-          inputRef.current?.contains(target) ||
-          dropdownRef.current?.contains(target)
-        ) {
-          return;
-        }
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, []);
 
-        setShow(false);
-      };
+  function getName(name = "") {
+    const parts = name.trim().split(/\s+/);
 
-      document.addEventListener("mousedown", handler);
+    if (parts.length === 1) {
+      return parts[0][0]?.toUpperCase() || "";
+    }
 
-      return () => {
-        document.removeEventListener("mousedown", handler);
-      };
-    }, []);
+    return (
+      parts[0][0]?.toUpperCase() + parts[parts.length - 1][0]?.toUpperCase()
+    );
+  }
 
-      function getName(name = "") {
-        const parts = name.trim().split(/\s+/);
+  const { setShowLoader } = useGlobalUI();
+  useEffect(() => {
+    setShowLoader(false);
+  }, [pathname]);
 
-        if (parts.length === 1) {
-          return parts[0][0]?.toUpperCase() || "";
-        }
+  const list = query ? results : suggestions;
 
-        return (
-          parts[0][0]?.toUpperCase() + parts[parts.length - 1][0]?.toUpperCase()
-        );
-      }
+  const handleClear = () => {
+    setQuery("");
+    setResults([]);
+    setShow(false);
+  };
 
-      const { setShowLoader } = useGlobalUI();
-        useEffect(() => {
-          setShowLoader(false);
-        }, [pathname]);
+  const handleLogoutClick = async () => {
+    try {
+      //  setShowLoader(true);
+      setAccountOpen(false);
 
-    const list = query ? results : suggestions;
-
-
-const handleClear = () => {
-  setQuery("");
-  setResults([]);
-  setShow(false);
-};
-
- const handleLogoutClick = async () => {
-   try {
-    //  setShowLoader(true);
-     setAccountOpen(false);     
-
-     const res = await logoutCustomer();
-    // if(res.success){
-      toast.success( "Logged out successfully!");
+      const res = await logoutCustomer();
+      // if(res.success){
+      toast.success("Logged out successfully!");
       clearCustomer();
       router.push("/");
-    // }
-   } catch (error) {
-     console.error("Logout failed", error);
-   } finally {
-    //  setShowLoader(false);
-   }
- };
+      // }
+    } catch (error) {
+      console.error("Logout failed", error);
+    } finally {
+      //  setShowLoader(false);
+    }
+  };
 
-const handleMobileBack = () => {
-  setMobileSearchOpen(false);
-  setQuery("");
-};
+  const handleMobileBack = () => {
+    setMobileSearchOpen(false);
+    setQuery("");
+  };
 
   return (
     <>
@@ -231,6 +232,62 @@ const handleMobileBack = () => {
           <LoadingAnimation />
         </div>
       )}
+      <div
+        className={`fixed md:hidden top-0 left-0 h-full w-[80%] bg-white z-[999]
+        transform transition-transform duration-300
+        ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <div className="flex justify-between items-center p-4 border-b border-gray-200">
+          <span className="font-semibold">Menu</span>
+
+          <button onClick={() => setMenuOpen(false)}>
+            <FiX className="text-2xl text-define-red" />
+          </button>
+        </div>
+
+        <div className="overflow-y-auto h-[calc(100%-60px)]">
+          {navLinks?.map((item, idx) => (
+            <div key={idx} className="border-b border-gray-200">
+              <button
+                onClick={() => toggleAccordion(idx)}
+                className="flex justify-between items-center text-define-red w-full px-4 py-3 text-left"
+              >
+                {item.label}
+
+                {item.dropdown && (
+                  <FiChevronDown
+                    className={`transition-transform ${
+                      openAccordion === idx ? "rotate-180" : ""
+                    }`}
+                  />
+                )}
+              </button>
+
+              {item.dropdown && (
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    openAccordion === idx
+                      ? "max-h-96 overflow-y-auto no-scrollbar"
+                      : "max-h-0"
+                  }`}
+                >
+                  {item.dropdown.map((sub, i) => (
+                    <Link
+                      key={i}
+                      href={sub.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-6 py-2 text-sm hover:bg-gray-100 text-define-brown"
+                    >
+                      {sub.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <header className="w-full bg-white">
         <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 max-w-300 mx-auto z-[60] relative">
           {/* LEFT SIDE */}
@@ -246,18 +303,25 @@ const handleMobileBack = () => {
           </Link>
 
           {/* LOGO */}
-          <Link href={"/"}>
-            <Image
-              src={"/logo.svg"}
-              alt="logo"
-              width={1224}
-              height={181}
-              priority
-              className="w-[10rem] lg:w-[25rem] h-auto"
-            />
-          </Link>
+          <div className="flex gap-2 items-center justify-center">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="md:hidden size-10 rounded-full flex items-center justify-center bg-define-white"
+            >
+              <FiMenu className="text-define-red size-5" />
+            </button>
+            <Link href={"/"}>
+              <Image
+                src={"/logo.svg"}
+                alt="logo"
+                width={1224}
+                height={181}
+                priority
+                className="w-[10rem] lg:w-[25rem] h-auto"
+              />
+            </Link>
+          </div>
 
-          {/* RIGHT ICONS */}
           <div className="flex items-center gap-2 lg:gap-4">
             <div ref={inputRef} className="hidden md:flex relative">
               <button
@@ -561,19 +625,6 @@ const handleMobileBack = () => {
                     </div>
                   )}
                 </div>
-                {/* <input
-                autoFocus
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                onFocus={() => {
-                  if (!searchText) {
-                    fetchSuggestions();
-                    setShow(true);
-                  }
-                }}
-                placeholder="Search for Products, Brands, Categories"
-                className="flex-1 border rounded-full px-4 py-2 text-sm outline-none"
-              /> */}
 
                 {/* Clear Button */}
                 {query.length > 0 && (
@@ -611,6 +662,8 @@ const handleMobileBack = () => {
           )}
         </div>
       </header>
+
+      {/* MOBILE SIDEBAR */}
     </>
   );
 };

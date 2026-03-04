@@ -1,7 +1,6 @@
 
 import Footer from "@/components/global/Footer";
 import Header from "@/components/global/Header";
-import TopHeader from "@/components/global/TopHeader";
 import React from "react";
 
 const MainTemplate = ({
@@ -11,8 +10,7 @@ const MainTemplate = ({
 }) => {
   return (
     <div className="flex w-full h-full flex-col">
-      <div className="z-[1000] w-full fixed top-0 left-0">
-        <TopHeader />
+      <div className="z-[1000] w-full fixed top-0 left-0">        
         <Header />
       </div>
 

@@ -2,11 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { BiCheck, BiMapPin, BiPhone } from "react-icons/bi";
+import { BiCheck, BiPhone } from "react-icons/bi";
 import { BsInstagram, BsYoutube } from "react-icons/bs";
 
-import { FaFacebook, FaWhatsapp } from "react-icons/fa";
+import { FaFacebook, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
 import { LiaLinkedin } from "react-icons/lia";
+import { MdEmail } from "react-icons/md";
 
 const socialLinks = [
   { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
@@ -17,26 +18,26 @@ const socialLinks = [
 
 const quickLinks = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "" },
-  { label: "Our Products", href: "" },
-  { label: "My Account", href: "/my-account" },
+  { label: "About Us", href: "/" },
+  { label: "Our Products", href: "/" },
+  // { label: "My Account", href: "/my-account" },
   { label: "Contact Us", href: "" },
 ];
 
 const quickLinks2 = [
-  { label: "Shiping Policy", href: "" },
-  { label: "Payment Help", href: "" },
-  { label: "For Plant Help", href: "" },
-  { label: "Invoice Help", href: "" },
-  { label: "Our CSR", href: "" },
+  { label: "Shiping Policy", href: "/" },
+  { label: "Payment Help", href: "/" },
+  { label: "For Plant Help", href: "/" },
+  { label: "Invoice Help", href: "/" },
+  { label: "Our CSR", href: "/" },
 ];
 
 const quickLinks3 = [
-  { label: "Refund Policy", href: "" },
-  { label: "Privacy Policy", href: "" },
-  { label: "Delivery", href: " " },
-  { label: "Invoice Help", href: "" },
-  { label: "Contact Us", href: "" },
+  { label: "Refund Policy", href: "/" },
+  { label: "Privacy Policy", href: "/" },
+  { label: "Delivery", href: "/" },
+  { label: "Invoice Help", href: "/" },
+  { label: "Contact Us", href: "/" },
 ];
 
 export default function Footer() {
@@ -70,7 +71,7 @@ export default function Footer() {
 
       <div className="relative z-10 pb-6 pt-12">
         <div className="mx-auto max-w-300 px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
             <p className="text-[17px] text-white">
               Get a call back within 15 minutes. WhatsApp us 24x7<br></br>{" "}
               between 9:00 AM and 8:00 PM.
@@ -80,8 +81,8 @@ export default function Footer() {
               <form action="" onSubmit={handleSubmit}>
                 <div className="flex w-full md:w-[550px] px-4 md:px-0">
                   <div className="flex items-center   backdrop-blur-md rounded-l-[40px] px-3 w-full">
-                    <div className="size-8 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(212,35,0,0)_32.21%,rgba(212,35,0,0.60)_100%)] border border-[#FFBB00] flex items-center justify-center">
-                      <FaWhatsapp className="text-define-brown" />
+                    <div className="size-8 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(34,197,94,0)_32.21%,rgba(34,197,94,0.6)_100%)] border border-[#00ff4c] flex items-center justify-center">
+                      <FaWhatsapp className="text-[#00ff4c]" />
                     </div>
 
                     <input
@@ -199,7 +200,7 @@ export default function Footer() {
                       href="tel:+917586891753"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      +91 98331 23423 / 98331 23423
+                      +91 75868 91753
                     </Link>
                   </li>
 
@@ -209,12 +210,12 @@ export default function Footer() {
                       href="tel:+917586891753"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      +91 98331 23423 / 98331 23423
+                      +91 75868 91753
                     </Link>
                   </li>
 
                   <li className="flex items-center gap-2">
-                    {/* <BiMail size={16} /> */}
+                    <MdEmail size={16} />
                     <Link
                       href="mailto:contact@ganpatirudraksh.com"
                       className="hover:text-[#FFBB00] transition"
@@ -224,7 +225,7 @@ export default function Footer() {
                   </li>
 
                   <li className="flex items-start gap-2">
-                    <BiMapPin size={40} />
+                    <FaMapMarkerAlt size={16} className="shrink-0" />
                     <Link
                       href="https://maps.app.goo.gl/HDFP8hN6nWyEAaJ6A"
                       target="_blank"
