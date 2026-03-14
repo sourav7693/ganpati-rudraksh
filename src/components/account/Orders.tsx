@@ -20,6 +20,8 @@ export const STATUS_COLORS: Record<string, string> = {
   Delivered: "bg-define-brown",
   Cancelled: "bg-red-500",
   RTO: "bg-gray-700",
+  PickupScheduled: "bg-orange-500",
+  PickedUp: "bg-cyan-500",
 };
 
 interface CancelModalState {
@@ -353,7 +355,9 @@ export default function Orders() {
                     View Order Details
                   </Link>
                   <span>|</span>
-                  {order.status === "Processing" && (
+                  {["Processing", "Confirmed", "PickupScheduled"].includes(
+                    order.status,
+                  ) && (
                     <button
                       type="button"
                       className="text-white hover:text-define-red hover:underline"

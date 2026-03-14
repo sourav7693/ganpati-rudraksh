@@ -176,7 +176,7 @@ export default function CategoryPage({
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="w-[90%] flex flex-col h-[calc(100vh-6rem)]">
+        <div className="w-[90%] flex flex-col h-screen">
           <div className="md:hidden flex  items-center   md:px-0">
             <div className="relative w-fit rounded border border-gray-200 bg-white">
               {/* 1. Icons are now visually 'under' the select, but visible because select is transparent */}
@@ -225,7 +225,7 @@ export default function CategoryPage({
             ))}
           </div>
 
-          <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-1 md:gap-4 lg:grid-cols-4 xxl:grid-cols-4 bg-white lg:px-4 px-2 py-4 items-start ">
+          <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4 xxl:grid-cols-4 lg:px-4 px-2 py-4 content-start no-scrollbar bg-white">
             {loading ? (
               <>
                 <CardSkeleton />
@@ -244,15 +244,16 @@ export default function CategoryPage({
                 No products found
               </p>
             )}
-          </div>
-
           {!loading && hasMore && (
             <div ref={ref} className="grid grid-cols-3 gap-4">
               <CardSkeleton />
               <CardSkeleton />
               <CardSkeleton />
+              <CardSkeleton />
             </div>
           )}
+          </div>
+
         </div>
       </div>
     </section>

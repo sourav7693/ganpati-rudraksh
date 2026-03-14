@@ -5,6 +5,17 @@ import { OrderType } from "@/types/types";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 
+const SHIPROCKET_STATUS_MAP: Record<string, string> = {
+  DRC: "Confirmed",
+  OFP: "PickupScheduled",
+  PUD: "PickedUp",
+  PKD: "Shipped",
+  IT: "InTransit",
+  RAD: "InTransit",
+  OFD: "OutForDelivery",
+  DLVD: "Delivered",
+};
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -19,7 +30,15 @@ export default function OrderTracker({ open, onClose, order }: Props) {
   });
 
   const trackingHistory = order.shipping?.trackingHistory || [];
-  const orderStatus = order.status;
+  const latestTracking =
+    trackingHistory?.length > 0
+      ? trackingHistory[trackingHistory.length - 1]
+      : null;
+
+  const orderStatus =
+    latestTracking?.status && SHIPROCKET_STATUS_MAP[latestTracking.status]
+      ? SHIPROCKET_STATUS_MAP[latestTracking.status]
+      : order.status;
   const createdAt = order.createdAt;
   const expectedDeliveryDate = order.shipping?.expectedDeliveryDate;
 
@@ -29,34 +48,48 @@ export default function OrderTracker({ open, onClose, order }: Props) {
     const orderDate = new Date(createdAt);
 
     // Standard flow of successful order
-    const STATUS_FLOW = [
-      {
-        key: "Processing",
-        title: "Order Processing",
-        desc: "We are processing your order",
-      },
-      {
-        key: "Confirmed",
-        title: "Order Confirmed",
-        desc: "Your order has been confirmed",
-      },
-      { key: "Shipped", title: "Shipped", desc: "Your item has been shipped" },
-      {
-        key: "InTransit",
-        title: "In Transit",
-        desc: "Your item is on the way",
-      },
-      {
-        key: "OutForDelivery",
-        title: "Out for Delivery",
-        desc: "Your item is out for delivery",
-      },
-      {
-        key: "Delivered",
-        title: "Delivered",
-        desc: "Item delivered successfully",
-      },
-    ];
+ const STATUS_FLOW = [
+   {
+     key: "Processing",
+     title: "Order Processing",
+     desc: "We are processing your order",
+   },
+   {
+     key: "Confirmed",
+     title: "Order Confirmed",
+     desc: "Shipment AWB generated",
+   },
+   {
+     key: "PickupScheduled",
+     title: "Pickup Scheduled",
+     desc: "Courier pickup scheduled",
+   },
+   {
+     key: "PickedUp",
+     title: "Picked Up",
+     desc: "Courier has collected your parcel",
+   },
+   {
+     key: "Shipped",
+     title: "Shipped",
+     desc: "Shipment dispatched",
+   },
+   {
+     key: "InTransit",
+     title: "In Transit",
+     desc: "Shipment moving through courier hubs",
+   },
+   {
+     key: "OutForDelivery",
+     title: "Out for Delivery",
+     desc: "Courier is delivering your package",
+   },
+   {
+     key: "Delivered",
+     title: "Delivered",
+     desc: "Item delivered successfully",
+   },
+ ];
 
     // Helper to format date
     const formatDate = (dateString?: string | Date) => {

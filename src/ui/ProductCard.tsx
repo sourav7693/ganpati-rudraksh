@@ -168,7 +168,7 @@ export default function ProductCard({
 
   return (
     <>
-      <div className="relative rounded bg-white p-1 md:p-2 shadow-md hover:shadow-lg w-full flex flex-col justify-between">
+      <div className="relative rounded bg-white p-1 md:p-2 shadow-md hover:shadow-lg w-full flex flex-col gap-2 justify-between">
         <Link
           href={`/product/${slug}`}
           className="absolute inset-0 z-10 "
@@ -193,23 +193,20 @@ export default function ProductCard({
             />
           </button>
 
-          <div
-            className={` ${height}`}
-          >
+          <div className="relative w-full aspect-square">
             <Image
               src={coverImage.url}
               alt={coverImage.public_id}
-              height={500}
-              width={500}
-              className="object-cover h-full w-full"
+              fill
+              className="object-cover"
             />
           </div>
         </div>
 
         {/* CONTENT */}
-        <div className=" pt-2 pb-2 flex flex-col gap-2">
+        <div className="px-2 pb-2 flex flex-col lg:gap-2">
           <div className="flex justify-between items-center">
-            <h3 className="text-xs md:text-sm  font-semibold text-define-brown line-clamp-1">
+            <h3 className="lg:text-lg text-sm  font-semibold text-define-brown line-clamp-1">
               {name}
             </h3>
           </div>
@@ -236,7 +233,7 @@ export default function ProductCard({
 
           <div>
             {category && (
-              <span className="rounded-full bg-define-pink px-3 py-1 text-define-red text-[9px] md:text-sm ">
+              <span className="rounded-full bg-define-pink px-2 lg:px-3 py-1 text-define-red text-[9px] md:text-sm ">
                 {category}
               </span>
             )}

@@ -18,10 +18,7 @@ import { useCartPreview } from "@/context/CartPreviewContext";
 import { FaRupeeSign, FaStar } from "react-icons/fa";
 import { CgShoppingCart } from "react-icons/cg";
 import { BiShoppingBag } from "react-icons/bi";
-import HelpIcon from "@/svgs/Help";
-import EasyReturn from "@/svgs/EasyReturn";
-import Original from "@/svgs/Original";
-import MakeIndia from "@/svgs/MakeIndia";
+import ProductFeatures from "./ProductFeatures"
 import { checkPinCodeServiceability } from "@/api/product";
 
 export interface ProductVariantResponse {
@@ -374,6 +371,22 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
         <div className="flex flex-col lg:flex-row gap-4 md:gap-10">
           <div className="lg:sticky lg:top-24 h-fit w-full lg:w-[50%] xl:w-[45%] xxl:w-[40%] z-10">
             <div className="flex flex-col w-full gap-2">
+              <p className="text-define-brown lg:hidden flex flex-wrap gap-2">
+                Home ›{" "}
+                <span className="text-black flex flex-wrap">
+                  {product.categoryLevels?.map((cat: any, index: number) => (
+                    <div key={index} className="">
+                      <Link
+                        href={`/products?category=${encodeURIComponent(cat.name)}`}
+                        className="text-define-red hover:text-define-brown transition-colors text-sm md:text-xs font-bold tracking-widest"
+                      >
+                        {cat.name} {">"}
+                      </Link>
+                    </div>
+                  ))}
+                </span>{" "}
+                <span className="text-black"> {product.name}</span>
+              </p>
               <SinglePageImagesComponent
                 images={productImages}
                 isWishlisted={isWishlisted}
@@ -409,7 +422,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
 
           <div className="flex flex-col gap-3 w-full lg:w-[50%] xl:w-[55%] xxl:w-[60%]">
             {/* Breadcrumb */}
-            <p className="text-sm text-define-brown flex flex-wrap gap-2">
+            <p className="text-sm text-define-brown lg:flex flex-wrap gap-2 hidden">
               Home ›{" "}
               <span className="text-black flex flex-wrap">
                 {product.categoryLevels?.map((cat: any, index: number) => (
@@ -427,7 +440,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
             </p>
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl text-define-brown font-semibold leading-tight text-define-brown">
+            <h1 className="text-2xl md:text-3xl font-semibold leading-tight text-define-brown">
               {product.name}
             </h1>
 
@@ -634,25 +647,9 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
             </div>
 
             {/* Trust Icons */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-6">
-              <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
-                <HelpIcon width={50} height={50} />
-                <p className="mt-2 font-medium">24/7 Support</p>
-              </div>
-              <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
-                <EasyReturn width={50} height={50} />
-                <p className="mt-2 font-medium">Easy Returns</p>
-              </div>
+            <div className="w-full">
 
-              <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
-                <Original width={50} height={50} />
-                <p className="mt-2 font-medium">100% Original</p>
-              </div>
-
-              <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
-                <MakeIndia width={50} height={50} />
-                <p className="mt-2 font-medium">Made in India</p>
-              </div>
+         <ProductFeatures />
             </div>
 
             {/* ================= DESCRIPTION (CONNECTED) ================= */}

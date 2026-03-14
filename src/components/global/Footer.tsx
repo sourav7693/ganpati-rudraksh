@@ -73,14 +73,15 @@ export default function Footer() {
         <div className="mx-auto max-w-300 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
             <p className="text-[17px] text-white">
-              Get a call back within 15 minutes. WhatsApp us 24x7<br></br>{" "}
+              Get a call back within 15 minutes. WhatsApp us 24x7 <br />
               between 9:00 AM and 8:00 PM.
             </p>
 
-            <div className="flex w-full md:w-auto md:border md:border-white rounded-[40px]">
-              <form action="" onSubmit={handleSubmit}>
-                <div className="flex w-full md:w-[550px] px-4 md:px-0">
-                  <div className="flex items-center   backdrop-blur-md rounded-l-[40px] px-3 w-full">
+            <div className="w-full md:w-auto">
+              <form onSubmit={handleSubmit} className="w-full">
+                <div className="flex w-full md:w-[550px] rounded-full border border-white/40 bg-white/10 backdrop-blur-md overflow-hidden">
+                  {/* INPUT AREA */}
+                  <div className="flex items-center flex-1 pl-3 pr-2 py-1">
                     <div className="size-8 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(34,197,94,0)_32.21%,rgba(34,197,94,0.6)_100%)] border border-[#00ff4c] flex items-center justify-center">
                       <FaWhatsapp className="text-[#00ff4c]" />
                     </div>
@@ -88,7 +89,7 @@ export default function Footer() {
                     <input
                       type="text"
                       placeholder="Message"
-                      className=" text-white px-4 py-3 w-full focus:outline-none rounded-l-[40px] placeholder-gray-400"
+                      className="bg-transparent text-white px-3 py-2 w-full focus:outline-none placeholder-gray-400"
                       value={formData.message}
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
@@ -97,7 +98,8 @@ export default function Footer() {
                     />
                   </div>
 
-                  <button className="bg-white text-gray-900 px-6 py-3 rounded-tr-[40px]  rounded-br-[40px] font-semibold hover:bg-gray-200 transition flex items-center justify-center whitespace-nowrap">
+                  {/* BUTTON */}
+                  <button className="bg-white text-gray-900 px-6 py-2 font-semibold hover:bg-gray-200 transition whitespace-nowrap border-l border-white/20">
                     Chat With
                   </button>
                 </div>

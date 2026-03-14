@@ -70,7 +70,7 @@ export default function ProductSection({
       <div className="self-padding flex flex-col gap-6">
         <h2 className="md:text-2xl font-bold text-defined-black">{title}</h2>
 
-        <div className="grid gap-1 md:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {allProducts.map((p, index) => (
             <ProductCard
               key={`${p._id}-${index}`}

@@ -58,9 +58,24 @@ export default function HomeCategory({
   return (
     <section className="pb-2">
       <div className="mx-auto max-w-300 px-4 flex flex-col gap-4 lg:gap-8">
-        <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">{title}</h2>
+        <div className='flex justify-between items-center'>
+          <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">
+            {title}
+          </h2>
+          {!isCategoryPage && (
+            <div className="mt-2 flex items-center justify-end">
+              <Link
+                href="/categories"
+                className="text-[15px] md:text-[18px] font-medium text-define-brown"
+              >
+                See All →
+              </Link>
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 xxl:grid-cols-9 place-items-stretch justify-items-stretch gap-3">
-          {categories.map((cat, index) => (           
+          {categories.map((cat, index) => (
             <React.Fragment key={`${cat.parent.id}-${index}`}>
               <Link
                 href={`/products?category=${encodeURIComponent(cat.parent.name)}`}
@@ -87,7 +102,7 @@ export default function HomeCategory({
                     href={`/products?category=${encodeURIComponent(subCat.name)}`}
                     className="text-center group"
                   >
-                    <div className="relative mx-auto size-[5rem] min-[410px]:size-[7.5rem] md:size-[6rem] lg:size-[8rem]  overflow-hidden rounded-md bg-gray-300">
+                    <div className="relative mx-auto size-[4rem] md:size-[6rem] lg:size-[6rem] overflow-hidden rounded-md bg-gray-300">
                       <Image
                         src={subCat.image}
                         alt={subCat.name}
@@ -113,17 +128,6 @@ export default function HomeCategory({
             </>
           )}
         </div>
-
-        {!isCategoryPage && (
-          <div className="mt-2 flex items-center justify-end">
-            <Link
-              href="/categories"
-              className="text-[15px] md:text-[18px] font-medium text-define-brown"
-            >
-              See All →
-            </Link>
-          </div>
-        )}
 
         {(enableLazy || isCategoryPage) && hasMore && (
           <div
