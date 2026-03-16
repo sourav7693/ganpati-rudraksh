@@ -110,3 +110,13 @@ export const logout = async () => {
     throw new Error(err.response?.data?.message ?? "Failed to logout");
   }
 };
+
+export const updateCustomer = async (id : string, updatedData : any) => {
+  try {
+    const res =  await api.post(`/customer/${id}`, updatedData);    
+    return res.data;
+  } catch (error) {
+    const err = error as AxiosError<ApiErrorResponse>;
+    throw new Error(err.response?.data?.message ?? "Failed to update customer");
+  }
+};

@@ -1,11 +1,10 @@
-"use server";
 import { api } from "./customer";
 
 export async function fetchProducts(query: string = "") {
     const PRODUCT_LIMIT = 10;
   try {
-    const res = await api(
-      `/product?limit=${PRODUCT_LIMIT}&status=Active&page=1&${query}`);
+    const res = await api.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/product?limit=${PRODUCT_LIMIT}&status=Active&page=1&${query}`);
     if (!res.status || res.status !== 200) throw new Error("Failed to fetch");
     return res.data;
   } catch (err) {

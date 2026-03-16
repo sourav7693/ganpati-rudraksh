@@ -1,6 +1,6 @@
 "use client";
 
-import { api, logout } from "@/api/customer";
+import { api, logout, updateCustomer } from "@/api/customer";
 import { useCustomer } from "@/context/CustomerContext";
 import { allowOnlyNumbers, blockNumbersInText } from "@/utils/inputHandlers";
 import { useRouter } from "next/navigation";
@@ -61,10 +61,7 @@ export default function AccountInfo() {
     }
 
     try {
-      const res = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}`,
-        { [key]: value },
-      );
+      const res = await updateCustomer(customer._id, { [key]: value });
 
       if (!res.data.success) {
         toast.error(res.data.message || "Update failed");
