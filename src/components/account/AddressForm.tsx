@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/api/customer";
 import { allowOnlyNumbers, blockNumbersInText } from "@/utils/inputHandlers";
 
 type AddressType = "Home" | "Office" | "Others";
@@ -31,13 +32,13 @@ function AddressForm({
     if (pin.length !== 6) return;
 
     try {
-      const res = await fetch(
+      const res = await api(
         `${process.env.NEXT_PUBLIC_API_URL}/pickup/location/${pin}`,
       );
 
-      if (!res.ok) return;
-
-      const data = await res.json();
+      if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
+      if(!res.data.success) throw new Error("Service not available at this location");
+      const data = res.data.data || null;
 
       const postOffice =
         data?.PostOffice || (Array.isArray(data) ? data[0]?.PostOffice : null);

@@ -7,7 +7,7 @@ import { CartType, ProductType } from "@/types/types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { logout } from "@/api/customer";
+import { api, logout } from "@/api/customer";
 import { CouponType } from "@/types/types";
 import { toggleWishlistApi } from "@/api/wishlist";
 import { IoMdSync } from "react-icons/io";
@@ -217,19 +217,15 @@ export default function CheckoutClient() {
     try {
       await loadRazorpayScript();
 
-      const res = await fetch(
+      const res = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/order/razorpay/create`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: Math.max(totalFinalPrice - couponDiscount, 0),
-            currency: "INR",
-          }),
+          amount: Math.max(totalFinalPrice - couponDiscount, 0),
+          currency: "INR",
         },
       );
 
-      const data = await res.json();
+      const data = res.data;
 
       if (!data.success) {
         alert("Failed to create Razorpay order");
@@ -247,33 +243,29 @@ export default function CheckoutClient() {
         order_id: order.id,
 
         handler: async (response: RazorpayResponse) => {
-          const verifyRes = await fetch(
+          const verifyRes = await api.post(
             `${process.env.NEXT_PUBLIC_API_URL}/order/razorpay/verify`,
             {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
 
-                customer: customerId,
-                mobile: customer?.mobile,
-                address: selectedAddress,
-                items: checkoutItems.map((i: CartType) => ({
-                  product: (i.productId as ProductType)._id,
-                  quantity: i.quantity,
-                  price: (i.productId as ProductType).price,
-                })),
+              customer: customerId,
+              mobile: customer?.mobile,
+              address: selectedAddress,
+              items: checkoutItems.map((i: CartType) => ({
+                product: (i.productId as ProductType)._id,
+                quantity: i.quantity,
+                price: (i.productId as ProductType).price,
+              })),
 
-                couponCode: appliedCoupon?.code,
-                couponDiscount: couponDiscount,
-                orderValue: totalFinalPrice - couponDiscount,
-              }),
+              couponCode: appliedCoupon?.code,
+              couponDiscount: couponDiscount,
+              orderValue: totalFinalPrice - couponDiscount,
             },
           );
 
-          const verifyData = await verifyRes.json();
+          const verifyData = verifyRes.data;
 
           if (verifyData.success) {
             toast.success("Payment successful & verified!");
@@ -381,10 +373,10 @@ export default function CheckoutClient() {
 
     const fetchCoupons = async () => {
       try {
-        const res = await fetch(
+        const res = await api(
           `${process.env.NEXT_PUBLIC_API_URL}/coupon?min=${totalFinalPrice}&expire=${new Date().toISOString()}`,
         );
-        const data = await res.json();
+        const data = res.data;
 
         setAvailableCoupons(data.coupons || []);
       } catch (err) {

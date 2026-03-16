@@ -6,11 +6,11 @@ import Link from "next/link";
 import OrderTracker from "./OrderTracker";
 import { OrderType } from "@/types/types";
 import { useCustomer } from "@/context/CustomerContext";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { api } from "@/api/customer";
 export const STATUS_COLORS: Record<string, string> = {
   Processing: "bg-yellow-500",
   Confirmed: "bg-amber-600",
@@ -53,7 +53,7 @@ export default function Orders() {
     if (!customer?._id) return;
 
     const fetchOrders = async () => {
-      const res = await axios(
+      const res = await api(
         `${process.env.NEXT_PUBLIC_API_URL}/order/customers/${customer._id}?page=${page}&limit=10`,
       );
       if (res.data.success) {
@@ -75,7 +75,7 @@ export default function Orders() {
     setCancelModal((prev) => ({ ...prev, isLoading: true }));
 
     try {
-      const res = await axios.put(
+      const res = await api.put(
         `${process.env.NEXT_PUBLIC_API_URL}/order/${cancelModal.orderId}`,
         {
           status: "Cancelled",

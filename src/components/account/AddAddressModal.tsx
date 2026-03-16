@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import AddressForm, { Address } from "./AddressForm";
 import { useCustomer } from "@/context/CustomerContext";
+import { api } from "@/api/customer";
 
 interface Props {
   onClose: () => void;
@@ -66,21 +67,14 @@ export default function AddAddressModal({ onClose, onSuccess }: Props) {
 
 const existing = customer.addresses || [];
 
-const res = await fetch(
+const res = await api.post(
   `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address`,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(form),
-  }
+  form,
 );
 
-const data = await res.json();
+if(!res.data.success) throw new Error(res.data.message || "Failed to save address");
 
-if (!res.ok || !data.address?._id) {
-  throw new Error("Failed to add address");
-}
+const data = res.data;
 
 toast.success("Address added");
 

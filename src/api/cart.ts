@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "./customer";
 
 export const addToCartApi = async (
   customerId: string,
@@ -7,10 +7,9 @@ export const addToCartApi = async (
   quantity = 1,
   priceAtTime?: number
 ) => {
-  const res = await axios.post(
+  const res = await api.post(
     `${process.env.NEXT_PUBLIC_API_URL}/customer/${customerId}/cart`,
-    { productId, variantId, quantity, priceAtTime },
-    { withCredentials: true }
+    { productId, variantId, quantity, priceAtTime },    
   );
 
   return res.data;
@@ -21,11 +20,10 @@ export const removeFromCartApi = async (
   productId: string,
   variantId?: string
 ) => {
-  const res = await axios.delete(
+  const res = await api.delete(
     `${process.env.NEXT_PUBLIC_API_URL}/customer/${customerId}/cart`,
     {
-      data: { productId, variantId },
-      withCredentials: true,
+      data: { productId, variantId },      
     }
   );
 

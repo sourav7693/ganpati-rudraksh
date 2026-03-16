@@ -1,3 +1,4 @@
+import { api } from "@/api/customer";
 import ReviewPage from "@/components/account/Review"
 import MainTemplate from "@/templates/MainTemplate";
 import { ProductType } from "@/types/types";
@@ -13,15 +14,13 @@ const page = async ({
   let productDetails: ProductType | null = null;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/product/${product}`,
-      { cache: "no-store" },
+    const res = await api(
+      `${process.env.NEXT_PUBLIC_API_URL}/product/${product}`,      
     );
 
-    if (!res.ok) throw new Error("Product not found");
+    if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
 
-    const data = await res.json();
-    productDetails = data;
+    productDetails = res.data.product;
   } catch (error) {
     console.error("Product fetch failed:", error);
   }

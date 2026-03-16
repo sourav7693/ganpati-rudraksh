@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import MainTemplates from "@/templates/MainTemplate";
 import ProductDetails from "@/components/product/ProductDetails";
 import RelatedProductSection from "@/components/product/RelatedProductSection";
+import { api } from "@/api/customer";
 
 export const dynamic = "force-dynamic";
 function stripHtmlTags(html: string): string {
@@ -21,14 +22,13 @@ export async function generateMetadata({
   const { slug } = await params;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/product/${slug}`,
-      { cache: "no-store" },
+    const res = await api(
+      `${process.env.NEXT_PUBLIC_API_URL}/product/${slug}`,      
     );
 
-    if (!res.ok) throw new Error("Product not found");
+    if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
 
-    const product = await res.json();
+    const product = res.data;
 
     return {
       title: product.name,

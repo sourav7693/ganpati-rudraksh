@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { IoMdClose, IoMdStar } from "react-icons/io";
+import { api } from "@/api/customer";
 
 interface FileWithPreview extends File {
   preview?: string;
@@ -147,23 +148,20 @@ export default function ReviewEdit({
         formData.append("images", file); // Note: same field name as existing files JSON
       });
 
-      const response = await fetch(
+      const response = await api.put(
         `${process.env.NEXT_PUBLIC_API_URL}/review/${review._id}`,
-        {
-          method: "PUT",
-          body: formData,
-        },
+       formData
       );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server response:", errorText);
-        throw new Error(`Failed to update review: ${response.statusText}`);
+      if(response.status !== 200) {
+        console.error("Error updating review:", response);
+        toast.error("Failed to update review. Please try again.");
+        throw new Error("Failed to update review. Please try again.");
       }
 
-      const updatedReview = await response.json();
+      const updatedReview = response.data;
 
-      alert("Review updated successfully!");
+      toast.success("Review updated successfully!");
 
       // Cleanup preview URLs
       supportingFiles.forEach((file) => {
@@ -212,19 +210,18 @@ export default function ReviewEdit({
         formData.append("images", JSON.stringify(existingFilesData));
       }
 
-      const response = await fetch(
+      const response = await api.put(
         `${process.env.NEXT_PUBLIC_API_URL}/review/${review._id}`,
-        {
-          method: "PUT",
-          body: formData,
-        },
+     formData
       );
 
-      if (!response.ok) {
-        throw new Error(`Failed to update review: ${response.statusText}`);
+      if(response.status !== 200) {
+        console.error("Error updating review:", response);
+        toast.error("Failed to update review. Please try again.");
+        throw new Error("Failed to update review. Please try again.");
       }
 
-      const updatedReview = await response.json();
+      const updatedReview = response.data;
 
       toast.success("Review updated successfully!");
 

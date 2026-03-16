@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCustomer } from "@/context/CustomerContext";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { IoMdStar } from "react-icons/io";
+import { api } from "@/api/customer";
 
 export default function ShowReview() {
   const { customer } = useCustomer();
@@ -14,7 +14,7 @@ export default function ShowReview() {
 
   async function getAllReviews() {
     try {
-      const { data, status } = await axios.get(
+      const { data, status } = await api.get(
         `${process.env.NEXT_PUBLIC_API_URL}/review?user=${customer?._id}`,
       );
 
@@ -28,7 +28,7 @@ export default function ShowReview() {
 
   async function deleteReview(id: string) {
     try {
-      const { status } = await axios.delete(
+      const { status } = await api.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/review/${id}`,
       );
 

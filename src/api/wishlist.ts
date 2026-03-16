@@ -1,15 +1,14 @@
-import axios from "axios";
+import { api } from "./customer";
 
 export const toggleWishlistApi = async (customerId?: string, productId?: string) => {
-  const res = await axios.post(
+  const res = await api.post(
     `${process.env.NEXT_PUBLIC_API_URL}/customer/${customerId}/wishlist`,
-    { productId },
-    { withCredentials: true }
+    { productId },    
   );
   return res.data; // { message, wishlist }
 };
 
 
 export const removeWishlistApi = (customerId: string, productId: string) => {
-  return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/customer/remove-wishlist/${customerId}/${productId}`,  { withCredentials: true });
+  return api.delete(`${process.env.NEXT_PUBLIC_API_URL}/customer/remove-wishlist/${customerId}/${productId}`);
 };

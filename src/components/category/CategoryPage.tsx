@@ -9,6 +9,7 @@ import { useInView } from "react-intersection-observer";
 import CardSkeleton from "@/ui/CardSkeleton";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import { IoFilterSharp } from "react-icons/io5";
+import { api } from "@/api/customer";
 
 export default function CategoryPage({
   activeCategory,
@@ -93,8 +94,8 @@ export default function CategoryPage({
         url.searchParams.append("q", debouncedSearch.trim());
       }
 
-      const res = await fetch(url.toString(), { cache: "no-store" });
-      const data = await res.json();
+      const res = await api(url.toString());
+      const data = res.data;
       const newProducts = data?.data || [];
       const totalPages = data?.pagination?.totalPages || 1;
 

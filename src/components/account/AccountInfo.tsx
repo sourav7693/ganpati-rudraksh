@@ -1,6 +1,6 @@
 "use client";
 
-import { logout } from "@/api/customer";
+import { api, logout } from "@/api/customer";
 import { useCustomer } from "@/context/CustomerContext";
 import { allowOnlyNumbers, blockNumbersInText } from "@/utils/inputHandlers";
 import { useRouter } from "next/navigation";
@@ -61,25 +61,19 @@ export default function AccountInfo() {
     }
 
     try {
-      const res = await fetch(
+      const res = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ [key]: value }),
-        },
+        { [key]: value },
       );
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Update failed");
+      if (!res.data.success) {
+        toast.error(res.data.message || "Update failed");
+        return;
       }
 
-      const data = await res.json();
 
       toast.success("Update successful");
-      return data.data;
+      return res.data;
     } catch (error: any) {
       toast.error(error.message || "Update failed");
       throw error;
@@ -173,14 +167,16 @@ const handleSaveMobile = async () => {
   }
 
   // Step 1: Check if mobile exists
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/customer/check-mobile?mobile=${formattedMobile}`,
-    {      
-      credentials: "include",
-    },
+  const res = await api(
+    `${process.env.NEXT_PUBLIC_API_URL}/customer/check-mobile?mobile=${formattedMobile}`,    
   );
 
-  const data = await res.json();
+  if (!res.data.success) {
+    toast.error(res.data.message || "Something went wrong");
+    return;
+  }
+
+  const data = res.data;
 
   if (data.exists) {
     toast.error("Mobile already registered with another account");

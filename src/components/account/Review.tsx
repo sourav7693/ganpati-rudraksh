@@ -6,8 +6,8 @@ import { ProductType } from "@/types/types";
 import { useCustomer } from "@/context/CustomerContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { IoMdClose, IoMdStar } from "react-icons/io";
+import { api } from "@/api/customer";
 
 interface FileWithPreview extends File {
   preview?: string;
@@ -105,7 +105,7 @@ export default function ReviewPage({
       formData.append("productId", productDetails?._id ?? "");
       formData.append("customerId", customer?._id ?? "");
 
-      const { status, data } = await axios.post(
+      const { status, data } = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/review`,
         formData,
         {

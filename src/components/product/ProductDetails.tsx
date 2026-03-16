@@ -20,6 +20,7 @@ import { CgShoppingCart } from "react-icons/cg";
 import { BiShoppingBag } from "react-icons/bi";
 import ProductFeatures from "./ProductFeatures"
 import { checkPinCodeServiceability } from "@/api/product";
+import { api } from "@/api/customer";
 
 export interface ProductVariantResponse {
   selectedProduct: ProductType;
@@ -247,18 +248,13 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   const fetchProductWithVariants = async (
     slug: string,
   ): Promise<ProductVariantResponse> => {
-    const res = await fetch(
+    const res = await api(
       `${process.env.NEXT_PUBLIC_API_URL}/product/variants/${slug}`,
-      {
-        cache: "no-store",
-      },
     );
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch product");
-    }
+    if (!res.status || res.status !== 200) throw new Error("Variant fetch failed"); 
 
-    const data = await res.json();
+    const data = res.data;
     return {
       selectedProduct: data.data.selectedProduct,
       variants: data.data.variants,
@@ -353,8 +349,8 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/coupon`);
-        const data = await res.json();
+        const res = await api(`${process.env.NEXT_PUBLIC_API_URL}/coupon`);
+        const data = res.data;
 
         setAvailableCoupons(data.coupons || []);
       } catch (err) {

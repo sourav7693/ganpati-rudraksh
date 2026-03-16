@@ -1,6 +1,6 @@
+import { api } from "@/api/customer";
 import ReviewEdit from "@/components/account/ReviewEdit";
 import MainTemplate from "@/templates/MainTemplate";
-import axios from "axios";
 
 export default async function ReviewUpdate({
   params,
@@ -18,7 +18,7 @@ export default async function ReviewUpdate({
   } | null = null;
 
   try {
-    const { data } = await axios.get(
+    const { data } = await api.get(
       `${process.env.NEXT_PUBLIC_API_URL}/review/${id}`,
     );
 

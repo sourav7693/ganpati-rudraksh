@@ -7,6 +7,7 @@ import { BiPencil } from "react-icons/bi";
 import { BsTrash2 } from "react-icons/bs";
 import AddressForm from "./AddressForm";
 import ConfirmModal from "@/ui/ConfirmModal";
+import { api } from "@/api/customer";
 
 type AddressType = "Home" | "Office" | "Others";
 
@@ -63,18 +64,17 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
     }
 
     try {
-      const res = await fetch(
+      const res = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(form),
-        },
+       form
       );
 
-      const data = await res.json();
-      if (!res.ok || !data.address) throw new Error();
+      if (!res.data.success) {
+        toast.error(res.data.message || "Failed to add address");
+        return;
+      }
+
+      const data = res.data;
 
       setAddresses((prev) => [...prev, data.address]);
       toast.success("Address added");
@@ -116,18 +116,17 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
       }
 
     try {
-      const res = await fetch(
+      const res = await api.post(
         `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address/${form._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(form),
-        },
+       form
       );
 
-      const data = await res.json();
-      if (!res.ok || !data.address) throw new Error();
+      if (!res.data.success) {
+        toast.error(res.data.message || "Failed to update address");
+        return;
+      }
+
+      const data = res.data;
 
       setAddresses((prev) =>
         prev.map((a) => (a._id === form._id ? data.address : a)),
@@ -147,14 +146,16 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
     setAddresses((a) => a.filter((x) => x._id !== id));
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address/${id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        },
+      const res = await api.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address/${id}`,       
       );
-      if (!res.ok) throw new Error();
+
+      if (!res.data.success) {
+        setAddresses(prev);
+        toast.error(res.data.message || "Failed to remove address");
+        return;
+      }
+      
       toast.success("Address removed");
     } catch {
       setAddresses(prev);
