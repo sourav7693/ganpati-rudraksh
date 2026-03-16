@@ -20,8 +20,15 @@ export type ApiErrorResponse = {
   message: string;
 };
 
+const isServer = typeof window === "undefined";
+const baseURL = isServer
+  ? process.env.NEXT_PUBLIC_API_URL?.endsWith("/")
+    ? process.env.NEXT_PUBLIC_API_URL
+    : `${process.env.NEXT_PUBLIC_API_URL}/`
+  : "/api/";
+
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
@@ -44,14 +51,14 @@ export const sendOtp = async (mobile: string): Promise<SendOtpResponse> => {
 
 export const verifyOtp = async (
   mobile: string,
-  otp: string,  
+  otp: string,
 ): Promise<VerifyOtpResponse> => {
   try {
     const res = await api.post<VerifyOtpResponse>("/customer/verify-otp", {
       mobile,
-      otp,      
+      otp,
     });
-    console.log("verify otp wala data",res);
+    console.log("verify otp wala data", res);
     return res.data;
   } catch (error) {
     const err = error as AxiosError<ApiErrorResponse>;

@@ -33,7 +33,7 @@ function AddressForm({
 
     try {
       const res = await api(
-        `${process.env.NEXT_PUBLIC_API_URL}/pickup/location/${pin}`,
+        `pickup/location/${pin}`,
       );
 
       if (!res.status || res.status !== 200) throw new Error("Product fetch failed");

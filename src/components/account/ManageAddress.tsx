@@ -65,7 +65,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
 
     try {
       const res = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address`,
+        `customer/${customer._id}/address`,
        form
       );
 
@@ -117,7 +117,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
 
     try {
       const res = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address/${form._id}`,
+        `customer/${customer._id}/address/${form._id}`,
        form
       );
 
@@ -143,19 +143,19 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
     if (!customer?._id || !id) return;
 
     const prev = addresses;
-    setAddresses((a) => a.filter((x) => x._id !== id));
-
+    
     try {
       const res = await api.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address/${id}`,       
+        `customer/${customer._id}/address/${id}`,       
       );
-
+      
       if (!res.data.success) {
         setAddresses(prev);
         toast.error(res.data.message || "Failed to remove address");
         return;
       }
       
+      setAddresses((a) => a.filter((x) => x._id !== id));
       toast.success("Address removed");
     } catch {
       setAddresses(prev);
@@ -167,6 +167,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
     setConfirmOpen(false);
     if (!id) return;
     await removeAddress(id);
+    
   };
 
   return (

@@ -19,7 +19,7 @@ export default async function ReviewUpdate({
 
   try {
     const { data } = await api.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/review/${id}`,
+      `/review/${id}`,
     );
 
     review = data.review;

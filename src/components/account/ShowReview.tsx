@@ -15,7 +15,7 @@ export default function ShowReview() {
   async function getAllReviews() {
     try {
       const { data, status } = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/review?user=${customer?._id}`,
+        `/review?user=${customer?._id}`,
       );
 
       if (status === 200) {
@@ -29,7 +29,7 @@ export default function ShowReview() {
   async function deleteReview(id: string) {
     try {
       const { status } = await api.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/review/${id}`,
+        `/review/${id}`,
       );
 
       if (status === 200) {

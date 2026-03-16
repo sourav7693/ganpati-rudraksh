@@ -106,7 +106,7 @@ export default function ReviewPage({
       formData.append("customerId", customer?._id ?? "");
 
       const { status, data } = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/review`,
+        `review`,
         formData,
         {
           headers: {

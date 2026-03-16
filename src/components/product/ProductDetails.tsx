@@ -248,8 +248,8 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   const fetchProductWithVariants = async (
     slug: string,
   ): Promise<ProductVariantResponse> => {
-    const res = await api(
-      `${process.env.NEXT_PUBLIC_API_URL}/product/variants/${slug}`,
+    const res = await api.get(
+      `product/variants/${slug}`,
     );
 
     if (!res.status || res.status !== 200) throw new Error("Variant fetch failed"); 
@@ -349,7 +349,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const res = await api(`${process.env.NEXT_PUBLIC_API_URL}/coupon`);
+        const res = await api.get(`coupon`);
         const data = res.data;
 
         setAvailableCoupons(data.coupons || []);

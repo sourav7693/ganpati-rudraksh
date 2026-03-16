@@ -45,7 +45,7 @@ export default function ProductSection({
     try {
       const nextPage = page + 1;
      const res = await fetchProducts(
-       `${process.env.NEXT_PUBLIC_API_URL}/product?limit=${limit}&page=${nextPage}&status=Active&${apiQuery}`,
+       `limit=${limit}&page=${nextPage}&status=Active&${apiQuery}`,
      );     
       const newProducts = res.data;
 

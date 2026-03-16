@@ -14,8 +14,8 @@ const page = async ({
   let productDetails: ProductType | null = null;
 
   try {
-    const res = await api(
-      `${process.env.NEXT_PUBLIC_API_URL}/product/${product}`,      
+    const res = await api.get(
+      `/product/${product}`,      
     );
 
     if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
