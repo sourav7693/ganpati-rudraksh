@@ -218,7 +218,7 @@ export default function CheckoutClient() {
       await loadRazorpayScript();
 
       const res = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/razorpay/create`,
+        `order/razorpay/create`,
         {
           amount: Math.max(totalFinalPrice - couponDiscount, 0),
           currency: "INR",
@@ -244,7 +244,7 @@ export default function CheckoutClient() {
 
         handler: async (response: RazorpayResponse) => {
           const verifyRes = await api.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/order/razorpay/verify`,
+            `order/razorpay/verify`,
             {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -374,7 +374,7 @@ export default function CheckoutClient() {
     const fetchCoupons = async () => {
       try {
         const res = await api(
-          `${process.env.NEXT_PUBLIC_API_URL}/coupon?min=${totalFinalPrice}&expire=${new Date().toISOString()}`,
+          `coupon?min=${totalFinalPrice}&expire=${new Date().toISOString()}`,
         );
         const data = res.data;
 

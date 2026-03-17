@@ -17,7 +17,7 @@ export type CategoryUI = {
 // Accept page and limit as arguments
 export async function fetchCategories(page: number = 1, limit: number = 10): Promise<CategoryUI[]> {
   // Pass params to your API
-  const res = await api(`${process.env.NEXT_PUBLIC_API_URL}/category?limit=${limit}&page=${page}`);
+  const res = await api(`/category?limit=${limit}&page=${page}`);
 
   if (!res.status || res.status !== 200) {
     throw new Error("Failed to fetch categories");

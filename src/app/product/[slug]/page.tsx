@@ -22,9 +22,7 @@ export async function generateMetadata({
   const { slug } = await params;
 
   try {
-    const res = await api(
-      `${process.env.NEXT_PUBLIC_API_URL}/product/${slug}`,      
-    );
+    const res = await api.get(`/product/${slug}`);
 
     if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
 

@@ -11,6 +11,7 @@ import { IoMdArrowBack, IoMdClose } from "react-icons/io";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useCustomer } from "@/context/CustomerContext";
 import toast from "react-hot-toast";
+import { api } from "@/api/customer";
 import { useGlobalUI } from "@/context/GlobalUIContext";
 import LoadingAnimation from "@/ui/LoadingAnimation";
 import { NavLinkType } from "./Header";
@@ -58,11 +59,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
     return () => clearInterval(interval);
   }, [query]);
   const fetchSuggestions = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/search/suggestions`,
+    const res = await api.get(
+      `/search/suggestions`,
     );
 
-    const data = await res.json();
+    const data = res.data;
 
     if (data.success) {
       setSuggestions(data.results);
@@ -146,9 +147,9 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       return;
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?q=${debouncedQuery}`)
-      .then((res) => res.json())
-      .then((data) => {
+    api.get(`search?q=${debouncedQuery}`)
+      .then((res) => {
+        const data = res.data;
         if (data.success) {
           setResults(data.results);
           setShow(true);

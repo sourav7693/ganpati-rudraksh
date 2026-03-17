@@ -149,7 +149,7 @@ export default function ReviewEdit({
       });
 
       const response = await api.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/review/${review._id}`,
+        `review/${review._id}`,
        formData
       );
 
@@ -211,7 +211,7 @@ export default function ReviewEdit({
       }
 
       const response = await api.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/review/${review._id}`,
+        `review/${review._id}`,
      formData
       );
 

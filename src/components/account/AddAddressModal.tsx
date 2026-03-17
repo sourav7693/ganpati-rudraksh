@@ -68,7 +68,7 @@ export default function AddAddressModal({ onClose, onSuccess }: Props) {
 const existing = customer.addresses || [];
 
 const res = await api.post(
-  `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}/address`,
+  `customer/${customer._id}/address`,
   form,
 );
 

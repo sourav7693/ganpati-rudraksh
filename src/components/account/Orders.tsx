@@ -54,7 +54,7 @@ export default function Orders() {
 
     const fetchOrders = async () => {
       const res = await api(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/customers/${customer._id}?page=${page}&limit=10`,
+        `order/customers/${customer._id}?page=${page}&limit=10`,
       );
       if (res.data.success) {
         setOrders(res.data.data);
@@ -76,7 +76,7 @@ export default function Orders() {
 
     try {
       const res = await api.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/order/${cancelModal.orderId}`,
+        `order/${cancelModal.orderId}`,
         {
           status: "Cancelled",
           cancelReason: cancelModal.reason,

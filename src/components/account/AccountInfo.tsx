@@ -61,8 +61,8 @@ export default function AccountInfo() {
     }
 
     try {
-      const res = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/customer/${customer._id}`,
+      const res = await api.put(
+        `customer/${customer._id}`,
         { [key]: value },
       );
 
@@ -167,8 +167,8 @@ const handleSaveMobile = async () => {
   }
 
   // Step 1: Check if mobile exists
-  const res = await api(
-    `${process.env.NEXT_PUBLIC_API_URL}/customer/check-mobile?mobile=${formattedMobile}`,    
+  const res = await api.get(
+    `customer/check-mobile?mobile=${formattedMobile}`,    
   );
 
   if (!res.data.success) {

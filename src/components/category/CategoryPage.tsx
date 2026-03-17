@@ -72,29 +72,18 @@ export default function CategoryPage({
     }
 
     try {
-      const url = new URL(
-        `${process.env.NEXT_PUBLIC_API_URL}/product?status=Active`,
-      );
-      url.searchParams.set("page", String(pageNumber));
-      url.searchParams.set("limit", String(LIMIT));
+      const params: any = {
+        status: "Active",
+        page: pageNumber,
+        limit: LIMIT,
+      };
 
-      if (activeCategory) {
-        url.searchParams.append("category", activeCategory);
-      }
+      if (activeCategory) params.category = activeCategory;
+      if (activeBrand) params.brand = activeBrand;
+      if (activeAttribute) params.attribute = activeAttribute;
+      if (debouncedSearch.trim()) params.q = debouncedSearch.trim();
 
-      if (activeBrand) {
-        url.searchParams.append("brand", activeBrand);
-      }
-
-      if (activeAttribute) {
-        url.searchParams.append("attribute", activeAttribute);
-      }
-
-      if (debouncedSearch.trim()) {
-        url.searchParams.append("q", debouncedSearch.trim());
-      }
-
-      const res = await api(url.toString());
+      const res = await api.get("/product", { params });
       const data = res.data;
       const newProducts = data?.data || [];
       const totalPages = data?.pagination?.totalPages || 1;

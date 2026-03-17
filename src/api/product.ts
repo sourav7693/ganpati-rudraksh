@@ -4,8 +4,8 @@ import { api } from "./customer";
 export async function fetchProducts(query: string = "") {
     const PRODUCT_LIMIT = 10;
   try {
-    const res = await api(
-      `/product?limit=${PRODUCT_LIMIT}&status=Active&page=1&${query}`);
+    const res = await api.get(
+      `product?limit=${PRODUCT_LIMIT}&status=Active&page=1&${query}`);
     if (!res.status || res.status !== 200) throw new Error("Failed to fetch");
     return res.data;
   } catch (err) {
@@ -16,8 +16,8 @@ export async function fetchProducts(query: string = "") {
 
 export async function fetchProductBySlug(slug: string) {
   try {
-    const res = await api(
-      `${process.env.NEXT_PUBLIC_API_URL}/product/${slug}`,
+    const res = await api.get(
+      `product/${slug}`,
     );
     if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
     return res.data;
@@ -29,8 +29,8 @@ export async function fetchProductBySlug(slug: string) {
 
 export const fetchRelatedProducts = async (slug: string) => {
    try {
-     const res = await api(
-       `/product/${slug}/related?status=Active`,
+     const res = await api.get(
+       `product/${slug}/related?status=Active`,
      );
      if (!res.status || res.status !== 200) throw new Error("Failed to fetch related products");
 
@@ -44,7 +44,7 @@ export const fetchRelatedProducts = async (slug: string) => {
 export const checkPinCodeServiceability = async (pinCode: string) => {
   try {
     const res = await api.post(
-      `/shiprocket/serviceability`, {
+      `shiprocket/serviceability`, {
         delivery_postcode: pinCode,
       }
     );
