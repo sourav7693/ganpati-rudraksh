@@ -66,13 +66,14 @@ export default function AccountInfo() {
         { [key]: value },
       );
 
+      console.log("update res", res);
       if (!res.data.success) {
         toast.error(res.data.message || "Update failed");
         return;
       }
 
 
-      toast.success("Update successful");
+      toast.success(res.data.message);
       return res.data;
     } catch (error: any) {
       toast.error(error.message || "Update failed");
@@ -205,7 +206,7 @@ const handleSaveMobile = async () => {
   }
 
   return (
-    <div className="bg-white lg:px-8 lg:py-0 p-8 ">
+    <div className="bg-white lg:px-8 lg:py-4 p-8 ">
       {/* ================= Personal Information ================= */}
       <section className="mb-14">
         <div className="flex items-center gap-6 mb-6">

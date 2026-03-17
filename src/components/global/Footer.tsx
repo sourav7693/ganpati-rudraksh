@@ -51,8 +51,8 @@ export default function Footer() {
 
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const whatsappUrl = isDesktop
-      ? `https://web.whatsapp.com/send?phone=+917586891753&text=${encodedMessage}`
-      : `https://api.whatsapp.com/send?phone=+917586891753&text=${encodedMessage}`;
+      ? `https://web.whatsapp.com/send?phone=918967790313&text=${encodedMessage}`
+      : `https://api.whatsapp.com/send?phone=918967790313&text=${encodedMessage}`;
     window.open(whatsappUrl, "_blank");
 
     setFormData({
@@ -199,20 +199,20 @@ export default function Footer() {
                   <li className="flex items-center gap-2">
                     <BiPhone size={16} />
                     <Link
-                      href="tel:+917586891753"
+                      href="tel:+918967790313"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      +91 75868 91753
+                      +91 89677 90313
                     </Link>
                   </li>
 
                   <li className="flex items-center gap-2">
                     <FaWhatsapp size={16} />
                     <Link
-                      href="tel:+917586891753"
+                      href="https://wa.me/918967790313"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      +91 75868 91753
+                      +91 89677 90313
                     </Link>
                   </li>
 

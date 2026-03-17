@@ -116,7 +116,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
       }
 
     try {
-      const res = await api.post(
+      const res = await api.put(
         `customer/${customer._id}/address/${form._id}`,
        form
       );

@@ -294,13 +294,13 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
           {/* LEFT SIDE */}
           <Link
             className="hover:scale-105 transition-all duration-300 font-medium hidden md:flex items-center gap-2"
-            href={"/"}
+            href={"https://wa.me/918967790313"}
             target="_blank"
           >
             <div className="size-8 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(212,35,0,0)_32.21%,rgba(212,35,0,0.60)_100%)] border border-define-red flex items-center justify-center">
               <FaWhatsapp className="text-define-brown" />
             </div>
-            <span className="text-define-brown text-sm">+91 12345 67890</span>
+            <span className="text-define-brown text-sm">+91 89677 90313</span>
           </Link>
 
           {/* LOGO */}
@@ -538,6 +538,12 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                         className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
                       >
                         My Account
+                      </Link>
+                      <Link
+                        href="/manage-address"
+                        className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
+                      >
+                        Manage Address
                       </Link>
 
                       <Link

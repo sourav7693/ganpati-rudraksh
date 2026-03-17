@@ -39,10 +39,7 @@ const page = async () => {
           enableLazy={false}
         />
 
-      <TitleSection
-        title="Our Clients"
-        subtitle="Welcome to The World of Highest-Quality Rudraksha"
-      />
+    
 
       <OurClients />
       <TitleSection

@@ -118,9 +118,9 @@ export const logout = async () => {
   }
 };
 
-export const updateCustomer = async (id : string, updatedData : any) => {
+export const updateCustomer = async (id: string, updatedData: any) => {
   try {
-    const res =  await api.post(`/customer/${id}`, updatedData);    
+    const res = await api.post(`/customer/${id}`, updatedData);
     return res.data;
   } catch (error) {
     const err = error as AxiosError<ApiErrorResponse>;
