@@ -97,20 +97,22 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
     }
   }, [currentProduct.stock]);
 
+  const normalize = (str: string) =>
+    str?.trim().toLowerCase() === "colour"
+      ? "color"
+      : str?.trim().toLowerCase();
+
   const getAttributeValue = (
     product: ProductType,
     attrName: string,
   ): string | null => {
-    const attr = product.variables?.find((v) => v.name === attrName);
+     const attr = product.variables?.find(
+       (v) => normalize(v.name) === normalize(attrName),
+     );
 
-    if (attr?.values?.length) return attr.values[0];
+     if (!attr || !attr.values?.length) return null;
 
-    if (!product.isVariant) {
-      if (attrName === "Color") return `${" "}`;
-      if (attrName === "Size") return "";
-    }
-
-    return null;
+     return attr.values[0]?.trim();
   };
 
   const groupByAttribute = (variants: ProductType[], attrName: string) => {
@@ -131,8 +133,9 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   const colorGroups = groupByAttribute(variants, "Color");
   const sizeGroups = groupByAttribute(variants, "Size");
 
-  const hasColor = Object.keys(colorGroups).length > 0;
-  const hasSize = Object.keys(sizeGroups).length > 0;
+const hasColor = variants.some((v) => getAttributeValue(v, "Color"));
+
+const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
 
   const router = useRouter();
   const { showPreview } = useCartPreview();

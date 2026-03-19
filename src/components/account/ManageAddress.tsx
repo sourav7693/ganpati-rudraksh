@@ -38,6 +38,7 @@ const emptyForm: Address = {
 
 export default function ManageAddress() {
   const { customer } = useCustomer();
+  const [loading, setLoading] = useState(false);
 const [confirmOpen, setConfirmOpen] = useState(false);
 const [selectedId, setSelectedId] = useState<string | undefined>();
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -57,6 +58,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
 
   /* ================= CREATE ================= */
   const createAddress = async () => {
+    if (loading) return; 
     if (!customer?._id || !form) return;
     if(!form.name || !form.mobile || !form.pin || !form.area || !form.city || !form.state || !form.landmark){
       toast.error("Please fill all required fields");
@@ -64,10 +66,8 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
     }
 
     try {
-      const res = await api.post(
-        `customer/${customer._id}/address`,
-       form
-      );
+      setLoading(true);
+      const res = await api.post(`customer/${customer._id}/address`, form);
 
       if (!res.data.success) {
         toast.error(res.data.message || "Failed to add address");
@@ -81,11 +81,14 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
       setForm(null);
     } catch {
       toast.error("Failed to add address");
+    } finally {
+      setLoading(false);
     }
   };
 
   /* ================= UPDATE ================= */
   const updateAddress = async () => {
+    if (loading) return;
     if (!customer?._id || !form?._id) return;
       if (
         !form.name ||
@@ -116,9 +119,10 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
       }
 
     try {
+      setLoading(true);
       const res = await api.put(
         `customer/${customer._id}/address/${form._id}`,
-       form
+        form,
       );
 
       if (!res.data.success) {
@@ -135,6 +139,8 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
       setForm(null);
     } catch {
       toast.error("Failed to update address");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,9 +194,14 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
           <div className="flex gap-3">
             <button
               onClick={form._id ? updateAddress : createAddress}
-              className="bg-define-brown text-white px-5 py-2 rounded-md text-sm"
+              disabled={loading}
+              className={`bg-define-brown text-white px-5 py-2 rounded-md text-sm ${loading && "opacity-50 cursor-not-allowed"}`}
             >
-              {form._id ? "Update Address" : "Save Address"}
+              {loading
+                ? "Saving..."
+                : form._id
+                  ? "Update Address"
+                  : "Save Address"}
             </button>
 
             <button
@@ -244,7 +255,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
             </div>
           </div>
         ))}
-      </div>  
+      </div>
       <ConfirmModal
         open={confirmOpen}
         id={selectedId}
