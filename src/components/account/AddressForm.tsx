@@ -1,7 +1,7 @@
 "use client";
 
-import { api } from "@/api/customer";
 import { allowOnlyNumbers, blockNumbersInText } from "@/utils/inputHandlers";
+import axios from "axios";
 
 type AddressType = "Home" | "Office" | "Others";
 
@@ -32,13 +32,16 @@ function AddressForm({
     if (pin.length !== 6) return;
 
     try {
-      const res = await api(
-        `pickup/location/${pin}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/pickup/location/${pin}`,
       );
 
-      if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
-      if(!res.data.success) throw new Error("Service not available at this location");
-      const data = res.data.data || null;
+      if (!res.ok) {
+        throw new Error("Failed to fetch pin code details");
+      }
+      const dataRes = await res.json();
+
+      const data = dataRes?.data || dataRes;
 
       const postOffice =
         data?.PostOffice || (Array.isArray(data) ? data[0]?.PostOffice : null);

@@ -238,7 +238,7 @@ export default function CheckoutClient() {
         key,
         amount: order.amount,
         currency: order.currency,
-        name: "Pri Priya Nursery",
+        name: "Ganpati Rudraakshaam",
         description: "Order Payment",
         order_id: order.id,
 
