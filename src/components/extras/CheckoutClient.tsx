@@ -243,27 +243,24 @@ export default function CheckoutClient() {
         order_id: order.id,
 
         handler: async (response: RazorpayResponse) => {
-          const verifyRes = await api.post(
-            `order/razorpay/verify`,
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
+          const verifyRes = await api.post(`order/razorpay/verify`, {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
 
-              customer: customerId,
-              mobile: customer?.mobile,
-              address: selectedAddress,
-              items: checkoutItems.map((i: CartType) => ({
-                product: (i.productId as ProductType)._id,
-                quantity: i.quantity,
-                price: (i.productId as ProductType).price,
-              })),
+            customer: customerId,
+            mobile: customer?.mobile,
+            address: selectedAddress,
+            items: checkoutItems.map((i: CartType) => ({
+              product: (i.productId as ProductType)._id,
+              quantity: i.quantity,
+              price: (i.productId as ProductType).price,
+            })),
 
-              couponCode: appliedCoupon?.code,
-              couponDiscount: couponDiscount,
-              orderValue: totalFinalPrice - couponDiscount,
-            },
-          );
+            couponCode: appliedCoupon?.code,
+            couponDiscount: couponDiscount,
+            orderValue: totalFinalPrice - couponDiscount,
+          });
 
           const verifyData = verifyRes.data;
 
@@ -287,7 +284,7 @@ export default function CheckoutClient() {
           contact: customer?.mobile,
         },
 
-        theme: { color: "#16a34a" },
+        theme: { color: "#4a180e" },
       };
 
       const razorpay = new (window as unknown as RazorpayWindow).Razorpay(
