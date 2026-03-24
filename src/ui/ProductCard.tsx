@@ -104,7 +104,7 @@ export default function ProductCard({
         decay: 0.9,
         gravity: 0,
         scalar: 0.8,
-        colors: ["#22c55e", "#ffffff"],
+        colors: ["#D42300", "#4A180E"],
         disableForReducedMotion: true,
         zIndex: 9999,
       });
@@ -214,7 +214,7 @@ export default function ProductCard({
           <div>
             <span className="text-xs md:text-lg font-bold text-define-brown">
               <FaRupeeSign className="inline" />
-              {price.toFixed(0)}
+             { Math.round(price).toLocaleString("en-IN")}
             </span>
 
             {discount && discount > 0 && mrp && (

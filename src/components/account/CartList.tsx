@@ -195,7 +195,7 @@ const CartList = () => {
 const reversedCart = cart.slice().reverse();
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between items-center  h-[calc(100vh-100px)] overflow-y-auto no-scrollbar">
+    <div className="w-full flex flex-col lg:flex-row justify-between items-center h-[calc(100vh-100px)] overflow-y-auto no-scrollbar">
       {/* Cart  */}
       <div className="flex flex-col gap-6 lg:px-2 px-0 self-start basis-full w-full">
         <div>

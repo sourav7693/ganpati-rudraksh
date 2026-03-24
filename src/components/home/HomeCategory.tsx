@@ -44,7 +44,7 @@ export default function HomeCategory({
    if (loading) {
      return (
        <div className="py-5">
-         <div className="mx-auto max-w-300 px-4">
+         <div className="mx-auto max-w-350 px-4">
            <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
              <CardSkeleton />
              <CardSkeleton />
@@ -57,7 +57,7 @@ export default function HomeCategory({
 
   return (
     <section className="pb-2">
-      <div className="mx-auto max-w-300 px-4 flex flex-col gap-4 lg:gap-8">
+      <div className="mx-auto max-w-360 px-4 flex flex-col gap-4 lg:gap-8">
         <div className='flex justify-between items-center'>
           <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">
             {title}

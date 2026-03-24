@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
       <Suspense
         fallback={
           <div className="py-6">
-            <div className="mx-auto max-w-300 px-4">
+            <div className="mx-auto max-w-360 px-4">
               <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
                 <CardSkeleton />
                 <CardSkeleton />

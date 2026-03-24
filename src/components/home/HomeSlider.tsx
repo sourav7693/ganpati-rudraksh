@@ -52,7 +52,7 @@ export default function Homebanner() {
     if (banners.length === 0) return null;
 
   return (
-    <div className="relative max-w-300 mx-auto">
+    <div className="relative w-full mx-auto">
       <Swiper
         modules={[Autoplay, Navigation]}
         autoplay={{
@@ -70,17 +70,17 @@ export default function Homebanner() {
           prevEl: prevRef.current,
           nextEl: nextRef.current,
         }}
-        className="h-[200px] sm:h-[300px] md:h-[350px] lg:h-[400px] mt-[-60px] mb-[-60px] md:mt-0 md:mb-0"
+        className="h-[200px]  md:h-[350px] lg:h-[550px]  md:mt-0 md:mb-0"
       >
         {banners.map((item, index) => (
-          <SwiperSlide key={item._id || index}>
+          <SwiperSlide key={item._id || index} className="h-full">
             <div className="relative h-full w-full">
               <Image
                 src={item.image.url}
                 alt={`Banner ${index + 1}`}
                 fill
                 priority={index === 0}
-                className="object-cover"
+                className="object-cover size-full"
               />
             </div>
           </SwiperSlide>
@@ -88,13 +88,19 @@ export default function Homebanner() {
       </Swiper>
 
       {banners.length > 1 && (
-        <button ref={prevRef} className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white/80 py-6 shadow hover:bg-white rounded-tr-[12px] rounded-br-[12px] cursor-pointer">
+        <button
+          ref={prevRef}
+          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white/80 py-6 shadow hover:bg-white rounded-tr-[12px] rounded-br-[12px] cursor-pointer"
+        >
           <BiChevronLeft size={20} className="text-black" />
         </button>
       )}
 
       {banners.length > 1 && (
-        <button ref={nextRef} className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-tl-[12px] rounded-bl-[12px] bg-white/80 py-6 shadow hover:bg-white cursor-pointer">
+        <button
+          ref={nextRef}
+          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-tl-[12px] rounded-bl-[12px] bg-white/80 py-6 shadow hover:bg-white cursor-pointer"
+        >
           <BiChevronRight size={20} className="text-black" />
         </button>
       )}

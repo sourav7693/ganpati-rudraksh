@@ -459,7 +459,7 @@ export default function CheckoutClient() {
   }
 
   return (
-    <div className="max-w-300 px-4 mx-auto grid grid-cols-1 lg:grid-cols-3 py-6 gap-6">
+    <div className="max-w-360 px-4 mx-auto grid grid-cols-1 lg:grid-cols-3 py-6 gap-6">
       {/* LEFT */}
       <div className="lg:col-span-2 space-y-2">
         <div className="flex flex-col text-define-black bg-white rounded-md p-4">

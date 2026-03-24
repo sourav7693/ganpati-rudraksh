@@ -55,7 +55,7 @@ const WishList = () => {
    }
  };
   return (
-    <div className="flex flex-col gap-6 px-4 lg:px-8 h-[calc(100vh-100px)] overflow-y-auto no-scrollbar">
+    <div className="flex w-full flex-col gap-6 px-4 h-[calc(100vh-100px)] overflow-y-auto no-scrollbar">
       <h1 className="text-xl font-bold text-define-red">
         Wishlist ({customer?.wishlist?.length || 0})
       </h1>
@@ -68,7 +68,7 @@ const WishList = () => {
             {customer?.wishlist?.map((item: WishlistType) => (
               <div
                 key={item._id}
-                className="flex flex-col lg:flex-row gap-2 rounded border border-gray-200 p-4"
+                className="flex flex-col lg:flex-row gap-2 rounded bg-white border border-gray-200 p-4"
               >
                 <div className="flex items-center justify-center">
                   <Image

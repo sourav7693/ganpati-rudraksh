@@ -12,7 +12,7 @@ export default function ImageSection() {
   ]
 
   return (
-    <section className="max-w-300 mx-auto md:px-0 p-4">
+    <section className="max-w-360 mx-auto md:px-0 p-4">
       <div className="relative">
         <Swiper
           modules={[Autoplay, Navigation]}

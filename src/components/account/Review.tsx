@@ -137,7 +137,7 @@ export default function ReviewPage({
   }
 
   return (
-    <div className="max-w-225 mx-auto bg-white px-4 rounded-md shadow-sm py-8 md:my-6">
+    <div className="w-full bg-white px-4 rounded-md shadow-sm py-8 md:my-6">
       {/* PRODUCT INFO */}
       <div className="flex gap-4 border-b border-gray-300 pb-4">
         <div className="relative w-24 h-24 border border-gray-300 rounded">

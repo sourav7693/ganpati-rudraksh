@@ -90,7 +90,7 @@ const Header = () => {
 
       {/* DESKTOP NAV */}
       <header className="hidden md:block border border-gray-200 bg-white">
-        <div className="mx-auto max-w-300 px-4">
+        <div className="mx-auto max-w-360 px-4">
           <nav className="flex justify-between py-4 text-gray-700 font-medium">
             {navLinks.map((item, idx) => (
               <div key={idx} className="relative group">

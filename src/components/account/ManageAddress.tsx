@@ -177,7 +177,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
   };
 
   return (
-    <div className="bg-white rounded-md px-6 flex flex-col gap-4">
+    <div className=" rounded-md  flex flex-col gap-4">
       <div>
         <button
           onClick={() => setForm({ ...emptyForm })}
@@ -219,7 +219,7 @@ const [selectedId, setSelectedId] = useState<string | undefined>();
         {addresses.map((addr) => (
           <div
             key={addr._id}
-            className="border border-gray-200 rounded-md p-4 flex justify-between shadow-defined-light"
+            className="border border-gray-200 rounded-md p-4 flex justify-between shadow-defined-light bg-white"
           >
             <div>
               <span className="text-xs bg-define-brown text-white px-2 py-0.5 rounded">

@@ -79,7 +79,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   return (
     
     <MainTemplates>
-      <section className="max-w-300 mx-auto px-4 md:py-10  flex flex-col gap-8">
+      <section className="max-w-360 mx-auto px-4 md:py-10  flex flex-col gap-8">
         <ProductDetails product={product} />
         <div className="w-full max-md:mb-6">
           <RelatedProductSection slug={product.slug} />

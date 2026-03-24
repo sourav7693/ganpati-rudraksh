@@ -39,7 +39,7 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="max-w-300 mx-auto p-4">
+    <section className="max-w-360 mx-auto p-4">
       <div className="relative">
         <Swiper
           modules={[Autoplay, Navigation]}
