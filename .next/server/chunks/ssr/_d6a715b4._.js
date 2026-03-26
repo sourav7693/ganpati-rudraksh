@@ -10,31 +10,31 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-localpattern
           background: #fff;
         }
 
-        .rotate-img {
-          width: 100px;
-          height: 100px;
-          animation: spin 3s linear infinite;
-        }
+        .video-wrapper {
+  width: 60vw;
+  max-width: 500px;
+  min-width: 250px;
+  aspect-ratio: 1 / 1;
+  animation: fadeIn 0.5s ease-in;
+}
+  @media (max-width: 640px) {
+  .video-wrapper {
+    width: 80vw;
+    min-width: unset;
+  }
+           @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-        @keyframes spin {
-          0% {
-            transform: rotateY(0deg);
-          }
-          100% {
-            transform: rotateY(360deg);
-          }
-        }
-
-        /* optional shadow */
-        .shadow {
-          width: 70px;
-          height: 20px;
-          background: rgba(0,0,0,0.2);
-          filter: blur(10px);
-          border-radius: 50%;
-          margin: auto;
-          margin-top: 10px;
-        }
-      `}),(0,b.jsx)("div",{className:"container-a",children:(0,b.jsxs)("div",{style:{textAlign:"center"},children:[(0,b.jsx)(c.default,{src:"/images/rudraksh2.png",alt:"rudraksh",width:500,height:500,className:"object-cover size-full"}),(0,b.jsx)("div",{className:"shadow"})]})})]})])}];
+      .shadow {
+  width: 40%;
+  height: 25px;
+  background: rgba(0,0,0,0.2);
+  filter: blur(15px);
+  border-radius: 50%;
+  margin: 20px auto 0;
+}
+      `}),(0,b.jsx)("div",{className:"container-a",children:(0,b.jsxs)("div",{style:{textAlign:"center"},children:[(0,b.jsx)("div",{className:"relative w-full h-[260px] lg:h-[350px] rounded-xl overflow-hidden video-wrapper",children:(0,b.jsx)(c.default,{src:"/images/rudragif.gif",alt:"Service Technician",fill:!0,priority:!0,className:"object-cover"})}),(0,b.jsx)("div",{className:"shadow"})]})})]})])}];
 
 //# sourceMappingURL=_d6a715b4._.js.map
