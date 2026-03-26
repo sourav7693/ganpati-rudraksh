@@ -70,7 +70,7 @@ export default function Homebanner() {
           prevEl: prevRef.current,
           nextEl: nextRef.current,
         }}
-        className="h-[200px]  md:h-[350px] lg:h-[550px]  md:mt-0 md:mb-0"
+        className="h-[200px]  md:h-[350px] 2xl:h-[550px] lg:h-[400px]  md:mt-0 md:mb-0"
       >
         {banners.map((item, index) => (
           <SwiperSlide key={item._id || index} className="h-full">

@@ -44,9 +44,9 @@ export default function ProductSection({
     setLoading(true);
     try {
       const nextPage = page + 1;
-     const res = await fetchProducts(
-       `limit=${limit}&page=${nextPage}&status=Active&${apiQuery}`,
-     );     
+      const res = await fetchProducts(
+        `limit=${limit}&page=${nextPage}&status=Active&${apiQuery}`,
+      );
       const newProducts = res.data;
 
       if (newProducts?.success) {
@@ -66,11 +66,11 @@ export default function ProductSection({
   }, [inView, enableLazy]);
 
   return (
-    <section className="py-2 max-w-360 mx-auto px-4">
+    <section className="py-2 2xl:max-w-360 lg:max-w-300 mx-auto px-4">
       <div className="self-padding flex flex-col gap-6">
-        <h2 className="md:text-2xl font-bold text-defined-black">{title}</h2>
+        <h2 className="md:text-2xl font-bold text-define-brown">{title}</h2>
 
-        <div className="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-2 md:gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {allProducts.map((p, index) => (
             <ProductCard
               key={`${p._id}-${index}`}
@@ -80,10 +80,8 @@ export default function ProductSection({
               coverImage={p.coverImage}
               mrp={p.mrp}
               discount={p.discount}
-              slug={p.slug}           
-              category={
-                p.categoryLevels?.[0]?.name                 
-              }
+              slug={p.slug}
+              category={p.categoryLevels?.[0]?.name}
               height="h-[12rem] md:h-[12rem] lg:h-[14rem] xxl:h-[16rem]"
             />
           ))}

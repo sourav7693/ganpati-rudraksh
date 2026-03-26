@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCustomer } from "@/context/CustomerContext";
-import {  removeFromCartApi } from "@/api/cart";
+import { removeFromCartApi } from "@/api/cart";
 import { CartType, ProductType } from "@/types/types";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -217,13 +217,10 @@ export default function CheckoutClient() {
     try {
       await loadRazorpayScript();
 
-      const res = await api.post(
-        `order/razorpay/create`,
-        {
-          amount: Math.max(totalFinalPrice - couponDiscount, 0),
-          currency: "INR",
-        },
-      );
+      const res = await api.post(`order/razorpay/create`, {
+        amount: Math.max(totalFinalPrice - couponDiscount, 0),
+        currency: "INR",
+      });
 
       const data = res.data;
 
@@ -459,7 +456,7 @@ export default function CheckoutClient() {
   }
 
   return (
-    <div className="max-w-360 px-4 mx-auto grid grid-cols-1 lg:grid-cols-3 py-6 gap-6">
+    <div className="2xl:max-w-360 lg:max-w-300 px-4 mx-auto grid grid-cols-1 lg:grid-cols-3 py-6 gap-6">
       {/* LEFT */}
       <div className="lg:col-span-2 space-y-2">
         <div className="flex flex-col text-define-black bg-white rounded-md p-4">
@@ -919,8 +916,7 @@ export default function CheckoutClient() {
             "Select Address First"
           ) : (
             <>
-              Pay{" "}
-              <FaRupeeSign className="inline" />
+              Pay <FaRupeeSign className="inline" />
               {Math.max(
                 totalFinalPrice - couponDiscount,
                 0,

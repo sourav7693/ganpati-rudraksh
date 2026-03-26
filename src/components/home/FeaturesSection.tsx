@@ -5,8 +5,7 @@ import FreeShiping from "@/svgs/FreeShiping";
 import FreshProduct from "@/svgs/FreshProduct";
 import GetFlat from "@/svgs/GetFlat";
 import QualityTested from "@/svgs/QualityTested";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function FeaturesSection() {
@@ -39,20 +38,16 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="max-w-360 mx-auto p-4">
+    <section className="2xl:max-w-360 lg:max-w-300 mx-auto p-4">
       <div className="relative">
         <Swiper
-          modules={[Autoplay, Navigation]}
+          modules={[Autoplay]}
           autoplay={{
             delay: 1500,
             disableOnInteraction: false,
           }}
           loop
-          spaceBetween={20}
-          navigation={{
-            nextEl: ".feature-next",
-            prevEl: ".feature-prev",
-          }}
+          spaceBetween={20}         
           breakpoints={{
             0: { slidesPerView: 1 },
             640: { slidesPerView: 2 },
@@ -90,29 +85,6 @@ export default function FeaturesSection() {
           ))}
         </Swiper>
 
-        {/* PREV */}
-        <button
-          className="
-          feature-prev absolute left-0 top-1/2 -translate-y-1/2 z-10
-          bg-white shadow hover:bg-gray-100
-          rounded-tr-xl rounded-br-xl
-          py-5 px-1
-        "
-        >
-          <BiChevronLeft className="w-4 h-4" />
-        </button>
-
-        {/* NEXT */}
-        <button
-          className="
-          feature-next absolute right-0 top-1/2 -translate-y-1/2 z-10
-          bg-white shadow hover:bg-gray-100
-          rounded-tl-xl rounded-bl-xl
-          py-5 px-1
-        "
-        >
-          <BiChevronRight className="w-4 h-4" />
-        </button>
       </div>
     </section>
   );

@@ -24,7 +24,8 @@ export async function generateMetadata({
   try {
     const res = await api.get(`/product/${slug}`);
 
-    if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
+    if (!res.status || res.status !== 200)
+      throw new Error("Product fetch failed");
 
     const product = res.data;
 
@@ -56,30 +57,28 @@ export async function generateMetadata({
     // Return fallback metadata if product fetch fails
     return {
       title: "Ganapati Rudrakash - Premium Rudraksh Supplies",
-      description:
-        "Find the perfect Rudraksh at Ganapati Rudrakash.",
+      description: "Find the perfect Rudraksh at Ganapati Rudrakash.",
     };
   }
 }
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
-     const { slug } = await params;
-     let product: ProductType | null = null;
-     product = await fetchProductBySlug(slug);
+  const { slug } = await params;
+  let product: ProductType | null = null;
+  product = await fetchProductBySlug(slug);
 
-     if (!product) {
-       return (
-         <MainTemplates>
-           <h2 className="text-center text-red-500 py-20 text-xl">
-             Product Not Found
-           </h2>
-         </MainTemplates>
-       );
-     }
+  if (!product) {
+    return (
+      <MainTemplates>
+        <h2 className="text-center text-red-500 py-20 text-xl">
+          Product Not Found
+        </h2>
+      </MainTemplates>
+    );
+  }
   return (
-    
     <MainTemplates>
-      <section className="max-w-360 mx-auto px-4 md:py-10  flex flex-col gap-8">
+      <section className="2xl:max-w-360 lg:max-w-300 mx-auto px-4 md:py-10  flex flex-col gap-8">
         <ProductDetails product={product} />
         <div className="w-full max-md:mb-6">
           <RelatedProductSection slug={product.slug} />
@@ -89,4 +88,4 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   );
 };
 
-export default page
+export default page;

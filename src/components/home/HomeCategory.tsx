@@ -1,10 +1,10 @@
 "use client";
-import { useCategoryList } from '@/hooks/useCategoryList';
-import CardSkeleton from '@/ui/CardSkeleton';
-import Image from 'next/image';
-import Link from 'next/link'
-import { usePathname } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { useCategoryList } from "@/hooks/useCategoryList";
+import CardSkeleton from "@/ui/CardSkeleton";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 interface HomeCategoryProps {
@@ -41,24 +41,24 @@ export default function HomeCategory({
     }
   }, [inView, hasMore, loading, loadingMore, loadMore]);
 
-   if (loading) {
-     return (
-       <div className="py-5">
-         <div className="mx-auto max-w-350 px-4">
-           <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-             <CardSkeleton />
-             <CardSkeleton />
-             <CardSkeleton />
-           </div>
-         </div>
-       </div>
-     );
-   }
+  if (loading) {
+    return (
+      <div className="py-5">
+        <div className="mx-auto 2xl:max-w-360 lg:max-w-300 px-4">
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 18 }).map((_, index) => (
+              <CardSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="pb-2">
-      <div className="mx-auto max-w-360 px-4 flex flex-col gap-4 lg:gap-8">
-        <div className='flex justify-between items-center'>
+      <div className="mx-auto 2xl:max-w-360 lg:max-w-300 px-4 flex flex-col gap-4 lg:gap-8">
+        <div className="flex justify-between items-center">
           <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">
             {title}
           </h2>
@@ -74,14 +74,14 @@ export default function HomeCategory({
           )}
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 xxl:grid-cols-9 place-items-stretch justify-items-stretch gap-3">
+        <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 xxl:grid-cols-9 place-items-stretch justify-items-stretch gap-2">
           {categories.map((cat, index) => (
             <React.Fragment key={`${cat.parent.id}-${index}`}>
               <Link
                 href={`/products?category=${encodeURIComponent(cat.parent.name)}`}
                 className="text-center group"
               >
-                <div className="relative mx-auto size-[4rem] min-[410px]:size-[4rem] md:size-[6rem] lg:size-[6rem] overflow-hidden rounded-md bg-gray-300">
+                <div className="relative mx-auto size-[4rem] min-[410px]:size-[4rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
                   <Image
                     src={cat.parent.image}
                     alt={cat.parent.name}
@@ -90,7 +90,7 @@ export default function HomeCategory({
                   />
                 </div>
 
-                <p className=" mt-2 lg:mt-4 text-gray-900 font-medium text-xs sm:text-sm lg:text-sm">
+                <p className=" mt-2 lg:mt-4 text-define-brown font-medium text-xs sm:text-sm lg:text-sm">
                   {cat.parent.name}
                 </p>
               </Link>
@@ -102,7 +102,7 @@ export default function HomeCategory({
                     href={`/products?category=${encodeURIComponent(subCat.name)}`}
                     className="text-center group"
                   >
-                    <div className="relative mx-auto size-[4rem] md:size-[6rem] lg:size-[6rem] overflow-hidden rounded-md bg-gray-300">
+                    <div className="relative mx-auto size-[4rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
                       <Image
                         src={subCat.image}
                         alt={subCat.name}
@@ -111,7 +111,7 @@ export default function HomeCategory({
                       />
                     </div>
 
-                    <p className="mt-2 lg:mt-4 text-gray-900 font-medium text-xs sm:text-sm lg:text-sm">
+                    <p className="mt-2 lg:mt-4 text-define-brown font-medium text-xs sm:text-sm lg:text-sm">
                       {subCat.name}
                     </p>
                   </Link>

@@ -59,9 +59,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
     return () => clearInterval(interval);
   }, [query]);
   const fetchSuggestions = async () => {
-    const res = await api.get(
-      `/search/suggestions`,
-    );
+    const res = await api.get(`/search/suggestions`);
 
     const data = res.data;
 
@@ -147,14 +145,13 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       return;
     }
 
-    api.get(`search?q=${debouncedQuery}`)
-      .then((res) => {
-        const data = res.data;
-        if (data.success) {
-          setResults(data.results);
-          setShow(true);
-        }
-      });
+    api.get(`search?q=${debouncedQuery}`).then((res) => {
+      const data = res.data;
+      if (data.success) {
+        setResults(data.results);
+        setShow(true);
+      }
+    });
   }, [debouncedQuery]);
 
   useEffect(() => {
@@ -290,19 +287,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       </div>
 
       <header className="w-full bg-white">
-        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 max-w-360 mx-auto z-[60] relative">
-          {/* LEFT SIDE */}
-          {/* <Link
-            className="hover:scale-105 transition-all duration-300 font-medium hidden md:flex items-center gap-2"
-            href={"https://wa.me/918967790313"}
-            target="_blank"
-          >
-            <div className="size-8 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(212,35,0,0)_32.21%,rgba(212,35,0,0.60)_100%)] border border-define-red flex items-center justify-center">
-              <FaWhatsapp className="text-define-brown" />
-            </div>
-            <span className="text-define-brown text-sm">+91 89677 90313</span>
-          </Link> */}
-
+        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 mx-auto z-[60] relative">
           {/* LOGO */}
           <div className="flex gap-2 items-center justify-center">
             <button

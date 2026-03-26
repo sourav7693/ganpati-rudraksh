@@ -26,8 +26,7 @@ const quickLinks = [
 
 const quickLinks2 = [
   { label: "Shiping Policy", href: "/" },
-  { label: "Payment Help", href: "/" },
-  { label: "For Plant Help", href: "/" },
+  { label: "Payment Help", href: "/" },  
   { label: "Invoice Help", href: "/" },
   { label: "Our CSR", href: "/" },
 ];
@@ -64,13 +63,13 @@ export default function Footer() {
     <footer
       className="relative w-full bg-cover bg-center"
       style={{
-        backgroundImage: "url('/images/footerbg.png')",
+        backgroundImage: "url('/images/footer-bg.avif')",
       }}
     >
-      <div className="absolute inset-0 bg-black/90" />
+      <div className="absolute inset-0" />
 
       <div className="relative z-10 pb-6 pt-12">
-        <div className="mx-auto max-w-360 px-4">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
             <p className="text-[17px] text-white">
               Get a call back within 15 minutes. WhatsApp us 24x7 <br />
@@ -110,7 +109,7 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10">
-        <div className="mx-auto max-w-360 px-4 pb-12 pt-6">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4 pb-12 pt-6">
           <div className="text-gray-300">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
               <div className="lg:col-span-3">
@@ -124,13 +123,12 @@ export default function Footer() {
                   />
                 </Link>
                 <p className="mt-4 text-sm leading-relaxed text-justify">
-                  Lorem ipsum dolor sit amet consectetur. Scelerisque et sem sem
-                  fames sed ullamcorper. Sollicitudin erat id quisque at. A
-                  semper nam in posuere euismod sed. Pretium elit mauris eget
-                  amet magna consequat dignissim est tellus. Et malesuada
-                  egestas viverra risus venenatis scelerisque tempus. Diam in
-                  massa mattis non. Erat phasellus porta faucibus . massa mattis
-                  non.
+                  Ganpati Rudraakshaam is a premier Rudraksha gemstone
+                  wholesaler in India, known for delivering authentic,
+                  high-quality Rudraksha beads sourced with purity and
+                  precision. With over 20 years of trusted experience, we
+                  specialize in providing certified Rudraksha for spiritual,
+                  astrological, and healing purposes.
                 </p>
               </div>
 
@@ -245,7 +243,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-360 px-4">
+      <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded bg-white/10 backdrop-blur-md px-6 py-4">
           <div className="flex items-center gap-3">
             <p className="text-white text-sm whitespace-nowrap">We Accept</p>
@@ -286,7 +284,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white hover:bg-gray-100 transition">
-                  <Icon size={20} className="text-black" />
+                  <Icon size={20} className="text-define-red" />
                 </div>
               </Link>
             ))}

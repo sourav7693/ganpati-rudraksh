@@ -504,25 +504,6 @@ const showSimpleVariables =
               {product.name}
             </h1>
 
-            {/* Place this ABOVE your Product Title <h1> */}
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              {product.categoryLevels?.map((cat: any, index: number) => (
-                <div key={cat._id} className="flex items-center">
-                  {/* Separator only if not the first item */}
-                  {index > 0 && (
-                    <span className="text-gray-300 mx-2 text-[10px]">•</span>
-                  )}
-
-                  <Link
-                    href={`/products?category=${encodeURIComponent(cat.name)}`}
-                    className="text-[11px] md:text-xs font-bold tracking-widest uppercase text-define-red hover:text-define-brown transition-colors"
-                  >
-                    {cat.name}
-                  </Link>
-                </div>
-              ))}
-            </div>
-
             {/* Rating */}
             <Link
               href={`/product/${product.slug}#reviews`}
@@ -588,7 +569,7 @@ const showSimpleVariables =
                     <Link
                       key={variant._id}
                       href={`/product/${variant.slug}`}
-                      className={`border rounded-md p-2 w-24 text-center transition ${
+                      className={`border rounded-md text-center transition ${
                         variant._id === currentProduct._id
                           ? "border-define-red"
                           : "border-gray-200 hover:border-define-red"
@@ -599,7 +580,7 @@ const showSimpleVariables =
                         alt={variant.name}
                         width={80}
                         height={80}
-                        className="object-cover size-20"
+                        className="object-contain size-20"
                       />
 
                     </Link>                     
@@ -611,7 +592,7 @@ const showSimpleVariables =
 
             {/* COLOR */}
             {variantOptions?.color && variantOptions?.color?.length > 0 && (
-              <div className="mb-4">
+              <div>
                 <p className="font-medium mb-2">Color</p>
 
                 <div className="flex gap-3 flex-wrap">
@@ -638,7 +619,7 @@ const showSimpleVariables =
 
             {/* SIZE */}
             {variantOptions?.size && variantOptions?.size?.length > 0 && (
-              <div className="mb-4">
+              <div>
                 <p className="font-medium mb-2">Size</p>
 
                 <div className="flex gap-2 flex-wrap">

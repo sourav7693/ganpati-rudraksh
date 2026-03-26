@@ -43,7 +43,7 @@ export const Whychoose: React.FC = () => {
 
   return (
     <section className="w-full flex justify-center px-4 py-5">
-      <div className="w-full max-w-360 mx-auto flex flex-col lg:flex-row items-center gap-6">
+      <div className="w-full 2xl:max-w-360 lg:max-w-300 mx-auto flex flex-col lg:flex-row items-center gap-6">
         <div className="text-[20px] font-bold"></div>
 
         <div className="order-2 lg:order-1 flex-[1.5] flex flex-col gap-4 w-full">
@@ -65,14 +65,24 @@ export const Whychoose: React.FC = () => {
         </div>
 
         <div className="order-1 lg:order-2 flex-1 w-full flex justify-center">
-          <div className="relative w-full h-[260px] sm:h-[300px] lg:h-[450px] rounded-xl overflow-hidden">
+          <div className="relative w-full h-[260px] lg:h-[350px] rounded-xl overflow-hidden">
             <Image
-              src="/images/rudraksh2.png"
+              src="/images/rudragif.gif"
               alt="Service Technician"
               fill
               priority
-              className="object-cover object-center"
+              className="object-cover"
             />
+            {/* <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              className="w-full h-full object-cover"
+            >
+              <source src="/images/rudragif.gif" type="video/mp4" />
+            </video> */}
           </div>
         </div>
 

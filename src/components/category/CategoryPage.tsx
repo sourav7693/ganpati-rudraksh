@@ -158,7 +158,7 @@ export default function CategoryPage({
     }`;
 
   return (
-    <section className="md:py-8 max-w-360 mx-auto flex flex-col">
+    <section className="md:py-8 2xl:max-w-360 lg:max-w-300 mx-auto flex flex-col">
       <div className="flex justify-between items-start mb-4 p-2 ">
         {/* SIDEBAR */}
         <div className="w-[20%] lg:w-[10%] bg-white h-full">
