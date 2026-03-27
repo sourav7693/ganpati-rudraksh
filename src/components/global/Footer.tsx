@@ -1,7 +1,8 @@
 "use client";
+import { CategoryUI, fetchCategories } from "@/api/category";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiCheck, BiPhone } from "react-icons/bi";
 import { BsInstagram, BsYoutube } from "react-icons/bs";
 
@@ -9,37 +10,9 @@ import { FaFacebook, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
 import { LiaLinkedin } from "react-icons/lia";
 import { MdEmail } from "react-icons/md";
 
-const socialLinks = [
-  { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
-  { icon: BsInstagram, href: "https://www.instagram.com/" },
-  { icon: BsYoutube, href: "https://www.youtube.com/" },
-  { icon: FaFacebook, href: "https://www.facebook.com/" },
-];
-
-const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/" },
-  { label: "Our Products", href: "/" },
-  // { label: "My Account", href: "/my-account" },
-  { label: "Contact Us", href: "" },
-];
-
-const quickLinks2 = [
-  { label: "Shiping Policy", href: "/" },
-  { label: "Payment Help", href: "/" },  
-  { label: "Invoice Help", href: "/" },
-  { label: "Our CSR", href: "/" },
-];
-
-const quickLinks3 = [
-  { label: "Refund Policy", href: "/" },
-  { label: "Privacy Policy", href: "/" },
-  { label: "Delivery", href: "/" },
-  { label: "Invoice Help", href: "/" },
-  { label: "Contact Us", href: "/" },
-];
 
 export default function Footer() {
+  const [categories, setCategories] = useState<CategoryUI[]>([])
   const [formData, setFormData] = useState<{ message: string }>({
     message: "",
   });
@@ -58,6 +31,43 @@ export default function Footer() {
       message: "",
     });
   };
+
+ useEffect(() => {
+   const fetcher = async () => {
+     try {
+       const res = await fetchCategories();
+       setCategories(res);
+     } catch (error) {
+       console.error("Failed to fetch categories:", error);
+     }
+   };
+
+   fetcher();
+ }, []);
+ 
+const socialLinks = [
+  { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
+  { icon: BsInstagram, href: "https://www.instagram.com/" },
+  { icon: BsYoutube, href: "https://www.youtube.com/" },
+  { icon: FaFacebook, href: "https://www.facebook.com/" },
+];
+
+const quickLinks = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Refund Policy", href: "/refund-policy" },
+  { label: "Shipping Policy", href: "/shipping-policy" },
+  { label: "Terms & Conditions", href: "/terms-conditions" },
+];
+
+const quickLinks2 = categories.slice(0,5).map((category) => ({
+  label: category.parent.name,
+  href: `/products?category=${category.parent.name}`,
+}));
+
+const quickLinks3 = categories.slice(5,10).map((category) => ({
+  label: category.parent.name,
+  href: `/products?category=${category.parent.name}`,
+}));
 
   return (
     <footer
@@ -136,13 +146,13 @@ export default function Footer() {
                 <h4 className="mb-4 font-semibold text-white text-[22px]">
                   Quick Link
                 </h4>
-                <ul className="space-y-3 text-[17px]">
+                <ul className="space-y-3 w-full">
                   {quickLinks.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} />
+                      <BiCheck size={14} className="shrink-0"/>
                       <Link
                         href={link.href}
-                        className="hover:text-[#FFBB00] transition"
+                        className="hover:text-[#FFBB00] transition text-nowrap"
                       >
                         {link.label}
                       </Link>
@@ -158,10 +168,10 @@ export default function Footer() {
                 <ul className="space-y-3 text-[17px]">
                   {quickLinks2.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} />
+                      <BiCheck size={14} className="shrink-0"/>
                       <Link
                         href={link.href}
-                        className="hover:text-[#FFBB00] transition"
+                        className="hover:text-[#FFBB00] transition text-nowrap"
                       >
                         {link.label}
                       </Link>
@@ -177,10 +187,10 @@ export default function Footer() {
                 <ul className="space-y-3 text-[17px]">
                   {quickLinks3.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} />
+                      <BiCheck size={14} className="shrink-0"/>
                       <Link
                         href={link.href}
-                        className="hover:text-[#FFBB00] transition"
+                        className="hover:text-[#FFBB00] transition text-nowrap"
                       >
                         {link.label}
                       </Link>
@@ -215,25 +225,24 @@ export default function Footer() {
                   </li>
 
                   <li className="flex items-center gap-2">
-                    <MdEmail size={16} />
+                    <MdEmail size={16} className="shrink-0"/>
                     <Link
-                      href="mailto:contact@ganpatirudraksh.com"
+                      href="mailto:ganpatirudraakshaam@gmail.com"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      contact@ganpatirudraksh.com
+                      ganpatirudraakshaam@gmail.com
                     </Link>
                   </li>
 
                   <li className="flex items-start gap-2">
                     <FaMapMarkerAlt size={16} className="shrink-0" />
                     <Link
-                      href="https://maps.app.goo.gl/HDFP8hN6nWyEAaJ6A"
+                      href="https://maps.app.goo.gl/1iPU3vdiQU3G36eR8"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      Papia Para, off Eastern Bypass Sadhon More Dabgrame 2,
-                      Bhaktinagar, Ghogomali, Siliguri, West Bengal - 734004
+                      NH12, Shib Mandir, Kadamtala, Siliguri WB 734015
                     </Link>
                   </li>
                 </ul>

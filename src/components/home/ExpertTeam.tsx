@@ -28,39 +28,39 @@ const ExpertTeam = () => {
     ];
   return (
     <section className="flex flex-col gap-4 2xl:max-w-360 lg:max-w-300 mx-auto p-4">
-      <h1 className='text-2xl font-bold text-define-brown'>Team of Experts</h1>      
-        <div className="relative">
-          <Swiper
-            modules={[Autoplay]}
-            autoplay={{
-              delay: 3500,
-              disableOnInteraction: false,
-            }}
-            loop
-            spaceBetween={16}
-            breakpoints={{
-              0: { slidesPerView: 1 },
-              768: { slidesPerView: 3 },
-            }}
-          >
-            {data.map((item, index) => (
-              <SwiperSlide key={index}>
-                <div className="relative w-full rounded-2xl overflow-hidden cursor-pointer ">
-                  <div className="flex flex-col gap-4 w-full h-auto p-4 btn-grad text-white">
-                    <div className="flex items-center justify-center flex-col">
-                      <div className="size-10 rounded-full bg-white text-define-red flex items-center justify-center">
-                        <FaRegUserCircle size={30} />
-                      </div>
-                      <p className="font-semibold">{item.name}</p>
-                      <p className="font-bold">{item.designation}</p>
+      <h1 className="text-2xl font-bold text-define-brown">Team of Experts</h1>
+      <div className="relative">
+        <Swiper
+          modules={[Autoplay]}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+          }}
+          loop
+          spaceBetween={16}
+          breakpoints={{
+            0: { slidesPerView: 1 },
+            768: { slidesPerView: 3 },
+          }}
+        >
+          {data.map((item, index) => (
+            <SwiperSlide key={index}>
+              <div className="relative w-full rounded-2xl overflow-hidden cursor-pointer ">
+                <div className="flex flex-col gap-4 w-full h-auto p-4 bg-linear-to-b from-[#D4573D] to-[#824336] text-white">
+                  <div className="flex items-center justify-center flex-col">
+                    <div className="size-10 rounded-full bg-white text-define-red flex items-center justify-center">
+                      <FaRegUserCircle size={30} />
                     </div>
-                    <p className="px-2">{item.desc}</p>
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="font-bold">{item.designation}</p>
                   </div>
+                  <p className="px-2">{item.desc}</p>
                 </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>      
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </section>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
+import { addToCartApi } from "@/api/cart";
 import { sendOtp, verifyOtp, verifyOtpUpdateMobile } from "@/api/customer";
+import { toggleWishlistApi } from "@/api/wishlist";
 import { useCustomer } from "@/context/CustomerContext";
 import { allowOnlyNumbers } from "@/utils/inputHandlers";
 import Image from "next/image";
@@ -10,7 +12,7 @@ import toast from "react-hot-toast";
 type Step = "MOBILE" | "OTP";
 
 export default function Login() {
-  const { refreshCustomer, clearCustomer, logoutCustomer } = useCustomer();
+  const { customer, refreshCustomer, clearCustomer, logoutCustomer } = useCustomer();
   const OTP_COOLDOWN = 600; // 10 minutes in seconds
 
   const [cooldown, setCooldown] = useState(0);
@@ -147,6 +149,52 @@ export default function Login() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!customer) return;
+
+    const action = sessionStorage.getItem("POST_LOGIN_ACTION");
+    if (!action) return;
+
+    const parsed = JSON.parse(action);
+
+    const run = async () => {
+      try {
+        switch (parsed.type) {
+          case "ADD_TO_CART":
+            await addToCartApi(customer._id, parsed.productId, undefined, 1);
+             await refreshCustomer();
+            toast.success("Added to cart");
+            break;
+
+          case "BUY_NOW":
+            sessionStorage.setItem(
+              "BUY_NOW_ITEM",
+              JSON.stringify({
+                productId: parsed.product,
+                variantId: undefined,
+                quantity: 1,
+                price: parsed.product.price,
+              }),
+            );
+            router.replace("/checkout?mode=buy-now");
+            break;
+
+          case "WISHLIST":
+            await toggleWishlistApi(customer._id, parsed.productId);
+             await refreshCustomer();
+            toast.success("Added to wishlist");
+            break;
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        sessionStorage.removeItem("POST_LOGIN_ACTION");
+      }
+    };
+
+    run();
+  }, [customer]);
 
   const resetOtpFlow = () => {
     setOtp("");

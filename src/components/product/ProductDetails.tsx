@@ -68,7 +68,6 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   );
 
   const [showShare, setShowShare] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   const [availableCoupons, setAvailableCoupons] = useState<any>([]);
 
@@ -124,20 +123,20 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
     return attr?.values?.map((v) => v.trim().toLowerCase()) || [];
   };
 
-const groupByAttribute = (variants: ProductType[], attrName: string) => {
-  return variants.reduce<Record<string, ProductType[]>>((acc, v) => {
-    const values = getAttributeValue(v, attrName);
+// const groupByAttribute = (variants: ProductType[], attrName: string) => {
+//   return variants.reduce<Record<string, ProductType[]>>((acc, v) => {
+//     const values = getAttributeValue(v, attrName);
 
-    if (!values || !values.length) return acc;
+//     if (!values || !values.length) return acc;
 
-    values.forEach((value) => {
-      if (!acc[value]) acc[value] = [];
-      acc[value].push(v);
-    });
+//     values.forEach((value) => {
+//       if (!acc[value]) acc[value] = [];
+//       acc[value].push(v);
+//     });
 
-    return acc;
-  }, {});
-};
+//     return acc;
+//   }, {});
+// };
 
  const variants = currentProduct.variants || [];
 
@@ -147,19 +146,19 @@ console.log("all variants products",allProducts)
 console.log("all variants options",variantOptions)
 
 
-const colorGroups = groupByAttribute(allProducts, "Color");
-const sizeGroups = groupByAttribute(allProducts, "Size");
+// const colorGroups = groupByAttribute(allProducts, "Color");
+// const sizeGroups = groupByAttribute(allProducts, "Size");
 
 const hasColor = allProducts.some((v) =>
   getAttributeValue(v, "Color")
 );
-const hasSize = allProducts.some((v) =>
-  getAttributeValue(v, "Size")
-);
+// const hasSize = allProducts.some((v) =>
+//   getAttributeValue(v, "Size")
+// );
 
-const showVariants = allProducts.length > 1;
-const showSimpleVariables =
-  allProducts.length === 1 && (currentProduct.variables?.length ?? 0) > 0;
+// const showVariants = allProducts.length > 1;
+// const showSimpleVariables =
+//   allProducts.length === 1 && (currentProduct.variables?.length ?? 0) > 0;
 
   const router = useRouter();
   const { showPreview } = useCartPreview();
@@ -167,7 +166,15 @@ const showSimpleVariables =
   const handleCart = async () => {
     if (!customer) {
       toast.error("Please login to add items to cart");
-      setIsSignupOpen(true);
+       sessionStorage.setItem(
+         "POST_LOGIN_ACTION",
+         JSON.stringify({
+           type: "ADD_TO_CART",
+           productId: product._id,
+           quantity: 1,
+         }),
+       );
+      router.push("/login");
       return;
     }
     if (isInCart) {
@@ -207,7 +214,14 @@ const showSimpleVariables =
     try {
       if (!customer) {
         toast.error("Please login to proceed");
-        setIsSignupOpen(true);
+        sessionStorage.setItem(
+          "POST_LOGIN_ACTION",
+          JSON.stringify({
+            type: "BUY_NOW",
+    product: product,
+          }),
+        );
+        router.push("/login");
         return;
       }
 
@@ -227,22 +241,6 @@ const showSimpleVariables =
       console.error(err);
       toast.error("Failed to proceed");
     }
-  };
-
-  const getDeliveryDate = (estimated: string): string => {
-    const days = parseInt(estimated); // "2 Days" → 2
-
-    if (isNaN(days)) return "";
-
-    const deliveryDate = new Date();
-    deliveryDate.setDate(deliveryDate.getDate() + days);
-
-    return deliveryDate.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      weekday: "long",
-    });
   };
 
   const handleCheckPincode = async () => {
@@ -342,7 +340,15 @@ const showSimpleVariables =
 
   const handleWishlist = async () => {
     if (!customerId) {
-      setIsSignupOpen(true); // Open the modal
+      toast.error("Please login to proceed");
+       sessionStorage.setItem(
+         "POST_LOGIN_ACTION",
+         JSON.stringify({
+           type: "WISHLIST",
+           productId: product._id,
+         }),
+       );
+      router.push("/login");
       return;
     }
 
@@ -403,25 +409,25 @@ const showSimpleVariables =
     fetchCoupons();
   }, []);
 
-  const getGroupedValues = (products: ProductType[]) => {
-    const result: Record<string, Set<string>> = {};
+  // const getGroupedValues = (products: ProductType[]) => {
+  //   const result: Record<string, Set<string>> = {};
 
-    products.forEach((product) => {
-      product.variables?.forEach((v) => {
-        const name = v.name.trim();
+  //   products.forEach((product) => {
+  //     product.variables?.forEach((v) => {
+  //       const name = v.name.trim();
 
-        if (!result[name]) {
-          result[name] = new Set();
-        }
+  //       if (!result[name]) {
+  //         result[name] = new Set();
+  //       }
 
-        v.values.forEach((val) => {
-          result[name].add(val.trim());
-        });
-      });
-    });
+  //       v.values.forEach((val) => {
+  //         result[name].add(val.trim());
+  //       });
+  //     });
+  //   });
 
-    return result;
-  };
+  //   return result;
+  // };
 
   // const groupedVariables = getGroupedValues(allProducts);
 

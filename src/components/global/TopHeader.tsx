@@ -287,7 +287,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       </div>
 
       <header className="w-full bg-white">
-        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 mx-auto z-[60] relative">
+        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 2xl:2xl:max-w-360 lg:max-w-300 mx-auto z-[60] relative">
           {/* LOGO */}
           <div className="flex gap-2 items-center justify-center">
             <button
@@ -308,16 +308,15 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 lg:gap-4">
-            <div ref={inputRef} className="hidden md:flex relative">
+            <div ref={inputRef} className="hidden md:flex">
               <div
-                className={`absolute right-0 top-1/2 -translate-y-1/2 
+                className={`
                   flex items-center bg-define-white rounded-full shadow-sm overflow-hidden
-                  transition-all duration-300 ease-in-out w-[450px] p-3                  
+                  transition-all duration-300 ease-in-out lg:w-[600px] 2xl:w-[700px] p-3                  
                   `}
               >
                 <FaSearch className="text-define-brown size-4" />
-                <div className="relative w-full">
+                <div className="relative w-full ">
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -356,7 +355,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
               {show && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-0 mt-5 w-[450px] rounded-xl bg-white shadow-lg z-50"
+                  className="absolute top-1/2 mt-5 lg:w-[600px] 2xl:w-[700px] rounded-xl bg-white shadow-lg z-50"
                 >
                   {/* Suggestions */}
                   {!query && suggestions.length > 0 && (
@@ -439,6 +438,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                 </div>
               )}
             </div>
+          <div className="flex items-center gap-2 lg:gap-4">
 
             <button
               onClick={() => {
@@ -615,9 +615,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
             )}
           </>
         </div>
-      </header>
-
-      {/* MOBILE SIDEBAR */}
+      </header>      
     </>
   );
 };

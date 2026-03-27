@@ -99,7 +99,7 @@ const Header = () => {
                 {item.dropdown && item.dropdown.length > 0 && (
                   <div
                     className="
-                    absolute -left-1/4 top-full mt-3 w-[500px]
+                    absolute -left-1/4 top-full mt-3 w-[700px]
                     bg-white border border-gray-200 shadow-lg rounded-md
                     opacity-0 invisible translate-y-2
                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
@@ -107,7 +107,7 @@ const Header = () => {
                     z-50
                   "
                   >
-                    <ul className="py-2 text-sm grid grid-cols-3">
+                    <ul className="py-2 text-sm grid grid-cols-4">
                       {item.dropdown.map((dropItem, dropIdx) => (
                         <li key={dropIdx}>
                           <Link

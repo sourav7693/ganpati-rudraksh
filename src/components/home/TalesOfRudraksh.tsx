@@ -62,29 +62,38 @@ const TalesOfRudraksh = () => {
         src: "",
       },
     ];
-  return (
-    <section className="grid grid-cols-1 gap-4 2xl:max-w-360 lg:max-w-300 mx-auto p-4 my-4">
-      {data.map((item, index) => (
-        <div
-          key={index}
-          className="bg-define-red/5 rounded-lg shadow-lg p-10 flex flex-col items-center justify-center gap-4"
-        >
-          <h3 className="text-2xl text-define-brown font-semibold text-center">
-            {item.label}
-          </h3>
-          <p
-            className="text-gray-600 text-center"
-            dangerouslySetInnerHTML={{ __html: item.desc }}
-          ></p>
-          <div className="flex flex-col items-center justify-center">
-            <p className="text-define-brown text-center">{item.sloka}</p>
-            <p className="text-gray-600 text-center">{item.meaning}</p>
-            <p className="text-gray-600 text-center">{item.src}</p>
-          </div>
-        </div>
-      ))}
-    </section>
-  );
+ return (
+   <section className="grid grid-cols-1 gap-6 2xl:max-w-360 lg:max-w-300 mx-auto p-4 my-6">
+     {data.map((item, index) => (
+       <div
+         key={index}
+         className="bg-white rounded-2xl shadow-md px-6 py-10 md:px-12 md:py-12 text-center"
+       >
+         {/* Title */}
+         <h3 className="text-2xl md:text-3xl font-semibold text-[#5a2a2a] mb-4">
+           {item.label}
+         </h3>
+
+         {/* Description */}
+         <p
+           className="text-gray-600 leading-relaxed max-w-3xl mx-auto mb-6"
+           dangerouslySetInnerHTML={{ __html: item.desc }}
+         />
+
+         {/* Sloka Section */}
+         <div className="space-y-2">
+           <p className="text-[#6b2c2c] italic text-lg md:text-xl font-medium">
+             {item.sloka}
+           </p>
+
+           <p className="text-gray-500 text-sm md:text-base">{item.meaning}</p>
+
+           <p className="text-gray-400 text-xs md:text-sm mt-2">— {item.src}</p>
+         </div>
+       </div>
+     ))}
+   </section>
+ );
 }
 
 export default TalesOfRudraksh
