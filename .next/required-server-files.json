@@ -107,7 +107,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "D:\\rebootaiproject\\ganpatirudraksh\\ganpati-rudraksh",
+    "outputFileTracingRoot": "D:\\aniket_workspace\\rudraksh\\site",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -164,7 +164,7 @@
       "proxyPrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 11,
+      "cpus": 3,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptTimeoutInSeconds": 7,
@@ -301,7 +301,7 @@
     "configFileName": "next.config.ts",
     "reactCompiler": true,
     "turbopack": {
-      "root": "D:\\rebootaiproject\\ganpatirudraksh\\ganpati-rudraksh"
+      "root": "D:\\aniket_workspace\\rudraksh\\site"
     },
     "distDirRoot": ".next",
     "_originalRewrites": {
@@ -315,7 +315,7 @@
       "fallback": []
     }
   },
-  "appDir": "D:\\rebootaiproject\\ganpatirudraksh\\ganpati-rudraksh",
+  "appDir": "D:\\aniket_workspace\\rudraksh\\site",
   "relativeAppDir": "",
   "files": [
     ".next\\routes-manifest.json",

@@ -16,9 +16,13 @@
   "/login/page": "/login",
   "/manifest.json/route": "/manifest.json",
   "/page": "/",
+  "/privacy-policy/page": "/privacy-policy",
   "/product/[slug]/page": "/product/[slug]",
   "/products/page": "/products",
+  "/refund-policy/page": "/refund-policy",
   "/review/[id]/page": "/review/[id]",
   "/review/page": "/review",
+  "/shipping-policy/page": "/shipping-policy",
+  "/terms-conditions/page": "/terms-conditions",
   "/thank-you/page": "/thank-you"
 }
