@@ -4,7 +4,7 @@ import { createResourceContext } from "./createResourceContext";
 import { CategoryUI, fetchCategories } from "@/api/category";
 
 const { Provider: CategoryProvider, useResource: useCategoryBase } =
-  createResourceContext<CategoryUI[]>(fetchCategories);
+  createResourceContext<CategoryUI[]>(() => fetchCategories(1,100));
 
 export const useCategories = () => {
   const ctx = useCategoryBase();

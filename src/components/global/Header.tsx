@@ -19,7 +19,7 @@ const Header = () => {
   useEffect(() => {
     async function loadCategories() {
       try {
-        const data: CategoryUI[] = await fetchCategories();
+        const data: CategoryUI[] = await fetchCategories(1,100);
 
         const mapped = data.map((cat) => ({
           name: cat.parent.name,
@@ -38,23 +38,7 @@ const Header = () => {
   const navLinks: NavLinkType[] = [
     {
       label: "Shop For Rudraksha",
-      dropdown: [
-        { name: "1 Mukhi Rudra", href: "#" },
-        { name: "2 Mukhi Rudra", href: "#" },
-        { name: "3 Mukhi Rudra", href: "#" },
-        { name: "4 Mukhi Rudra", href: "#" },
-        { name: "5 Mukhi Rudra", href: "#" },
-        { name: "6 Mukhi Rudra", href: "#" },
-        { name: "7 Mukhi Rudra", href: "#" },
-        { name: "8 Mukhi Rudra", href: "#" },
-        { name: "9 Mukhi Rudra", href: "#" },
-        { name: "10 Mukhi Rudra", href: "#" },
-        { name: "11 Mukhi Rudra", href: "#" },
-        { name: "12 Mukhi Rudra", href: "#" },
-        { name: "12 Mukhi Rudra", href: "#" },
-        { name: "12 Mukhi Rudra", href: "#" },
-        { name: "12 Mukhi Rudra", href: "#" },
-      ],
+      dropdown: accessories,
     },
     {
       label: "Puja Services",
@@ -70,7 +54,14 @@ const Header = () => {
     },
     {
       label: "Accessories",
-      dropdown: accessories,
+      dropdown: [
+        { name: "Rudraksha Bracelets", href: "#" },
+        { name: "Rudraksha Rosaries", href: "#" },
+        { name: "Rudraksha in Gold", href: "#" },
+        { name: "Raashi Collection", href: "#" },
+        { name: "Other Rosaries", href: "#" },
+        { name: "Shaligram", href: "#" },
+      ],
     },
     {
       label: "About Ganpati Rudraksh",
@@ -90,7 +81,7 @@ const Header = () => {
 
       {/* DESKTOP NAV */}
       <header className="hidden md:block border border-gray-200 bg-white">
-        <div className="mx-auto max-w-300 px-4">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
           <nav className="flex justify-between py-4 text-gray-700 font-medium">
             {navLinks.map((item, idx) => (
               <div key={idx} className="relative group">
@@ -108,7 +99,7 @@ const Header = () => {
                 {item.dropdown && item.dropdown.length > 0 && (
                   <div
                     className="
-                    absolute -left-1/4 top-full mt-3 w-[500px]
+                    absolute -left-1/4 top-full mt-3 w-[700px]
                     bg-white border border-gray-200 shadow-lg rounded-md
                     opacity-0 invisible translate-y-2
                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
@@ -116,7 +107,7 @@ const Header = () => {
                     z-50
                   "
                   >
-                    <ul className="py-2 text-sm grid grid-cols-3">
+                    <ul className="py-2 text-sm grid grid-cols-4">
                       {item.dropdown.map((dropItem, dropIdx) => (
                         <li key={dropIdx}>
                           <Link

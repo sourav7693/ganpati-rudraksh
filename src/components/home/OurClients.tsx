@@ -53,20 +53,20 @@ const cards = [
 
 export default function OurClients() {
   return (
-    <section className="max-w-300 mx-auto px-4 py-4 relative">
+    <section className="2xl:max-w-360 lg:max-w-300 mx-auto px-4 py-4 relative">
       <div className="flex justify-between items-baseline">
         <TitleSection
           title="Our Clients"
           subtitle="Welcome to The World of Highest-Quality Rudraksha"
         />
-      <div className="flex justify-end gap-3 mb-6">
-        <button className="prev-btn w-9 h-9 border rounded-full flex items-center justify-center hover:bg-gray-100">
-          <BiChevronLeft />
-        </button>
-        <button className="next-btn w-9 h-9 border rounded-full flex items-center justify-center hover:bg-gray-100">
-          <BiChevronLeft className="rotate-180" />
-        </button>
-      </div>
+        <div className="flex justify-end gap-3 mb-6">
+          <button className="prev-btn w-9 h-9 border rounded-full flex items-center justify-center hover:bg-gray-100">
+            <BiChevronLeft />
+          </button>
+          <button className="next-btn w-9 h-9 border rounded-full flex items-center justify-center hover:bg-gray-100">
+            <BiChevronLeft className="rotate-180" />
+          </button>
+        </div>
       </div>
       <Swiper
         modules={[Navigation]}

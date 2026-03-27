@@ -25,6 +25,10 @@ import { api } from "@/api/customer";
 export interface ProductVariantResponse {
   selectedProduct: ProductType;
   variants: ProductType[];
+  variantOptions: {
+    color?: string[];
+    size?: string[];
+  };
 }
 
 const ProductDetails = ({ product }: { product: ProductType }) => {
@@ -64,11 +68,15 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   );
 
   const [showShare, setShowShare] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   const [availableCoupons, setAvailableCoupons] = useState<any>([]);
 
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+
+  const [variantOptions, setVariantOptions] = useState<{
+    color?: string[];
+    size?: string[];
+  }>({});
 
   useEffect(() => {
     const handleScroll = () => {
@@ -105,37 +113,52 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   const getAttributeValue = (
     product: ProductType,
     attrName: string,
-  ): string | null => {
+  ): string[] | null => {
      const attr = product.variables?.find(
        (v) => normalize(v.name) === normalize(attrName),
      );
 
      if (!attr || !attr.values?.length) return null;
 
-     return attr.values[0]?.trim();
+    return attr?.values?.map((v) => v.trim().toLowerCase()) || [];
   };
 
-  const groupByAttribute = (variants: ProductType[], attrName: string) => {
-    return variants.reduce<Record<string, ProductType[]>>((acc, v) => {
-      const value = getAttributeValue(v, attrName);
-      if (!value) return acc;
+// const groupByAttribute = (variants: ProductType[], attrName: string) => {
+//   return variants.reduce<Record<string, ProductType[]>>((acc, v) => {
+//     const values = getAttributeValue(v, attrName);
 
-      if (!acc[value]) acc[value] = [];
-      acc[value].push(v);
-      return acc;
-    }, {});
-  };
+//     if (!values || !values.length) return acc;
 
-  const variants = currentProduct.variants || [];
+//     values.forEach((value) => {
+//       if (!acc[value]) acc[value] = [];
+//       acc[value].push(v);
+//     });
 
-  const showVariants = variants.length > 1;
+//     return acc;
+//   }, {});
+// };
 
-  const colorGroups = groupByAttribute(variants, "Color");
-  const sizeGroups = groupByAttribute(variants, "Size");
+ const variants = currentProduct.variants || [];
 
-const hasColor = variants.some((v) => getAttributeValue(v, "Color"));
+const allProducts =
+  variants.length > 0 ? variants : [currentProduct];
+console.log("all variants products",allProducts)
+console.log("all variants options",variantOptions)
 
-const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
+
+// const colorGroups = groupByAttribute(allProducts, "Color");
+// const sizeGroups = groupByAttribute(allProducts, "Size");
+
+const hasColor = allProducts.some((v) =>
+  getAttributeValue(v, "Color")
+);
+// const hasSize = allProducts.some((v) =>
+//   getAttributeValue(v, "Size")
+// );
+
+// const showVariants = allProducts.length > 1;
+// const showSimpleVariables =
+//   allProducts.length === 1 && (currentProduct.variables?.length ?? 0) > 0;
 
   const router = useRouter();
   const { showPreview } = useCartPreview();
@@ -143,7 +166,15 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
   const handleCart = async () => {
     if (!customer) {
       toast.error("Please login to add items to cart");
-      setIsSignupOpen(true);
+       sessionStorage.setItem(
+         "POST_LOGIN_ACTION",
+         JSON.stringify({
+           type: "ADD_TO_CART",
+           productId: product._id,
+           quantity: 1,
+         }),
+       );
+      router.push("/login");
       return;
     }
     if (isInCart) {
@@ -183,7 +214,14 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
     try {
       if (!customer) {
         toast.error("Please login to proceed");
-        setIsSignupOpen(true);
+        sessionStorage.setItem(
+          "POST_LOGIN_ACTION",
+          JSON.stringify({
+            type: "BUY_NOW",
+    product: product,
+          }),
+        );
+        router.push("/login");
         return;
       }
 
@@ -203,22 +241,6 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
       console.error(err);
       toast.error("Failed to proceed");
     }
-  };
-
-  const getDeliveryDate = (estimated: string): string => {
-    const days = parseInt(estimated); // "2 Days" → 2
-
-    if (isNaN(days)) return "";
-
-    const deliveryDate = new Date();
-    deliveryDate.setDate(deliveryDate.getDate() + days);
-
-    return deliveryDate.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      weekday: "long",
-    });
   };
 
   const handleCheckPincode = async () => {
@@ -261,6 +283,7 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
     return {
       selectedProduct: data.data.selectedProduct,
       variants: data.data.variants,
+      variantOptions: data.data.variantOptions,
     };
   };
 
@@ -271,13 +294,17 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
       try {
         setVariantLoading(true);
 
-        const { selectedProduct, variants } =
-          await fetchProductWithVariants(slug);
+      const { selectedProduct, variants, variantOptions } =
+        await fetchProductWithVariants(slug);
 
-        setCurrentProduct({
-          ...selectedProduct,
-          variants,
-        });
+      setCurrentProduct({
+        ...selectedProduct,
+        variants,
+      });
+
+      setVariantOptions(variantOptions);
+     
+
         setActiveImage(
           selectedProduct.images?.[0] ?? selectedProduct.coverImage,
         );
@@ -291,6 +318,16 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
     loadVariants();
   }, [slug]);
 
+   const findVariant = (key: "Color" | "Size", value: string) => {
+     return currentProduct?.variants?.find((v) =>
+       v.variables?.some(
+         (attr) =>
+           attr.name.toLowerCase() === key.toLowerCase() &&
+           attr.values?.includes(value),
+       ),
+     );
+   };
+
   const productImages: string[] = [
     ...(currentProduct.images?.map((img) => img.url) ?? []),
     ...(currentProduct.coverImage?.url ? [currentProduct.coverImage.url] : []),
@@ -303,7 +340,15 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
 
   const handleWishlist = async () => {
     if (!customerId) {
-      setIsSignupOpen(true); // Open the modal
+      toast.error("Please login to proceed");
+       sessionStorage.setItem(
+         "POST_LOGIN_ACTION",
+         JSON.stringify({
+           type: "WISHLIST",
+           productId: product._id,
+         }),
+       );
+      router.push("/login");
       return;
     }
 
@@ -363,6 +408,28 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
 
     fetchCoupons();
   }, []);
+
+  // const getGroupedValues = (products: ProductType[]) => {
+  //   const result: Record<string, Set<string>> = {};
+
+  //   products.forEach((product) => {
+  //     product.variables?.forEach((v) => {
+  //       const name = v.name.trim();
+
+  //       if (!result[name]) {
+  //         result[name] = new Set();
+  //       }
+
+  //       v.values.forEach((val) => {
+  //         result[name].add(val.trim());
+  //       });
+  //     });
+  //   });
+
+  //   return result;
+  // };
+
+  // const groupedVariables = getGroupedValues(allProducts);
 
   return (
     <>
@@ -443,25 +510,6 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
               {product.name}
             </h1>
 
-            {/* Place this ABOVE your Product Title <h1> */}
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              {product.categoryLevels?.map((cat: any, index: number) => (
-                <div key={cat._id} className="flex items-center">
-                  {/* Separator only if not the first item */}
-                  {index > 0 && (
-                    <span className="text-gray-300 mx-2 text-[10px]">•</span>
-                  )}
-
-                  <Link
-                    href={`/products?category=${encodeURIComponent(cat.name)}`}
-                    className="text-[11px] md:text-xs font-bold tracking-widest uppercase text-define-red hover:text-define-brown transition-colors"
-                  >
-                    {cat.name}
-                  </Link>
-                </div>
-              ))}
-            </div>
-
             {/* Rating */}
             <Link
               href={`/product/${product.slug}#reviews`}
@@ -479,17 +527,17 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
 
             {/* Price */}
             <div className="">
-              <p className="text-sm text-green-600 font-medium">
+              <p className="text-sm text-define-red font-medium">
                 Special price
               </p>
               <div className="flex items-center gap-3">
                 <span className="text-3xl font-semibold text-define-brown">
                   <FaRupeeSign className="inline" />
-                  {product.price.toFixed(0)}
+                  {Math.round(product.price).toLocaleString("en-IN")}
                 </span>
                 <span className="line-through text-gray-400">
                   <FaRupeeSign className="inline" />
-                  {product.mrp.toFixed(0)}
+                  {Math.round(product.mrp).toLocaleString("en-IN")}
                 </span>
                 <span className="bg-define-brown text-white px-2 py-1 text-xs rounded font-medium">
                   {product.discount}% Off
@@ -517,65 +565,88 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
               )}
             </div>
 
-            {showVariants && (
-              <div className="space-y-6 mb-4">
-                {hasColor && (
-                  <div>
-                    <p className="font-medium mb-2">Color</p>
+            {hasColor && (
+              <div>
+                <p className="font-medium mb-2">Variants</p>
 
-                    <div className="flex gap-3">
-                      {Object.entries(colorGroups).map(([color, products]) => {
-                        const variant = products[0]; // representative
+                <div className="flex gap-3">
+                  {allProducts.map((variant) => (
+                    <div className="flex flex-col">
+                    <Link
+                      key={variant._id}
+                      href={`/product/${variant.slug}`}
+                      className={`border rounded-md text-center transition ${
+                        variant._id === currentProduct._id
+                          ? "border-define-red"
+                          : "border-gray-200 hover:border-define-red"
+                      }`}
+                    >
+                      <Image
+                        src={variant.coverImage?.url}
+                        alt={variant.name}
+                        width={80}
+                        height={80}
+                        className="object-contain size-20"
+                      />
 
-                        return (
-                          <Link
-                            key={variant._id}
-                            href={`/product/${variant.slug}`}
-                            className={`border rounded-md p-1 size-20 text-center ${
-                              variant._id === currentProduct._id
-                                ? "border-green-600"
-                                : "border-gray-200 hover:border-green-600"
-                            }`}
-                          >
-                            <Image
-                              src={variant.coverImage.url}
-                              alt={color}
-                              width={60}
-                              height={60}
-                              className="object-cover mx-auto w-full h-full"
-                            />
-                            <p className="text-xs mt-1">{color}</p>
-                          </Link>
-                        );
-                      })}
+                    </Link>                     
                     </div>
-                  </div>
-                )}
-                {hasSize && (
-                  <div>
-                    <p className="font-medium mb-2">Size</p>
+                  ))}
+                </div>
+              </div>
+            )}
 
-                    <div className="flex gap-2">
-                      {Object.entries(sizeGroups).map(([size, products]) => {
-                        const variant = products[0];
+            {/* COLOR */}
+            {variantOptions?.color && variantOptions?.color?.length > 0 && (
+              <div>
+                <p className="font-medium mb-2">Color</p>
 
-                        return (
-                          <Link
-                            key={variant._id}
-                            href={`/product/${variant.slug}`}
-                            className={`px-4 py-2 border rounded-md text-sm ${
-                              variant._id === currentProduct._id
-                                ? "border-green-600 text-green-600"
-                                : "border-gray-300 hover:border-green-600"
-                            }`}
-                          >
-                            {size}
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+                <div className="flex gap-3 flex-wrap">
+                  {variantOptions.color.map((color) => {
+                    const variant = findVariant("Color", color);
+
+                    return (
+                      <Link
+                        key={color}
+                        href={variant ? `/product/${variant.slug}` : "#"}
+                        className={`px-3 py-2 border rounded-md text-sm ${
+                          variant?._id === currentProduct._id
+                            ? "border-define-red text-define-red"
+                            : "border-gray-300 hover:border-define-red"
+                        }`}
+                      >
+                        {color}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* SIZE */}
+            {variantOptions?.size && variantOptions?.size?.length > 0 && (
+              <div>
+                <p className="font-medium mb-2">Size</p>
+
+                <div className="flex gap-2 flex-wrap">
+                  {variantOptions.size.map((size) => {
+                    const variant = findVariant("Size", size);
+
+                    return (
+                      <Link
+                        key={size}
+                        href={variant ? `/product/${variant.slug}` : "#"}
+                        className={`px-4 py-2 border rounded-md text-sm ${
+                          variant?._id === currentProduct._id
+                            ? "border-define-red text-define-red"
+                            : "border-gray-300 hover:border-define-red"
+                        }`}
+                      >
+                        {size}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
@@ -647,8 +718,7 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
 
             {/* Trust Icons */}
             <div className="w-full">
-
-         <ProductFeatures />
+              <ProductFeatures />
             </div>
 
             {/* ================= DESCRIPTION (CONNECTED) ================= */}
@@ -709,7 +779,7 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
                     <div className={`relative mt-2`}>
                       <button
                         onClick={() => setOpen(!open)}
-                        className="pl-4 text-green-600 text-xs font-medium  hover:text-green-900 cursor-pointer z-10"
+                        className="pl-4 text-define-red text-xs font-medium  hover:text-green-900 cursor-pointer z-10"
                       >
                         {open ? "Read Less" : "Read More"}
                       </button>
@@ -775,7 +845,7 @@ const hasSize = variants.some((v) => getAttributeValue(v, "Size"));
             className={`flex-1 py-3 rounded font-medium flex items-center justify-center gap-2 transition-all ${
               stockStatus === "out"
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-60"
-                : "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-define-red hover:bg-green-700 text-white"
             }`}
           >
             <BiShoppingBag size={18} />

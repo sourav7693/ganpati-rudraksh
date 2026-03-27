@@ -104,7 +104,7 @@ export default function ProductCard({
         decay: 0.9,
         gravity: 0,
         scalar: 0.8,
-        colors: ["#22c55e", "#ffffff"],
+        colors: ["#D42300", "#4A180E"],
         disableForReducedMotion: true,
         zIndex: 9999,
       });
@@ -168,7 +168,7 @@ export default function ProductCard({
 
   return (
     <>
-      <div className="relative rounded bg-white p-1 md:p-2 shadow-md hover:shadow-lg w-full flex flex-col gap-2 justify-between">
+      <div className="relative rounded bg-white p-1 md:p-2 shadow-lg hover:shadow-xl  w-full flex flex-col gap-2 justify-between">
         <Link
           href={`/product/${slug}`}
           className="absolute inset-0 z-10 "
@@ -187,24 +187,24 @@ export default function ProductCard({
               ${
                 isWishlisted
                   ? "fill-red-500 text-red-500 scale-110"
-                  : "text-gray-800"
+                  : "text-gray-500"
               }
             `}
             />
           </button>
 
-          <div className="relative w-full aspect-square">
+          <div className="relative w-full h-[12rem]">
             <Image
               src={coverImage.url}
               alt={coverImage.public_id}
               fill
-              className="object-cover"
+              className="object-cover h-full"
             />
           </div>
         </div>
 
         {/* CONTENT */}
-        <div className="px-2 pb-2 flex flex-col lg:gap-2">
+        <div className="2xl:px-2 2xl:pb-2 p-1 flex flex-col lg:gap-0.5">
           <div className="flex justify-between items-center">
             <h3 className="lg:text-lg text-sm  font-semibold text-define-brown line-clamp-1">
               {name}
@@ -212,15 +212,15 @@ export default function ProductCard({
           </div>
 
           <div>
-            <span className="text-xs md:text-lg font-bold text-define-brown">
+            <span className="text-xs md:text-base font-semibold text-define-brown">
               <FaRupeeSign className="inline" />
-              {price.toFixed(0)}
+              {Math.round(price).toLocaleString("en-IN")}
             </span>
 
             {discount && discount > 0 && mrp && (
               <span className="ml-1 md:ml-2 text-[10px] md:text-xs text-gray-500 line-through">
                 <FaRupeeSign className="inline" />
-                {mrp.toFixed(0)}
+                {Math.round(mrp).toLocaleString("en-IN")}
               </span>
             )}
 
@@ -231,19 +231,19 @@ export default function ProductCard({
             )}
           </div>
 
-          <div>
+          {/* <div>
             {category && (
               <span className="rounded-full bg-define-pink px-2 lg:px-3 py-1 text-define-red text-[9px] md:text-sm ">
                 {category}
               </span>
             )}
-          </div>
+          </div> */}
 
           {/* BUTTONS */}
           <div className="mt-2 flex justify-between items-center">
             <Link
               href={`/product/${slug}`}
-              className="text-xs  text-define-brown font-medium border rounded-full px-3 py-2 hover:bg-define-brown/10 hidden md:flex justify-center items-center gap-1"
+              className="text-xs  text-define-brown font-medium border rounded-full p-1 2xl:px-3 2xl:py-2 hover:bg-define-brown/10 hidden md:flex justify-center items-center gap-1"
             >
               <PiWarningCircleLight size={18} />
               More Info
@@ -253,7 +253,7 @@ export default function ProductCard({
               onClick={handleCart}
               className={`cursor-pointer max-md:w-full relative z-20 
           group flex items-center justify-center gap-2
-          text-xs font-semibold px-3 py-2 rounded-full                     
+          text-xs font-semibold p-2 2xl:px-3 2xl:py-2 rounded-full                     
           ${isAnimating ? "scale-90" : "scale-100"} 
           ${
             isInCart

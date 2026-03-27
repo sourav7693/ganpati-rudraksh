@@ -18,14 +18,16 @@ export default async function Layout({
 
   return (
     <MainTemplate>
-      <section className="flex justify-between items-center max-w-300 px-4 mx-auto lg:py-4 py-8 lg:pb-32">
+      <section className="flex justify-between items-center 2xl:max-w-360 lg:max-w-300 px-4 gap-4 mx-auto py-8 lg:pb-16">
         {/* sidebar */}
-        <div className="lg:w-[25%] w-full self-start">
+        <div className="lg:w-[30%] w-full self-start">
           <Sidebar />
         </div>
 
         {/* pages */}
-        <div className="lg:w-[75%] w-full self-start py-0 lg:py-1 hidden lg:block">{children}</div>
+        <div className="lg:w-[70%] w-full self-start py-0 lg:py-1 hidden lg:block">
+          {children}
+        </div>
       </section>
     </MainTemplate>
   );

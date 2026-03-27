@@ -1,7 +1,8 @@
 "use client";
+import { CategoryUI, fetchCategories } from "@/api/category";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiCheck, BiPhone } from "react-icons/bi";
 import { BsInstagram, BsYoutube } from "react-icons/bs";
 
@@ -9,38 +10,9 @@ import { FaFacebook, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
 import { LiaLinkedin } from "react-icons/lia";
 import { MdEmail } from "react-icons/md";
 
-const socialLinks = [
-  { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
-  { icon: BsInstagram, href: "https://www.instagram.com/" },
-  { icon: BsYoutube, href: "https://www.youtube.com/" },
-  { icon: FaFacebook, href: "https://www.facebook.com/" },
-];
-
-const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/" },
-  { label: "Our Products", href: "/" },
-  // { label: "My Account", href: "/my-account" },
-  { label: "Contact Us", href: "" },
-];
-
-const quickLinks2 = [
-  { label: "Shiping Policy", href: "/" },
-  { label: "Payment Help", href: "/" },
-  { label: "For Plant Help", href: "/" },
-  { label: "Invoice Help", href: "/" },
-  { label: "Our CSR", href: "/" },
-];
-
-const quickLinks3 = [
-  { label: "Refund Policy", href: "/" },
-  { label: "Privacy Policy", href: "/" },
-  { label: "Delivery", href: "/" },
-  { label: "Invoice Help", href: "/" },
-  { label: "Contact Us", href: "/" },
-];
 
 export default function Footer() {
+  const [categories, setCategories] = useState<CategoryUI[]>([])
   const [formData, setFormData] = useState<{ message: string }>({
     message: "",
   });
@@ -60,17 +32,54 @@ export default function Footer() {
     });
   };
 
+ useEffect(() => {
+   const fetcher = async () => {
+     try {
+       const res = await fetchCategories();
+       setCategories(res);
+     } catch (error) {
+       console.error("Failed to fetch categories:", error);
+     }
+   };
+
+   fetcher();
+ }, []);
+ 
+const socialLinks = [
+  { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
+  { icon: BsInstagram, href: "https://www.instagram.com/" },
+  { icon: BsYoutube, href: "https://www.youtube.com/" },
+  { icon: FaFacebook, href: "https://www.facebook.com/" },
+];
+
+const quickLinks = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Refund Policy", href: "/refund-policy" },
+  { label: "Shipping Policy", href: "/shipping-policy" },
+  { label: "Terms & Conditions", href: "/terms-conditions" },
+];
+
+const quickLinks2 = categories.slice(0,5).map((category) => ({
+  label: category.parent.name,
+  href: `/products?category=${category.parent.name}`,
+}));
+
+const quickLinks3 = categories.slice(5,10).map((category) => ({
+  label: category.parent.name,
+  href: `/products?category=${category.parent.name}`,
+}));
+
   return (
     <footer
       className="relative w-full bg-cover bg-center"
       style={{
-        backgroundImage: "url('/images/footerbg.png')",
+        backgroundImage: "url('/images/footer-bg.avif')",
       }}
     >
-      <div className="absolute inset-0 bg-black/90" />
+      <div className="absolute inset-0" />
 
       <div className="relative z-10 pb-6 pt-12">
-        <div className="mx-auto max-w-300 px-4">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
             <p className="text-[17px] text-white">
               Get a call back within 15 minutes. WhatsApp us 24x7 <br />
@@ -110,7 +119,7 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10">
-        <div className="mx-auto max-w-300 px-4 pb-12 pt-6">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4 pb-12 pt-6">
           <div className="text-gray-300">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
               <div className="lg:col-span-3">
@@ -124,13 +133,12 @@ export default function Footer() {
                   />
                 </Link>
                 <p className="mt-4 text-sm leading-relaxed text-justify">
-                  Lorem ipsum dolor sit amet consectetur. Scelerisque et sem sem
-                  fames sed ullamcorper. Sollicitudin erat id quisque at. A
-                  semper nam in posuere euismod sed. Pretium elit mauris eget
-                  amet magna consequat dignissim est tellus. Et malesuada
-                  egestas viverra risus venenatis scelerisque tempus. Diam in
-                  massa mattis non. Erat phasellus porta faucibus . massa mattis
-                  non.
+                  Ganpati Rudraakshaam is a premier Rudraksha gemstone
+                  wholesaler in India, known for delivering authentic,
+                  high-quality Rudraksha beads sourced with purity and
+                  precision. With over 20 years of trusted experience, we
+                  specialize in providing certified Rudraksha for spiritual,
+                  astrological, and healing purposes.
                 </p>
               </div>
 
@@ -138,13 +146,13 @@ export default function Footer() {
                 <h4 className="mb-4 font-semibold text-white text-[22px]">
                   Quick Link
                 </h4>
-                <ul className="space-y-3 text-[17px]">
+                <ul className="space-y-3 w-full">
                   {quickLinks.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} />
+                      <BiCheck size={14} className="shrink-0"/>
                       <Link
                         href={link.href}
-                        className="hover:text-[#FFBB00] transition"
+                        className="hover:text-[#FFBB00] transition text-nowrap"
                       >
                         {link.label}
                       </Link>
@@ -160,10 +168,10 @@ export default function Footer() {
                 <ul className="space-y-3 text-[17px]">
                   {quickLinks2.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} />
+                      <BiCheck size={14} className="shrink-0"/>
                       <Link
                         href={link.href}
-                        className="hover:text-[#FFBB00] transition"
+                        className="hover:text-[#FFBB00] transition text-nowrap"
                       >
                         {link.label}
                       </Link>
@@ -179,10 +187,10 @@ export default function Footer() {
                 <ul className="space-y-3 text-[17px]">
                   {quickLinks3.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} />
+                      <BiCheck size={14} className="shrink-0"/>
                       <Link
                         href={link.href}
-                        className="hover:text-[#FFBB00] transition"
+                        className="hover:text-[#FFBB00] transition text-nowrap"
                       >
                         {link.label}
                       </Link>
@@ -217,25 +225,24 @@ export default function Footer() {
                   </li>
 
                   <li className="flex items-center gap-2">
-                    <MdEmail size={16} />
+                    <MdEmail size={16} className="shrink-0"/>
                     <Link
-                      href="mailto:contact@ganpatirudraksh.com"
+                      href="mailto:ganpatirudraakshaam@gmail.com"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      contact@ganpatirudraksh.com
+                      ganpatirudraakshaam@gmail.com
                     </Link>
                   </li>
 
                   <li className="flex items-start gap-2">
                     <FaMapMarkerAlt size={16} className="shrink-0" />
                     <Link
-                      href="https://maps.app.goo.gl/HDFP8hN6nWyEAaJ6A"
+                      href="https://maps.app.goo.gl/1iPU3vdiQU3G36eR8"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-[#FFBB00] transition"
                     >
-                      Papia Para, off Eastern Bypass Sadhon More Dabgrame 2,
-                      Bhaktinagar, Ghogomali, Siliguri, West Bengal - 734004
+                      NH12, Shib Mandir, Kadamtala, Siliguri WB 734015
                     </Link>
                   </li>
                 </ul>
@@ -245,7 +252,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-300 px-4">
+      <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded bg-white/10 backdrop-blur-md px-6 py-4">
           <div className="flex items-center gap-3">
             <p className="text-white text-sm whitespace-nowrap">We Accept</p>
@@ -286,7 +293,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white hover:bg-gray-100 transition">
-                  <Icon size={20} className="text-black" />
+                  <Icon size={20} className="text-define-red" />
                 </div>
               </Link>
             ))}

@@ -108,7 +108,7 @@ const Sidebar = () => {
       <>      
 
         {/* Active Link Highlight */}
-        <div className="px-4 py-2 bg-define-pink text-define-brown font-semibold rounded-md">
+        <div className="px-4 py-2 mt-8 bg-define-pink text-define-brown font-semibold rounded-md">
           {
             sections
               .flatMap((s) => s.links)

@@ -158,7 +158,7 @@ export default function CategoryPage({
     }`;
 
   return (
-    <section className="md:py-8 max-w-300 mx-auto flex flex-col">
+    <section className="md:py-8 2xl:max-w-360 lg:max-w-300 mx-auto flex flex-col">
       <div className="flex justify-between items-start mb-4 p-2 ">
         {/* SIDEBAR */}
         <div className="w-[20%] lg:w-[10%] bg-white h-full">
@@ -218,12 +218,9 @@ export default function CategoryPage({
           <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4 xxl:grid-cols-4 lg:px-4 px-2 py-4 content-start no-scrollbar bg-white">
             {loading ? (
               <>
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
+                {Array.from({ length: 24 }).map((_, i) => (
+                  <CardSkeleton key={i} />
+                ))}
               </>
             ) : sortedProducts.length > 0 ? (
               sortedProducts.map((item) => (
@@ -234,16 +231,15 @@ export default function CategoryPage({
                 No products found
               </p>
             )}
-          {!loading && hasMore && (
-            <div ref={ref} className="grid grid-cols-3 gap-4">
-              <CardSkeleton />
-              <CardSkeleton />
-              <CardSkeleton />
-              <CardSkeleton />
-            </div>
-          )}
+            {!loading && hasMore && (
+              <div ref={ref} className="grid grid-cols-3 gap-4">
+                <CardSkeleton />
+                <CardSkeleton />
+                <CardSkeleton />
+                <CardSkeleton />
+              </div>
+            )}
           </div>
-
         </div>
       </div>
     </section>

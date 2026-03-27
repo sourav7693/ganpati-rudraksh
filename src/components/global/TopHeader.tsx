@@ -59,9 +59,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
     return () => clearInterval(interval);
   }, [query]);
   const fetchSuggestions = async () => {
-    const res = await api.get(
-      `/search/suggestions`,
-    );
+    const res = await api.get(`/search/suggestions`);
 
     const data = res.data;
 
@@ -147,14 +145,13 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       return;
     }
 
-    api.get(`search?q=${debouncedQuery}`)
-      .then((res) => {
-        const data = res.data;
-        if (data.success) {
-          setResults(data.results);
-          setShow(true);
-        }
-      });
+    api.get(`search?q=${debouncedQuery}`).then((res) => {
+      const data = res.data;
+      if (data.success) {
+        setResults(data.results);
+        setShow(true);
+      }
+    });
   }, [debouncedQuery]);
 
   useEffect(() => {
@@ -290,19 +287,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       </div>
 
       <header className="w-full bg-white">
-        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 max-w-300 mx-auto z-[60] relative">
-          {/* LEFT SIDE */}
-          <Link
-            className="hover:scale-105 transition-all duration-300 font-medium hidden md:flex items-center gap-2"
-            href={"https://wa.me/918967790313"}
-            target="_blank"
-          >
-            <div className="size-8 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(212,35,0,0)_32.21%,rgba(212,35,0,0.60)_100%)] border border-define-red flex items-center justify-center">
-              <FaWhatsapp className="text-define-brown" />
-            </div>
-            <span className="text-define-brown text-sm">+91 89677 90313</span>
-          </Link>
-
+        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 2xl:2xl:max-w-360 lg:max-w-300 mx-auto z-[60] relative">
           {/* LOGO */}
           <div className="flex gap-2 items-center justify-center">
             <button
@@ -318,32 +303,20 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                 width={1224}
                 height={181}
                 priority
-                className="w-[10rem] lg:w-[25rem] h-auto"
+                className="w-[10rem] lg:w-[20rem] h-auto"
               />
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 lg:gap-4">
-            <div ref={inputRef} className="hidden md:flex relative">
-              <button
-                onClick={() => {
-                  setDesktopSearchOpen(true);
-                  fetchSuggestions();
-                  setShow(true);
-                }}
-                className={`size-10 rounded-full items-center justify-center bg-define-white ${desktopSearchOpen ? "hidden" : "flex"}`}
+            <div ref={inputRef} className="hidden md:flex">
+              <div
+                className={`
+                  flex items-center bg-define-white rounded-full shadow-sm overflow-hidden
+                  transition-all duration-300 ease-in-out lg:w-[600px] 2xl:w-[700px] p-3                  
+                  `}
               >
                 <FaSearch className="text-define-brown size-4" />
-              </button>
-
-              <div
-                className={`absolute right-0 top-1/2 -translate-y-1/2 
-    flex items-center bg-white border rounded-full shadow-sm overflow-hidden
-    transition-all duration-300 ease-in-out
-    ${desktopSearchOpen ? "w-[270px] p-2 opacity-100" : "w-0 px-0 opacity-0"}
-    `}
-              >
-                <div className="relative w-full">
+                <div className="relative w-full ">
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -354,11 +327,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                       }
                     }}
                     onKeyDown={handleKeyDown}
-                    className="w-full bg-transparent outline-none text-sm relative z-10"
+                    className="w-full bg-transparent outline-none text-sm relative z-10 px-4"
                   />
 
                   {!query && (
-                    <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden text-sm text-gray-400">
+                    <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden text-gray-400 py-2 px-4">
                       <span className="mr-1">Search for</span>
 
                       <div className="relative h-5 overflow-hidden">
@@ -378,21 +351,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                     </div>
                   )}
                 </div>
-
-                <button
-                  onClick={() => {
-                    setDesktopSearchOpen(false);
-                    setQuery("");
-                  }}
-                  className="ml-2"
-                >
-                  <IoMdClose className="text-define-brown size-5" />
-                </button>
               </div>
-              {show && desktopSearchOpen && (
+              {show && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-0 mt-5 w-[320px] rounded-xl bg-white shadow-lg border z-50"
+                  className="absolute top-1/2 mt-5 lg:w-[600px] 2xl:w-[700px] rounded-xl bg-white shadow-lg z-50"
                 >
                   {/* Suggestions */}
                   {!query && suggestions.length > 0 && (
@@ -402,13 +365,13 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                       </p>
 
                       {suggestions.map((item, idx) => (
-                        <button
+                        <div
                           key={`suggest-${idx}`}
                           onMouseDown={(e) => {
                             e.preventDefault();
                             handleSearchClick(item);
                           }}
-                          className="flex w-full items-center gap-3 px-4 py-2 hover:bg-gray-100 text-left cursor-pointer"
+                          className="flex w-full items-center gap-3 px-4 py-2 hover:bg-define-red/20 text-left cursor-pointer"
                         >
                           {item.type === "product" && item.image && (
                             <Image
@@ -425,7 +388,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                               {item.type}
                             </span>
                           </span>
-                        </button>
+                        </div>
                       ))}
                     </>
                   )}
@@ -475,17 +438,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                 </div>
               )}
             </div>
-
-            <div className="flex md:hidden">
-              {!mobileSearchOpen && (
-                <button
-                  onClick={() => setMobileSearchOpen(true)}
-                  className="size-10 rounded-full flex items-center justify-center bg-define-white"
-                >
-                  <FaSearch className="text-define-brown size-4" />
-                </button>
-              )}
-            </div>
+          <div className="flex items-center gap-2 lg:gap-4">
 
             <button
               onClick={() => {
@@ -586,91 +539,83 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
 
         <div
           className={`md:hidden relative transition-all duration-300 ease-in-out bg-white border-b border-gray-200
-        ${mobileSearchOpen ? "opacity-100" : "hidden opacity-0"}`}
+        `}
         >
-          {mobileSearchOpen && (
-            <>
-              <div className="flex items-center gap-2 px-4">
-                {/* Back Button */}
-                <button onClick={handleMobileBack}>
-                  <IoMdArrowBack className="size-6 text-define-brown" />
-                </button>
+          <>
+            <div className="flex items-center gap-2 px-4">
+              {/* Input */}
+              <div className="relative w-full">
+                <FaSearch className="text-define-brown size-4 absolute inset-2" />
+                <input
+                  autoFocus
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => {
+                    if (!query) {
+                      fetchSuggestions();
+                      setShow(true);
+                    }
+                  }}
+                  className="w-full bg-transparent outline-none text-sm relative z-10 flex-1 border border-gray-200 rounded-full px-8 py-2"
+                />
 
-                {/* Input */}
-                <div className="relative w-full">
-                  <input
-                    autoFocus
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onFocus={() => {
-                      if (!query) {
-                        fetchSuggestions();
-                        setShow(true);
-                      }
-                    }}
-                    className="w-full bg-transparent outline-none text-sm relative z-10 flex-1 border rounded-full px-4 py-2"
-                  />
+                {!query && (
+                  <div className="absolute left-4 top-2 flex items-center pointer-events-none overflow-hidden text-sm text-gray-400 px-4">
+                    <span className="mr-1">Search for</span>
 
-                  {!query && (
-                    <div className="absolute left-4 top-2 flex items-center pointer-events-none overflow-hidden text-sm text-gray-400">
-                      <span className="mr-1">Search for</span>
-
-                      <div className="relative h-5 overflow-hidden">
-                        <div
-                          className="transition-transform duration-500 ease-in-out"
-                          style={{
-                            transform: `translateY(-${activeWord * 20}px)`,
-                          }}
-                        >
-                          {words.map((word, index) => (
-                            <div key={index} className="h-5">
-                              "{word}"
-                            </div>
-                          ))}
-                        </div>
+                    <div className="relative h-5 overflow-hidden">
+                      <div
+                        className="transition-transform duration-500 ease-in-out"
+                        style={{
+                          transform: `translateY(-${activeWord * 20}px)`,
+                        }}
+                      >
+                        {words.map((word, index) => (
+                          <div key={index} className="h-5">
+                            "{word}"
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  )}
-                </div>
-
-                {/* Clear Button */}
-                {query.length > 0 && (
-                  <button onClick={handleClear}>
-                    <IoMdClose className="size-6 text-define-brown" />
-                  </button>
+                  </div>
                 )}
               </div>
 
-              {show && mobileSearchOpen && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute left-0 w-full px-4 z-[999] "
-                >
-                  <div className="rounded-xl bg-white shadow-lg border max-h-[300px] overflow-y-auto">
-                    {list.map((item, idx) => (
-                      <button
-                        key={idx}
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          handleSearchClick(item);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-define-red/20 text-sm"
-                      >
-                        <b>{item.name}</b>
-                        <span className="ml-2 text-xs text-gray-400">
-                          {item.type}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {/* Clear Button */}
+              {query.length > 0 && (
+                <button onClick={handleClear}>
+                  <IoMdClose className="size-6 text-define-brown" />
+                </button>
               )}
-            </>
-          )}
-        </div>
-      </header>
+            </div>
 
-      {/* MOBILE SIDEBAR */}
+            {show && (
+              <div
+                ref={dropdownRef}
+                className="absolute left-0 w-full px-4 z-[999] "
+              >
+                <div className="rounded-xl bg-white shadow-lg border border-gray-200 max-h-[350px] overflow-y-auto">
+                  {list.map((item, idx) => (
+                    <button
+                      key={idx}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleSearchClick(item);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-define-red/20 text-sm"
+                    >
+                      <b>{item.name}</b>
+                      <span className="ml-2 text-xs text-gray-400">
+                        {item.type}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        </div>
+      </header>      
     </>
   );
 };

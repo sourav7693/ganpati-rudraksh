@@ -19,8 +19,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ganapati Rudrakshaam",
-  description: "Ganapati Rudrakshaam",
+  title:
+    "Ganpati Rudraakshaam Official Store | Buy Original Rudraksha Online in North Bengal",
+  description:
+    "Looking for Ganpati Rudraakshaam? Explore our official store for 100% original Rudraksha beads. Trusted for 20+ years, offering premium quality, certification, and pan-India delivery.",
 };
 
 export default function RootLayout({

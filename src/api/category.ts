@@ -27,7 +27,12 @@ export async function fetchCategories(page: number = 1, limit: number = 10): Pro
   const categories: CategoryType[] = json.categories || [];
 
   const grouped: CategoryUI[] = [];
-  const activeCategories = categories.filter((cat) => cat.status !== false);
+  const activeCategories = categories
+  .filter((cat : CategoryType) => cat.status !== false)
+  .sort((a, b) => {
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
+  // console.log("activeCategories", activeCategories);
 
   for (const parent of activeCategories) {
     // ... (Keep your existing mapping logic here) ...
@@ -55,7 +60,7 @@ export async function fetchCategories(page: number = 1, limit: number = 10): Pro
       },
       subCategories,
     });
-  }
+  }  
 
-  return grouped;
+ return grouped;
 }
