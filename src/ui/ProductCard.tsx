@@ -52,9 +52,17 @@ export default function ProductCard({
 
   const handleWishlist = async () => {
     if (!customerId) {
-     router.push("/login");
-      return;
-    }
+         toast.error("Please login to proceed");
+          sessionStorage.setItem(
+            "POST_LOGIN_ACTION",
+            JSON.stringify({
+              type: "WISHLIST",
+              productId: _id,
+            }),
+          );
+         router.push("/login");
+         return;
+       }
 
     if (loading) return;
 
@@ -84,7 +92,16 @@ export default function ProductCard({
   const handleCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!customerId) {
-     router.push("/login");
+    toast.error("Please login to add items to cart");
+       sessionStorage.setItem(
+         "POST_LOGIN_ACTION",
+         JSON.stringify({
+           type: "ADD_TO_CART",
+           productId: _id,
+           quantity: 1,
+         }),
+       );
+      router.push("/login");
       return;
     }
 

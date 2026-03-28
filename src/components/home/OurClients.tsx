@@ -53,7 +53,7 @@ const cards = [
 
 export default function OurClients() {
   return (
-    <section className="2xl:max-w-360 lg:max-w-300 mx-auto px-4 py-4 relative">
+    <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto px-4 py-4 relative">
       <div className="flex justify-between items-baseline">
         <TitleSection
           title="Our Clients"

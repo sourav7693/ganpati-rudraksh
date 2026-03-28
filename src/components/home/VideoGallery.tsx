@@ -23,7 +23,9 @@ export default function VideoGallery() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/media?type=video&limit=10`);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/media?type=video&limit=10`,
+        );
         setVideos(res.data.data);
       } catch (err) {
         console.error("Error fetching videos", err);
@@ -72,7 +74,7 @@ export default function VideoGallery() {
   };
 
   return (
-    <section className="2xl:max-w-360 lg:max-w-300 mx-auto p-4 overflow-hidden">
+    <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4 overflow-hidden">
       {/* Video Popup Overlay */}
       {selectedVideo && (
         <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">

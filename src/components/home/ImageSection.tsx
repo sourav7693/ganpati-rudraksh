@@ -11,7 +11,7 @@ export default function ImageSection() {
   ];
 
   return (
-    <section className="2xl:max-w-360 lg:max-w-300 mx-auto md:px-0 p-4">
+    <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto md:px-0 p-4">
       <div className="relative">
         <Swiper
           modules={[Autoplay]}
@@ -20,7 +20,7 @@ export default function ImageSection() {
             disableOnInteraction: false,
           }}
           loop
-          spaceBetween={16}        
+          spaceBetween={16}
           breakpoints={{
             0: { slidesPerView: 1 },
             768: { slidesPerView: 3 },

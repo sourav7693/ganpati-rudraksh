@@ -164,6 +164,7 @@ export default function Login() {
           case "ADD_TO_CART":
             await addToCartApi(customer._id, parsed.productId, undefined, 1);
              await refreshCustomer();
+             router.replace("/my-cart");
             toast.success("Added to cart");
             break;
 
@@ -183,6 +184,7 @@ export default function Login() {
           case "WISHLIST":
             await toggleWishlistApi(customer._id, parsed.productId);
              await refreshCustomer();
+             router.replace("/my-wishlist");
             toast.success("Added to wishlist");
             break;
         }

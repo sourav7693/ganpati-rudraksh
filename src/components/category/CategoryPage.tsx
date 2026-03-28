@@ -35,7 +35,7 @@ export default function CategoryPage({
   const [fetchingMore, setFetchingMore] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   // const [isSearching, setIsSearching] = useState(false);
-  console.log(products);
+  // console.log(products);
 
   const sortArr = [
     {
@@ -158,7 +158,7 @@ export default function CategoryPage({
     }`;
 
   return (
-    <section className="md:py-8 2xl:max-w-360 lg:max-w-300 mx-auto flex flex-col">
+    <section className="md:py-8 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto flex flex-col">
       <div className="flex justify-between items-start mb-4 p-2 ">
         {/* SIDEBAR */}
         <div className="w-[20%] lg:w-[10%] bg-white h-full">

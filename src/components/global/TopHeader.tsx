@@ -37,8 +37,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
   const { customer, loading, logoutCustomer, clearCustomer } = useCustomer();
   // console.log("Customer in TopHeader:", customer);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const debouncedQuery = useDebounce(query, 400);
   const [results, setResults] = useState<any[]>([]);
   const [show, setShow] = useState(false);
@@ -217,11 +216,16 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       //  setShowLoader(false);
     }
   };
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const handleMobileBack = () => {
-    setMobileSearchOpen(false);
-    setQuery("");
-  };
+  // const handleMobileBack = () => {
+  //   setMobileSearchOpen(false);
+  //   setQuery("");
+  // };
 
   return (
     <>
@@ -287,7 +291,15 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       </div>
 
       <header className="w-full bg-white">
-        <div className="w-full h-[5rem] text-define-brown  flex justify-between items-center px-4 md:px-10 2xl:2xl:max-w-360 lg:max-w-300 mx-auto z-[60] relative">
+        <div
+          className={`
+    w-full h-[4.5rem] md:h-[5rem] text-define-brown flex justify-between items-center px-4 md:px-10 
+    2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto z-[60] relative
+    transition-transform duration-300
+    md:translate-y-0
+    ${scrolled ? "-translate-y-full md:translate-y-0" : "translate-y-0"}
+  `}
+        >
           {/* LOGO */}
           <div className="flex gap-2 items-center justify-center">
             <button
@@ -303,143 +315,142 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                 width={1224}
                 height={181}
                 priority
-                className="w-[10rem] lg:w-[20rem] h-auto"
+                className="w-[12.5rem] lg:w-[20rem] h-auto"
               />
             </Link>
           </div>
 
-            <div ref={inputRef} className="hidden md:flex">
-              <div
-                className={`
+          <div ref={inputRef} className="hidden md:flex">
+            <div
+              className={`
                   flex items-center bg-define-white rounded-full shadow-sm overflow-hidden
-                  transition-all duration-300 ease-in-out lg:w-[600px] 2xl:w-[700px] p-3                  
+                  transition-all duration-300 ease-in-out lg:w-[500px] 2xl:w-[700px]  p-3                  
                   `}
-              >
-                <FaSearch className="text-define-brown size-4" />
-                <div className="relative w-full ">
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onFocus={() => {
-                      if (!query) {
-                        fetchSuggestions();
-                        setShow(true);
-                      }
-                    }}
-                    onKeyDown={handleKeyDown}
-                    className="w-full bg-transparent outline-none text-sm relative z-10 px-4"
-                  />
+            >
+              <FaSearch className="text-define-brown size-4" />
+              <div className="relative w-full ">
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => {
+                    if (!query) {
+                      fetchSuggestions();
+                      setShow(true);
+                    }
+                  }}
+                  onKeyDown={handleKeyDown}
+                  className="w-full bg-transparent outline-none text-sm relative z-10 px-4"
+                />
 
-                  {!query && (
-                    <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden text-gray-400 py-2 px-4">
-                      <span className="mr-1">Search for</span>
+                {!query && (
+                  <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden text-gray-400 py-2 px-4">
+                    <span className="mr-1">Search for</span>
 
-                      <div className="relative h-5 overflow-hidden">
-                        <div
-                          className="transition-transform duration-500 ease-in-out"
-                          style={{
-                            transform: `translateY(-${activeWord * 20}px)`,
-                          }}
-                        >
-                          {words.map((word, index) => (
-                            <div key={index} className="h-5">
-                              "{word}"
-                            </div>
-                          ))}
-                        </div>
+                    <div className="relative h-5 overflow-hidden">
+                      <div
+                        className="transition-transform duration-500 ease-in-out"
+                        style={{
+                          transform: `translateY(-${activeWord * 20}px)`,
+                        }}
+                      >
+                        {words.map((word, index) => (
+                          <div key={index} className="h-5">
+                            "{word}"
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-              {show && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute top-1/2 mt-5 lg:w-[600px] 2xl:w-[700px] rounded-xl bg-white shadow-lg z-50"
-                >
-                  {/* Suggestions */}
-                  {!query && suggestions.length > 0 && (
-                    <>
-                      <p className="px-4 py-2 text-xs font-semibold text-define-brown">
-                        Suggestions
-                      </p>
-
-                      {suggestions.map((item, idx) => (
-                        <div
-                          key={`suggest-${idx}`}
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            handleSearchClick(item);
-                          }}
-                          className="flex w-full items-center gap-3 px-4 py-2 hover:bg-define-red/20 text-left cursor-pointer"
-                        >
-                          {item.type === "product" && item.image && (
-                            <Image
-                              src={item.image}
-                              alt=""
-                              width={32}
-                              height={32}
-                            />
-                          )}
-
-                          <span className="text-sm text-define-brown">
-                            <b>{item.name}</b>
-                            <span className="ml-2 text-xs text-define-brown">
-                              {item.type}
-                            </span>
-                          </span>
-                        </div>
-                      ))}
-                    </>
-                  )}
-
-                  {/* Results */}
-                  {query && results.length > 0 && (
-                    <>
-                      <p className="px-4 py-2 text-xs font-semibold text-gray-500">
-                        Results
-                      </p>
-
-                      {results.map((item, idx) => (
-                        <button
-                          key={`result-${idx}`}
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            handleSearchClick(item);
-                          }}
-                          className="flex w-full items-center gap-3 px-4 py-2 hover:bg-gray-100 text-left cursor-pointer"
-                        >
-                          {item.type === "product" && item.image && (
-                            <Image
-                              src={item.image}
-                              alt=""
-                              width={32}
-                              height={32}
-                            />
-                          )}
-
-                          <span className="text-sm text-gray-500">
-                            <b>{item.name}</b>
-                            <span className="ml-2 text-xs text-gray-500">
-                              {item.type}
-                            </span>
-                          </span>
-                        </button>
-                      ))}
-                    </>
-                  )}
-
-                  {/* No Results */}
-                  {query && results.length === 0 && (
-                    <p className="px-4 py-3 text-sm text-gray-400">
-                      No results found
-                    </p>
-                  )}
-                </div>
-              )}
             </div>
-          <div className="flex items-center gap-2 lg:gap-4">
+            {show && (
+              <div
+                ref={dropdownRef}
+                className="absolute top-1/2 mt-5 lg:w-[600px] 2xl:w-[700px] rounded-xl bg-white shadow-lg z-50"
+              >
+                {/* Suggestions */}
+                {!query && suggestions.length > 0 && (
+                  <>
+                    <p className="px-4 py-2 text-xs font-semibold text-define-brown">
+                      Suggestions
+                    </p>
 
+                    {suggestions.map((item, idx) => (
+                      <div
+                        key={`suggest-${idx}`}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSearchClick(item);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2 hover:bg-define-red/20 text-left cursor-pointer"
+                      >
+                        {item.type === "product" && item.image && (
+                          <Image
+                            src={item.image}
+                            alt=""
+                            width={32}
+                            height={32}
+                          />
+                        )}
+
+                        <span className="text-sm text-define-brown">
+                          <b>{item.name}</b>
+                          <span className="ml-2 text-xs text-define-brown">
+                            {item.type}
+                          </span>
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* Results */}
+                {query && results.length > 0 && (
+                  <>
+                    <p className="px-4 py-2 text-xs font-semibold text-gray-500">
+                      Results
+                    </p>
+
+                    {results.map((item, idx) => (
+                      <button
+                        key={`result-${idx}`}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSearchClick(item);
+                        }}
+                        className="flex w-full items-center gap-3 px-4 py-2 hover:bg-gray-100 text-left cursor-pointer"
+                      >
+                        {item.type === "product" && item.image && (
+                          <Image
+                            src={item.image}
+                            alt=""
+                            width={32}
+                            height={32}
+                          />
+                        )}
+
+                        <span className="text-sm text-gray-500">
+                          <b>{item.name}</b>
+                          <span className="ml-2 text-xs text-gray-500">
+                            {item.type}
+                          </span>
+                        </span>
+                      </button>
+                    ))}
+                  </>
+                )}
+
+                {/* No Results */}
+                {query && results.length === 0 && (
+                  <p className="px-4 py-3 text-sm text-gray-400">
+                    No results found
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-2 lg:gap-4">
             <button
               onClick={() => {
                 router.push("/my-cart");
@@ -447,7 +458,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
               className="size-10 rounded-full flex items-center justify-center bg-define-white"
             >
               <div className="relative">
-                <MdAddShoppingCart className="text-define-brown size-5" />
+                <MdAddShoppingCart className="text-define-brown size-4" />
                 <span className="absolute -top-3 -right-4 size-4 rounded-full bg-defined-green text-[10px] font-bold bg-define-brown text-white flex items-center justify-center">
                   {customer?.cart?.length ?? 0}
                 </span>
@@ -538,16 +549,19 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
         </div>
 
         <div
-          className={`md:hidden relative transition-all duration-300 ease-in-out bg-white border-b border-gray-200
-        `}
+          className={`
+    md:hidden bg-white border-b border-gray-200 pb-4
+    transition-all duration-300 ease-in-out
+    sticky top-0 z-[55]
+    ${scrolled ? "-mt-[4rem]" : "mt-0"}
+  `}
         >
           <>
-            <div className="flex items-center gap-2 px-4">
+            <div className="flex items-center gap-2 px-2">
               {/* Input */}
               <div className="relative w-full">
-                <FaSearch className="text-define-brown size-4 absolute inset-2" />
+                <FaSearch className="text-define-brown size-4 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  autoFocus
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onFocus={() => {
@@ -556,11 +570,11 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                       setShow(true);
                     }
                   }}
-                  className="w-full bg-transparent outline-none text-sm relative z-10 flex-1 border border-gray-200 rounded-full px-8 py-2"
+                  className="w-full bg-transparent outline-none text-sm relative z-10 flex-1 border border-define-red rounded-md  py-4 px-9"
                 />
 
                 {!query && (
-                  <div className="absolute left-4 top-2 flex items-center pointer-events-none overflow-hidden text-sm text-gray-400 px-4">
+                  <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none overflow-hidden text-sm text-gray-400 px-4">
                     <span className="mr-1">Search for</span>
 
                     <div className="relative h-5 overflow-hidden">
@@ -615,7 +629,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
             )}
           </>
         </div>
-      </header>      
+      </header>
     </>
   );
 };

@@ -5,7 +5,7 @@ export default function ShippingPolicy() {
   return (
     <MainTemplate>
       <div className="bg-gray-50 min-h-screen py-10 px-4 md:px-10">
-        <div className="2xl:max-w-360 lg:max-w-300 mx-auto p-4 bg-white md:p-10 rounded-2xl shadow-sm border border-gray-200">
+        <div className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4 bg-white md:p-10 rounded-2xl shadow-sm border border-gray-200">
           <h1 className="text-3xl font-bold mb-6">📦 Shipping Policy</h1>
 
           <p className="text-gray-600 mb-6">

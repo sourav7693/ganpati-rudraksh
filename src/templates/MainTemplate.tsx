@@ -15,7 +15,7 @@ const MainTemplate = ({
       </div>
 
       {/* Main Content */}
-      <div className=" lg:mt-[5rem] md:mt-[5rem] pt-[2rem] mt-[2rem] bg-[#f5f5f5]">{children}</div>
+      <div className=" lg:mt-[5rem] md:mt-[5rem] pt-[2rem] mt-[6.5rem] bg-[#f5f5f5]">{children}</div>
       {/* <CartButton /> */}
       <Footer />
     </div>

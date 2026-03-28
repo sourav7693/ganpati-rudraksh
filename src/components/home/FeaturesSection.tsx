@@ -38,7 +38,7 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="2xl:max-w-360 lg:max-w-300 mx-auto p-4">
+    <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4">
       <div className="relative">
         <Swiper
           modules={[Autoplay]}
@@ -47,7 +47,7 @@ export default function FeaturesSection() {
             disableOnInteraction: false,
           }}
           loop
-          spaceBetween={20}         
+          spaceBetween={20}
           breakpoints={{
             0: { slidesPerView: 1 },
             640: { slidesPerView: 2 },
@@ -84,7 +84,6 @@ export default function FeaturesSection() {
             </SwiperSlide>
           ))}
         </Swiper>
-
       </div>
     </section>
   );
