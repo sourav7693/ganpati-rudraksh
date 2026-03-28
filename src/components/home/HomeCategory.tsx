@@ -44,7 +44,7 @@ export default function HomeCategory({
   if (loading) {
     return (
       <div className="py-5">
-        <div className="mx-auto 2xl:max-w-360 lg:max-w-300 px-4">
+        <div className="mx-auto 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4">
           <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 18 }).map((_, index) => (
               <CardSkeleton key={index} />
@@ -57,7 +57,7 @@ export default function HomeCategory({
 
   return (
     <section className="pb-2">
-      <div className="mx-auto 2xl:max-w-360 lg:max-w-300 px-4 flex flex-col gap-4 lg:gap-8">
+      <div className="mx-auto xxl:max-w-460 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4 flex flex-col gap-4 lg:gap-8">
         <div className="flex justify-between items-center">
           <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">
             {title}
@@ -81,7 +81,7 @@ export default function HomeCategory({
                 href={`/products?category=${encodeURIComponent(cat.parent.name)}`}
                 className="text-center group"
               >
-                <div className="relative mx-auto size-[4rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
+                <div className="relative mx-auto size-[5.5rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
                   <Image
                     src={cat.parent.image}
                     alt={cat.parent.name}
@@ -102,7 +102,7 @@ export default function HomeCategory({
                     href={`/products?category=${encodeURIComponent(subCat.name)}`}
                     className="text-center group"
                   >
-                    <div className="relative mx-auto size-[4rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
+                    <div className="relative mx-auto size-[5.5rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
                       <Image
                         src={subCat.image}
                         alt={subCat.name}

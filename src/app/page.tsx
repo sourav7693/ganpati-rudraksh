@@ -66,8 +66,6 @@ const fifthBatch = categoryProducts.slice(12, 15);
         enableLazy={false}
       />
 
-      <TalesOfRudraksh />
-
       <ProductSection
         title="Newest Product in this Month"
         products={newProducts.data}
@@ -76,7 +74,8 @@ const fifthBatch = categoryProducts.slice(12, 15);
         apiQuery="sort=-createdAt"
         enableLazy={false}
       />
-      <ExpertTeam />
+      <TalesOfRudraksh />
+
       {firstBatch.map((item: any) => (
         <ProductSection
           key={item.category}
@@ -89,6 +88,7 @@ const fifthBatch = categoryProducts.slice(12, 15);
           enableLazy={false}
         />
       ))}
+      <ExpertTeam />
       <OurClients />
       <div className="relative w-full my-8">
         {/* Background Image */}

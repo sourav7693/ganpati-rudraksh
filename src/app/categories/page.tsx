@@ -14,7 +14,7 @@ const page = async () => {
       <Suspense
         fallback={
           <div className="py-6">
-            <div className="mx-auto 2xl:max-w-360 lg:max-w-300 px-4">
+            <div className="mx-auto 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4">
               <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
                 <CardSkeleton />
                 <CardSkeleton />

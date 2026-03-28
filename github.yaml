@@ -1,0 +1,39 @@
+name: Build and push to deploy branch
+
+on:
+  push:
+    branches:
+      - main   # Trigger the workflow when you push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Needed to push to the deploy branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # If your project uses Node.js, set up Node. Adjust the version as needed.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Install dependencies (adjust this if you use a different package manager)
+      - name: Install dependencies
+        run: npm ci
+
+      # Build the project – replace with your actual build command
+      - name: Build
+        run: npm run build
+
+      # Push the built files to the 'deploy' branch
+      - name: Deploy to deploy branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./next/standalone        # Change this to your build output directory (e.g., dist, public)
+          publish_branch: deploy      # The branch where built files will be pushed
+          force_orphan: true          # (Optional) Creates a fresh branch with only the built files

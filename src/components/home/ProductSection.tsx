@@ -66,7 +66,7 @@ export default function ProductSection({
   }, [inView, enableLazy]);
 
   return (
-    <section className="py-2 2xl:max-w-360 lg:max-w-300 mx-auto px-4">
+    <section className="py-2 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto px-4">
       <div className="self-padding flex flex-col gap-6">
         <h2 className="md:text-2xl font-bold text-define-brown">{title}</h2>
 

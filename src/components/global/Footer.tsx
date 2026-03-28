@@ -10,9 +10,8 @@ import { FaFacebook, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
 import { LiaLinkedin } from "react-icons/lia";
 import { MdEmail } from "react-icons/md";
 
-
 export default function Footer() {
-  const [categories, setCategories] = useState<CategoryUI[]>([])
+  const [categories, setCategories] = useState<CategoryUI[]>([]);
   const [formData, setFormData] = useState<{ message: string }>({
     message: "",
   });
@@ -32,42 +31,42 @@ export default function Footer() {
     });
   };
 
- useEffect(() => {
-   const fetcher = async () => {
-     try {
-       const res = await fetchCategories();
-       setCategories(res);
-     } catch (error) {
-       console.error("Failed to fetch categories:", error);
-     }
-   };
+  useEffect(() => {
+    const fetcher = async () => {
+      try {
+        const res = await fetchCategories();
+        setCategories(res);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
 
-   fetcher();
- }, []);
- 
-const socialLinks = [
-  { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
-  { icon: BsInstagram, href: "https://www.instagram.com/" },
-  { icon: BsYoutube, href: "https://www.youtube.com/" },
-  { icon: FaFacebook, href: "https://www.facebook.com/" },
-];
+    fetcher();
+  }, []);
 
-const quickLinks = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Refund Policy", href: "/refund-policy" },
-  { label: "Shipping Policy", href: "/shipping-policy" },
-  { label: "Terms & Conditions", href: "/terms-conditions" },
-];
+  const socialLinks = [
+    { icon: LiaLinkedin, href: "https://www.linkedin.com/" },
+    { icon: BsInstagram, href: "https://www.instagram.com/" },
+    { icon: BsYoutube, href: "https://www.youtube.com/" },
+    { icon: FaFacebook, href: "https://www.facebook.com/" },
+  ];
 
-const quickLinks2 = categories.slice(0,5).map((category) => ({
-  label: category.parent.name,
-  href: `/products?category=${category.parent.name}`,
-}));
+  const quickLinks = [
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Refund Policy", href: "/refund-policy" },
+    { label: "Shipping Policy", href: "/shipping-policy" },
+    { label: "Terms & Conditions", href: "/terms-conditions" },
+  ];
 
-const quickLinks3 = categories.slice(5,10).map((category) => ({
-  label: category.parent.name,
-  href: `/products?category=${category.parent.name}`,
-}));
+  const quickLinks2 = categories.slice(0, 5).map((category) => ({
+    label: category.parent.name,
+    href: `/products?category=${category.parent.name}`,
+  }));
+
+  const quickLinks3 = categories.slice(5, 10).map((category) => ({
+    label: category.parent.name,
+    href: `/products?category=${category.parent.name}`,
+  }));
 
   return (
     <footer
@@ -79,7 +78,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
       <div className="absolute inset-0" />
 
       <div className="relative z-10 pb-6 pt-12">
-        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
             <p className="text-[17px] text-white">
               Get a call back within 15 minutes. WhatsApp us 24x7 <br />
@@ -119,7 +118,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
       </div>
 
       <div className="relative z-10">
-        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4 pb-12 pt-6">
+        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4 pb-12 pt-6">
           <div className="text-gray-300">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
               <div className="lg:col-span-3">
@@ -149,7 +148,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
                 <ul className="space-y-3 w-full">
                   {quickLinks.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} className="shrink-0"/>
+                      <BiCheck size={14} className="shrink-0" />
                       <Link
                         href={link.href}
                         className="hover:text-[#FFBB00] transition text-nowrap"
@@ -168,7 +167,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
                 <ul className="space-y-3 text-[17px]">
                   {quickLinks2.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} className="shrink-0"/>
+                      <BiCheck size={14} className="shrink-0" />
                       <Link
                         href={link.href}
                         className="hover:text-[#FFBB00] transition text-nowrap"
@@ -187,7 +186,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
                 <ul className="space-y-3 text-[17px]">
                   {quickLinks3.map((link) => (
                     <li key={link.label} className="flex items-center gap-2">
-                      <BiCheck size={14} className="shrink-0"/>
+                      <BiCheck size={14} className="shrink-0" />
                       <Link
                         href={link.href}
                         className="hover:text-[#FFBB00] transition text-nowrap"
@@ -225,7 +224,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
                   </li>
 
                   <li className="flex items-center gap-2">
-                    <MdEmail size={16} className="shrink-0"/>
+                    <MdEmail size={16} className="shrink-0" />
                     <Link
                       href="mailto:ganpatirudraakshaam@gmail.com"
                       className="hover:text-[#FFBB00] transition"
@@ -252,7 +251,7 @@ const quickLinks3 = categories.slice(5,10).map((category) => ({
         </div>
       </div>
 
-      <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 lg:max-w-300 px-4">
+      <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded bg-white/10 backdrop-blur-md px-6 py-4">
           <div className="flex items-center gap-3">
             <p className="text-white text-sm whitespace-nowrap">We Accept</p>
