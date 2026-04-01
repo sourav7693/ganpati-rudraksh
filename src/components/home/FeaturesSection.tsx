@@ -38,7 +38,7 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4">
+    <section className="section-container p-4">
       <div className="relative">
         <Swiper
           modules={[Autoplay]}

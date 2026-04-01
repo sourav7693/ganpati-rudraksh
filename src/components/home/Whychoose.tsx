@@ -42,8 +42,8 @@ export const Whychoose: React.FC = () => {
   ];
 
   return (
-    <section className="w-full flex justify-center px-4 py-5">
-      <div className="w-full 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto flex flex-col lg:flex-row items-center gap-6">
+    <section className="section-container py-5">
+      <div className="flex flex-col lg:flex-row items-center gap-6">
         <div className="text-[20px] font-bold"></div>
 
         <div className="order-2 lg:order-1 flex-[1.5] flex flex-col gap-4 w-full">

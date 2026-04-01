@@ -142,7 +142,7 @@ export default function PlantsGallery() {
         .animate-slide-right { animation: slideInRight 0.35s ease both; }
       `}</style>
 
-      <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4">
+      <section className="section-container p-4">
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-xl lg:text-3xl font-bold">
             Rudrakshaam <span className="text-define-brown">Gallery</span>

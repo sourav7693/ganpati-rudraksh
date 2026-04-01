@@ -20,10 +20,10 @@ export const dynamic = "force-dynamic";
 const PRODUCT_LIMIT = 10;
 
 const page = async () => {
-   const [newProducts, categories] = await Promise.all([
-     fetchProducts("sort=-createdAt"),
-     fetchCategories(1,100),
-   ]);
+  const [newProducts, categories] = await Promise.all([
+    fetchProducts("sort=-createdAt"),
+    fetchCategories(1, 100),
+  ]);
 
   const categoryProductPromises = categories.map(async (cat) => {
     const categoryName = cat.parent.name;
@@ -32,7 +32,7 @@ const page = async () => {
     const res = await fetchProducts(
       `category=${encodeURIComponent(categoryName)}&limit=${PRODUCT_LIMIT}`,
     );
-    
+
     if (res?.data?.length > 0) {
       return {
         category: categoryName,
@@ -48,46 +48,46 @@ const page = async () => {
   const categoryProducts = (await Promise.all(categoryProductPromises)).filter(
     Boolean,
   );
-const firstBatch = categoryProducts.slice(0, 3);
-const secondBatch = categoryProducts.slice(3, 6);
-const thirdBatch = categoryProducts.slice(6, 9);
-const fourthBatch = categoryProducts.slice(9, 12);
-const fifthBatch = categoryProducts.slice(12, 15);
+  const firstBatch = categoryProducts.slice(0, 3);
+  const secondBatch = categoryProducts.slice(3, 6);
+  const thirdBatch = categoryProducts.slice(6, 9);
+  const fourthBatch = categoryProducts.slice(9, 12);
+  const fifthBatch = categoryProducts.slice(12, 15);
   return (
     <MainTemplates>
-      <HomeSlider />      
+      <HomeSlider />
       <HomeSlider2 />
-      <HomeCategory
-        title="Shop by Categories"
-        limit={8}
-        page={1}
-        enableLazy={false}
-      />
-
-      <ProductSection
-        title="Newest Product in this Month"
-        products={newProducts.data}
-        pagination={newProducts.pagination}
-        limit={PRODUCT_LIMIT}
-        apiQuery="sort=-createdAt"
-        enableLazy={false}
-      />
-      <TalesOfRudraksh />
-
-      {firstBatch.map((item: any) => (
-        <ProductSection
-          key={item.category}
-          {...item}
-          title={item.category}
-          products={item.products}
-          pagination={item.pagination}
-          limit={PRODUCT_LIMIT}
-          apiQuery={`category=${item.queryName}`}
+        <HomeCategory
+          title="Shop by Categories"
+          limit={8}
+          page={1}
           enableLazy={false}
         />
-      ))}
-      <ExpertTeam />
-      <OurClients />
+
+        <ProductSection
+          title="Newest Product in this Month"
+          products={newProducts.data}
+          pagination={newProducts.pagination}
+          limit={PRODUCT_LIMIT}
+          apiQuery="sort=-createdAt"
+          enableLazy={false}
+        />
+        <TalesOfRudraksh />
+
+        {firstBatch.map((item: any) => (
+          <ProductSection
+            key={item.category}
+            {...item}
+            title={item.category}
+            products={item.products}
+            pagination={item.pagination}
+            limit={PRODUCT_LIMIT}
+            apiQuery={`category=${item.queryName}`}
+            enableLazy={false}
+          />
+        ))}
+        <ExpertTeam />
+        <OurClients />
       <div className="relative w-full my-8">
         {/* Background Image */}
         <Image
@@ -135,70 +135,70 @@ const fifthBatch = categoryProducts.slice(12, 15);
         </div>
       </div>
 
-      {secondBatch.map((item: any) => (
-        <ProductSection
-          key={item.category}
-          {...item}
-          title={item.category}
-          products={item.products}
-          pagination={item.pagination}
-          limit={PRODUCT_LIMIT}
-          apiQuery={`category=${item.queryName}`}
-          enableLazy={false}
+        {secondBatch.map((item: any) => (
+          <ProductSection
+            key={item.category}
+            {...item}
+            title={item.category}
+            products={item.products}
+            pagination={item.pagination}
+            limit={PRODUCT_LIMIT}
+            apiQuery={`category=${item.queryName}`}
+            enableLazy={false}
+          />
+        ))}
+        <TitleSection
+          title="Why Ganpati Rudraksh"
+          subtitle="Welcome to The World of Highest-Quality Rudraksha"
         />
-      ))}
-      <TitleSection
-        title="Why Ganpati Rudraksh"
-        subtitle="Welcome to The World of Highest-Quality Rudraksha"
-      />
 
-      <Whychoose />
-      <VideoGallery />
+        <Whychoose />
+        <VideoGallery />
 
-      {thirdBatch.map((item: any) => (
-        <ProductSection
-          key={item.category}
-          {...item}
-          title={item.category}
-          products={item.products}
-          pagination={item.pagination}
-          limit={PRODUCT_LIMIT}
-          apiQuery={`category=${item.queryName}`}
-          enableLazy={false}
+        {thirdBatch.map((item: any) => (
+          <ProductSection
+            key={item.category}
+            {...item}
+            title={item.category}
+            products={item.products}
+            pagination={item.pagination}
+            limit={PRODUCT_LIMIT}
+            apiQuery={`category=${item.queryName}`}
+            enableLazy={false}
+          />
+        ))}
+        <TitleSection
+          title="Explore Popular Categories"
+          subtitle="Welcome to The World of Highest-Quality Rudraksha"
         />
-      ))}
-      <TitleSection
-        title="Explore Popular Categories"
-        subtitle="Welcome to The World of Highest-Quality Rudraksha"
-      />
-      <ImageSection />
-      {fourthBatch.map((item: any) => (
-        <ProductSection
-          key={item.category}
-          {...item}
-          title={item.category}
-          products={item.products}
-          pagination={item.pagination}
-          limit={PRODUCT_LIMIT}
-          apiQuery={`category=${item.queryName}`}
-          enableLazy={false}
-        />
-      ))}
-      <PlantsGallery />
-      {fifthBatch.map((item: any) => (
-        <ProductSection
-          key={item.category}
-          {...item}
-          title={item.category}
-          products={item.products}
-          pagination={item.pagination}
-          limit={PRODUCT_LIMIT}
-          apiQuery={`category=${item.queryName}`}
-          enableLazy={false}
-        />
-      ))}
-      <FeaturesSection />
-      <Blogs />
+        <ImageSection />
+        {fourthBatch.map((item: any) => (
+          <ProductSection
+            key={item.category}
+            {...item}
+            title={item.category}
+            products={item.products}
+            pagination={item.pagination}
+            limit={PRODUCT_LIMIT}
+            apiQuery={`category=${item.queryName}`}
+            enableLazy={false}
+          />
+        ))}
+        <PlantsGallery />
+        {fifthBatch.map((item: any) => (
+          <ProductSection
+            key={item.category}
+            {...item}
+            title={item.category}
+            products={item.products}
+            pagination={item.pagination}
+            limit={PRODUCT_LIMIT}
+            apiQuery={`category=${item.queryName}`}
+            enableLazy={false}
+          />
+        ))}
+        <FeaturesSection />
+        <Blogs />
     </MainTemplates>
   );
 };

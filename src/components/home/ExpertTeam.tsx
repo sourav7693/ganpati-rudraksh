@@ -27,7 +27,7 @@ const ExpertTeam = () => {
     },
   ];
   return (
-    <section className="flex flex-col gap-4 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4">
+    <section className="flex flex-col gap-4 section-container py-4">
       <h1 className="text-2xl font-bold text-define-brown">Team of Experts</h1>
       <div className="relative">
         <Swiper

@@ -74,7 +74,7 @@ export default function VideoGallery() {
   };
 
   return (
-    <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto p-4 overflow-hidden">
+    <section className="section-container p-4 overflow-hidden">
       {/* Video Popup Overlay */}
       {selectedVideo && (
         <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">

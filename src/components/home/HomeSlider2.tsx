@@ -16,7 +16,7 @@ export default function Homebanner2() {
   ];
 
   return (
-    <section className="2xl:max-w-360 xxl:max-w-460 lg:max-w-300 mx-auto md:px-0 px-4 py-6">
+    <section className="2xl:max-w-360 xxl:max-w-[1300px] lg:max-w-300 mx-auto md:px-0 px-4 py-6">
       <div className="relative">
         <Swiper
           modules={[Autoplay, Navigation]}

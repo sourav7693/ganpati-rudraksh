@@ -393,6 +393,20 @@ export default function CheckoutClient() {
   }, [selectedAddress, selectedAddressId]);
 
   const handleCouponSelect = (c: CouponType) => {
+    const now = new Date();
+    const startDate = new Date(c.startDate);
+    const expirationDate = new Date(c.expirationDate);
+
+    if (now < startDate) {
+      setCouponMessage("Coupon is not active yet");
+      return;
+    }
+
+    if (now > expirationDate) {
+      setCouponMessage("Coupon has expired");
+      return;
+    }
+
     setCoupon(c.code);
     applyCoupon(c);
   };
@@ -404,12 +418,11 @@ export default function CheckoutClient() {
       discountAmount = Math.round(
         (totalFinalPrice * found.discountValue) / 100,
       );
+      if (found.maxDiscountAmount) {
+        discountAmount = Math.min(discountAmount, found.maxDiscountAmount);
+      }
     } else {
       discountAmount = Math.round(found.discountValue);
-    }
-
-    if (found.maxDiscountAmount) {
-      discountAmount = Math.min(discountAmount, found.maxDiscountAmount);
     }
 
     setAppliedCoupon(found);
@@ -439,6 +452,24 @@ export default function CheckoutClient() {
 
     if (!found) {
       setCouponMessage("Invalid or ineligible coupon");
+      setCouponDiscount(0);
+      setAppliedCoupon(null);
+      return;
+    }
+
+    const now = new Date();
+    const startDate = new Date(found.startDate);
+    const expirationDate = new Date(found.expirationDate);
+
+    if (now < startDate) {
+      setCouponMessage("Coupon is not active yet");
+      setCouponDiscount(0);
+      setAppliedCoupon(null);
+      return;
+    }
+
+    if (now > expirationDate) {
+      setCouponMessage("Coupon has expired");
       setCouponDiscount(0);
       setAppliedCoupon(null);
       return;

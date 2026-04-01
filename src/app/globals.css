@@ -27,6 +27,10 @@
     @apply bg-linear-to-r from-define-brown to-define-red shadow-md shadow-define-brown/30 transition-all duration-300 hover:from-define-red hover:to-define-brown hover:shadow-lg hover:shadow-define-red/40
   }
 
+  .section-container {
+    @apply mx-auto w-full px-4 xlg:max-w-325;
+  }
+
 .custom-scroll::-webkit-scrollbar {
   width: 0.5px;
 }

@@ -57,7 +57,7 @@ export default function HomeCategory({
 
   return (
     <section className="pb-2">
-      <div className="mx-auto xxl:max-w-460 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4 flex flex-col gap-4 lg:gap-8">
+      <div className="section-container flex flex-col gap-4 lg:gap-8">
         <div className="flex justify-between items-center">
           <h2 className=" lg:text-2xl text-center lg:text-left font-bold text-define-black">
             {title}
