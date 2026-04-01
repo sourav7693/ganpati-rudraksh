@@ -182,7 +182,7 @@ export default function PlantsGallery() {
               transform: `translateX(-${startIndex * (100 / VISIBLE_COUNT)}%)`,
             }}
           >
-            {images.map((item, realIndex) => {
+            {images.filter(img => img.status != "inactive").map((item, realIndex) => {
               const isActive = realIndex === activeIndex;
               return (
                 <div

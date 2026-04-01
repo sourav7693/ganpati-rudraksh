@@ -1,141 +1,132 @@
-// "use client";
-
-// import Image from "next/image";
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import { Autoplay, Navigation } from "swiper/modules";
-// import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-// import { useEffect, useRef, useState } from "react";
-// import axios from "axios";
-
-// type Banner = {
-//   _id: string;
-//   image: { url: string };
-//   title?: string;
-// };
-
-// export default function Homebanner() {
-//    const [banners, setBanners] = useState<Banner[]>([]);
-//    const [loading, setLoading] = useState(true);
-//    const prevRef = useRef(null);
-//    const nextRef = useRef(null);
-
-//     useEffect(() => {
-//       const fetchBanners = async () => {
-//         try {
-//           // 👇 Update this URL to match your specific API endpoint
-//           const res = await axios(
-//             `${process.env.NEXT_PUBLIC_API_URL}/slider?page=1&limit=8&status=true`,
-//           );
-
-//           if (res.data.success) {
-//             // Assuming your API returns { success: true, data: [...] }
-//             setBanners(res.data.sliders || []);
-//           }
-//         } catch (error) {
-//           console.error("Failed to fetch banners:", error);
-//         } finally {
-//           setLoading(false);
-//         }
-//       };
-
-//       fetchBanners();
-//     }, []);
-
-//     // Optional: Loading Skeleton
-//     if (loading) {
-//       return (
-//         <div className="w-full h-[13rem] md:h-[450px] lg:h-[520px] bg-gray-200 animate-pulse" />
-//       );
-//     }
-
-//     // If no banners found, don't render the slider
-//     if (banners.length === 0) return null;
-
-//   return (
-//     <div className="relative w-full mx-auto">
-//       <Swiper
-//         modules={[Autoplay, Navigation]}
-//         autoplay={{
-//           delay: 4000,
-//           disableOnInteraction: false,
-//         }}
-//         loop={banners.length > 1}
-//         onBeforeInit={(swiper) => {
-//           // @ts-ignore
-//           swiper.params.navigation.prevEl = prevRef.current;
-//           // @ts-ignore
-//           swiper.params.navigation.nextEl = nextRef.current;
-//         }}
-//         navigation={{
-//           prevEl: prevRef.current,
-//           nextEl: nextRef.current,
-//         }}
-//         className="hidden lg:block xxl:h-[800px] 2xl:h-[650px] lg:h-[450px]"
-//       >
-//         {banners.map((item, index) => (
-//           <SwiperSlide key={item._id || index} className="h-full">
-//             <div className="relative h-full w-full">
-//               <Image
-//                 src={item.image.url}
-//                 alt={`Banner ${index + 1}`}
-//                 fill
-//                 priority={index === 0}
-//                 className="object-cover size-full"
-//               />
-//             </div>
-//           </SwiperSlide>
-//         ))}
-//       </Swiper>
-
-//       {banners.length > 1 && (
-//         <button
-//           ref={prevRef}
-//           className="absolute left-0 top-1/2 z-10 -translate-y-1/2 bg-white/80 py-6 shadow hover:bg-white rounded-tr-[12px] rounded-br-[12px] cursor-pointer"
-//         >
-//           <BiChevronLeft size={20} className="text-black" />
-//         </button>
-//       )}
-
-//       {banners.length > 1 && (
-//         <button
-//           ref={nextRef}
-//           className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-tl-[12px] rounded-bl-[12px] bg-white/80 py-6 shadow hover:bg-white cursor-pointer"
-//         >
-//           <BiChevronRight size={20} className="text-black" />
-//         </button>
-//       )}
-//     </div>
-//   );
-// }
-
 "use client";
-import { useEffect, useRef } from "react";
+import { SliderItem } from "@/types/types";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { Autoplay, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function HomeSlider() {
-  const videoRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [sliders, setSliders] = useState<SliderItem[]>([]);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      (videoRef.current as HTMLVideoElement)
-        .play()
-        .catch((error) => console.log("Autoplay blocked:", error));
-    }
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await axios(
+          `${process.env.NEXT_PUBLIC_API_URL}/slider?page=1&limit=10&status=true`,
+        );
+
+        if (res.data.success) {
+          setSliders(res.data.sliders || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch banners:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  // autoplay fix
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      video?.play().catch(() => {});
+    });
+  }, [sliders]);
+
+  if (isMobile === null) return null;
+  
+  const filtered = sliders.filter((item) => {
+    if (item.target === "all") return true;
+    if (item.target === "mobile") return isMobile;
+    if (item.target === "desktop") return !isMobile;
+    return true;
+  });
+
+  if (!filtered.length) return null;
+
+  if (loading) {
+    return (
+      <div className="w-full h-[13rem] md:h-[450px] lg:h-[520px] bg-gray-200 animate-pulse" />
+    );
+  }
+
   return (
-    <div className="w-full hidden lg:block ">
-      <video
-        ref={videoRef}
-        width="1440"
-        height="550"
-        loop
-        autoPlay
-        muted
-        playsInline
-        className="w-full h-[650px] object-cover"
+    <div className="relative mx-auto w-full">
+      <Swiper
+        modules={[Autoplay, Navigation]}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        loop={filtered.length > 1}
+        onBeforeInit={(swiper) => {
+          // @ts-ignore
+          swiper.params.navigation.prevEl = prevRef.current;
+          // @ts-ignore
+          swiper.params.navigation.nextEl = nextRef.current;
+        }}
+        onSlideChange={(swiper) => {
+          const activeSlide = swiper.slides[swiper.activeIndex];
+          const video = activeSlide.querySelector("video");
+
+          if (video) {
+            swiper.autoplay.stop();
+
+            video.currentTime = 0;
+            video.play().catch(() => {});
+
+            video.onended = () => {
+              swiper.autoplay.start();
+              swiper.slideNext();
+            };
+          } else {
+            swiper.autoplay.start();
+          }
+        }}
+        className="h-[750px] xxl:h-[950px] 2xl:h-[650px] lg:h-[550px]"
       >
-        <source src="/slider/rvideo.mp4" type="video/mp4" />
-      </video>
+        {filtered.map((item, index) => (
+          <SwiperSlide key={item.sliderId || index} className="h-full">
+            <div className="relative h-full w-full">
+              {item.media.resource_type === "image" ? (
+                <Image
+                  src={item.media.url}
+                  alt={`Banner ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  className="object-cover size-full"
+                />
+              ) : (
+                <video
+                  src={item.media.url}
+                  className="object-cover size-full w-full h-full"
+                  muted
+                  playsInline
+                  autoPlay
+                  preload="none"
+                />
+              )}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }

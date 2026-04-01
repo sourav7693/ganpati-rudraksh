@@ -244,6 +244,16 @@ export interface AddressType {
   alternateMobile: string;
 }
 
+export interface SliderItem {
+  sliderId: string;
+  name: string;
+  media: {
+    url: string;
+    resource_type: "image" | "video";
+  };
+  target: "all" | "mobile" | "desktop";
+}
+
 export type ImageType = {
   public_id: string;
   url: string;
