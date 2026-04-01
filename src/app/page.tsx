@@ -1,6 +1,5 @@
 import { fetchProducts } from "@/api/product";
 import { fetchCategories } from "@/api/category";
-import MobileSlider from "@/components/home/MobileSlider";
 import Blogs from "@/components/home/Blogs";
 import ExpertTeam from "@/components/home/ExpertTeam";
 import FeaturesSection from "@/components/home/FeaturesSection";
@@ -56,8 +55,7 @@ const fourthBatch = categoryProducts.slice(9, 12);
 const fifthBatch = categoryProducts.slice(12, 15);
   return (
     <MainTemplates>
-      <HomeSlider />
-      <MobileSlider />
+      <HomeSlider />      
       <HomeSlider2 />
       <HomeCategory
         title="Shop by Categories"

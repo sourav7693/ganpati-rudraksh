@@ -131,16 +131,18 @@ export default function VideoGallery() {
               transform: `translateX(-${startIndex * (100 / VISIBLE_COUNT)}%)`,
             }}
           >
-            {videos.map((item, index) => (
-              <div key={item._id} className="">
-                <VideoGalleryCard
-                  thumbnail={item.video.thumbnailUrl}
-                  title={item.video.videoName}
-                  active={false}
-                  onClick={() => setSelectedVideo(item.video.videoUrl)}
-                />
-              </div>
-            ))}
+            {videos
+              .filter((vid) => vid.status != "inactive")
+              .map((item) => (
+                <div key={item._id} className="">
+                  <VideoGalleryCard
+                    thumbnail={item.video.thumbnailUrl}
+                    title={item.video.videoName}
+                    active={false}
+                    onClick={() => setSelectedVideo(item.video.videoUrl)}
+                  />
+                </div>
+              ))}
           </div>
         </div>
 
@@ -150,19 +152,21 @@ export default function VideoGallery() {
           className="flex lg:hidden gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
           style={{ scrollbarWidth: "none" }}
         >
-          {videos.map((item) => (
-            <div
-              key={item._id}
-              className="snap-center shrink-0 w-[85vw] md:w-[45vw]"
-            >
-              <VideoGalleryCard
-                thumbnail={item.video.thumbnailUrl}
-                title={item.video.videoName}
-                active={false}
-                onClick={() => setSelectedVideo(item.video.videoUrl)}
-              />
-            </div>
-          ))}
+          {videos
+            .filter((vid) => vid.status != "inactive")
+            .map((item) => (
+              <div
+                key={item._id}
+                className="snap-center shrink-0 w-[85vw] md:w-[45vw]"
+              >
+                <VideoGalleryCard
+                  thumbnail={item.video.thumbnailUrl}
+                  title={item.video.videoName}
+                  active={false}
+                  onClick={() => setSelectedVideo(item.video.videoUrl)}
+                />
+              </div>
+            ))}
         </div>
 
         {/* Mobile Arrows/Pagination */}

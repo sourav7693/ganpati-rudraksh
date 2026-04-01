@@ -10,7 +10,7 @@ const MainTemplate = ({
 }) => {
   return (
     <div className="flex w-full h-full flex-col">
-      <div className="z-[1000] w-full fixed top-0 left-0">        
+      <div className="z-100 w-full fixed top-0 left-0">        
         <Header />
       </div>
 
