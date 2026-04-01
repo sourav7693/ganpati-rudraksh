@@ -13,6 +13,8 @@ import { toggleWishlistApi } from "@/api/wishlist";
 import { IoMdSync } from "react-icons/io";
 import { FaPlus, FaRupeeSign } from "react-icons/fa";
 import AddAddressModal from "@/components/account/AddAddressModal";
+import { checkPinCodeServiceability } from "@/api/product";
+
 
 interface RazorpayInstance {
   open: () => void;
@@ -68,6 +70,10 @@ export default function CheckoutClient() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
   );
+  const [isServiceable, setIsServiceable] = useState<boolean | null>(null);
+  const [isCheckingServiceability, setIsCheckingServiceability] =
+    useState(false);
+
   const router = useRouter();
   const [showAddAddress, setShowAddAddress] = useState(false);
   const { customer, refreshCustomer } = useCustomer();
@@ -429,6 +435,38 @@ export default function CheckoutClient() {
     setCouponDiscount(discountAmount);
     setCouponMessage(`Coupon ${found.code} applied`);
   };
+
+  useEffect(() => {
+    const checkServiceability = async () => {
+      const pin = selectedAddress?.pin || selectedAddress?.pincode;
+
+      if (!pin) {
+        setIsServiceable(null);
+        return;
+      }
+
+      setIsCheckingServiceability(true);
+      try {
+        const res = await checkPinCodeServiceability(pin.toString());
+        if (res && res.data?.success) {
+          setIsServiceable(true);
+        } else {
+          setIsServiceable(false);
+          toast.error("Courier service not available at this pincode");
+        }
+      } catch (error) {
+        console.error("Serviceability check failed:", error);
+        setIsServiceable(false);
+      } finally {
+        setIsCheckingServiceability(false);
+      }
+    };
+
+    if (selectedAddress) {
+      checkServiceability();
+    }
+  }, [selectedAddress]);
+
 
   const payableAmount = Math.max(
     Math.round(totalFinalPrice - couponDiscount),
@@ -919,14 +957,23 @@ export default function CheckoutClient() {
         <button
           onClick={handlePayment}
           disabled={
-            hasOutOfStockItems || totalFinalPrice <= 0 || !selectedAddress
+            hasOutOfStockItems ||
+            totalFinalPrice <= 0 ||
+            !selectedAddress ||
+            isCheckingServiceability ||
+            isServiceable === false
           }
           className={`mt-6 w-full rounded-full py-3 text-white font-semibold hover:scale-[1.03] transition-all duration-200 flex items-center justify-center ${
-            hasOutOfStockItems || totalFinalPrice <= 0 || !selectedAddress
+            hasOutOfStockItems ||
+            totalFinalPrice <= 0 ||
+            !selectedAddress ||
+            isCheckingServiceability ||
+            isServiceable === false
               ? "bg-gray-400 cursor-not-allowed from-gray-400 to-gray-500"
               : "btn-grad"
           }`}
         >
+
           {hasOutOfStockItems ? (
             <>
               <span className="w-5 h-5 mr-2">
@@ -945,6 +992,10 @@ export default function CheckoutClient() {
             "Empty Cart"
           ) : !selectedAddress ? (
             "Select Address First"
+          ) : isCheckingServiceability ? (
+            "Checking Serviceability..."
+          ) : isServiceable === false ? (
+            "Pincode Not Deliverable"
           ) : (
             <>
               Pay <FaRupeeSign className="inline" />
@@ -955,6 +1006,7 @@ export default function CheckoutClient() {
               Now
             </>
           )}
+
         </button>
       </div>
       {showAddAddress && (

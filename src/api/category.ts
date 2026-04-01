@@ -1,5 +1,6 @@
 import { CategoryType } from "@/types/types";
 import { api } from "./customer";
+import { cache } from "react";
 
 export type CategoryUI = {
   parent: {
@@ -15,7 +16,7 @@ export type CategoryUI = {
 };
 
 // Accept page and limit as arguments
-export async function fetchCategories(page: number = 1, limit: number = 10): Promise<CategoryUI[]> {
+export const fetchCategories = cache(async (page: number = 1, limit: number = 10): Promise<CategoryUI[]> => {
   // Pass params to your API
   const res = await api(`/category?limit=${limit}&page=${page}`);
 
@@ -62,5 +63,5 @@ export async function fetchCategories(page: number = 1, limit: number = 10): Pro
     });
   }  
 
- return grouped;
-}
+  return grouped;
+});

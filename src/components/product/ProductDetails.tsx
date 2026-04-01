@@ -31,7 +31,15 @@ export interface ProductVariantResponse {
   };
 }
 
-const ProductDetails = ({ product }: { product: ProductType }) => {
+const ProductDetails = ({ 
+    product, 
+    initialVariants = [], 
+    initialVariantOptions = {} 
+  }: { 
+    product: ProductType, 
+    initialVariants?: ProductType[], 
+    initialVariantOptions?: { color?: string[]; size?: string[] } 
+  }) => {
   const { customer, refreshCustomer } = useCustomer();
   const isInCart = (customer?.cart ?? []).some((item) => {
     if (!item.productId) return false;
@@ -58,7 +66,10 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   const [error, setError] = useState<string | null>(null);
   const [hasChecked, setHasChecked] = useState(false);
 
-  const [currentProduct, setCurrentProduct] = useState<ProductType>(product);
+  const [currentProduct, setCurrentProduct] = useState<ProductType>({
+    ...product,
+    variants: initialVariants
+  });
 
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
@@ -76,7 +87,7 @@ const ProductDetails = ({ product }: { product: ProductType }) => {
   const [variantOptions, setVariantOptions] = useState<{
     color?: string[];
     size?: string[];
-  }>({});
+  }>(initialVariantOptions);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -289,21 +300,25 @@ const hasColor = allProducts.some((v) =>
 
   useEffect(() => {
     if (!slug) return;
+    
+    // Skip initial load if props already match the slug (SSR performance)
+    if (currentProduct.slug === slug && Object.keys(variantOptions).length > 0) {
+      return;
+    }
 
     const loadVariants = async () => {
       try {
         setVariantLoading(true);
 
-      const { selectedProduct, variants, variantOptions } =
-        await fetchProductWithVariants(slug);
+        const { selectedProduct, variants, variantOptions } =
+          await fetchProductWithVariants(slug);
 
-      setCurrentProduct({
-        ...selectedProduct,
-        variants,
-      });
+        setCurrentProduct({
+          ...selectedProduct,
+          variants,
+        });
 
-      setVariantOptions(variantOptions);
-     
+        setVariantOptions(variantOptions);
 
         setActiveImage(
           selectedProduct.images?.[0] ?? selectedProduct.coverImage,
@@ -316,7 +331,7 @@ const hasColor = allProducts.some((v) =>
     };
 
     loadVariants();
-  }, [slug]);
+  }, [slug, product.slug]);
 
    const findVariant = (key: "Color" | "Size", value: string) => {
      return currentProduct?.variants?.find((v) =>

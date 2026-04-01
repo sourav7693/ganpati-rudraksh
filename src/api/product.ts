@@ -1,4 +1,5 @@
 import { api } from "./customer";
+import { cache } from "react";
 
 export async function fetchProducts(query: string = "") {
     const PRODUCT_LIMIT = 10;
@@ -13,7 +14,7 @@ export async function fetchProducts(query: string = "") {
   }
 }
 
-export async function fetchProductBySlug(slug: string) {
+export const fetchProductBySlug = cache(async (slug: string) => {
   try {
     const res = await api.get(
       `product/${slug}`,
@@ -24,7 +25,18 @@ export async function fetchProductBySlug(slug: string) {
     console.log(err);
     return null;
   }
-}
+});
+
+export const fetchFullProduct = cache(async (slug: string) => {
+  try {
+    const res = await api.get(`product/variants/${slug}`);
+    if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
+    return res.data.data;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+});
 
 export const fetchRelatedProducts = async (slug: string) => {
    try {

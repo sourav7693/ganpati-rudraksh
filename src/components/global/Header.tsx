@@ -1,9 +1,9 @@
 "use client";
 
-import { CategoryUI, fetchCategories } from "@/api/category";
 import TopHeader from "./TopHeader";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useCategories } from "@/context/CategoryContext";
 import { FaChevronDown } from "react-icons/fa6";
 
 export type NavLinkType = {
@@ -12,28 +12,14 @@ export type NavLinkType = {
 };
 
 const Header = () => {
-  const [accessories, setAccessories] = useState<
-    { name: string; href: string }[]
-  >([]);
+  const { categories } = useCategories();
 
-  useEffect(() => {
-    async function loadCategories() {
-      try {
-        const data: CategoryUI[] = await fetchCategories(1, 100);
-
-        const mapped = data.map((cat) => ({
-          name: cat.parent.name,
-          href: `/products?category=${cat.parent.name}`,
-        }));
-
-        setAccessories(mapped);
-      } catch (err) {
-        console.error("Failed to load categories", err);
-      }
-    }
-
-    loadCategories();
-  }, []);
+  const accessories = useMemo(() => {
+    return (categories || []).map((cat) => ({
+      name: cat.parent.name,
+      href: `/products?category=${cat.parent.name}`,
+    }));
+  }, [categories]);
 
   const navLinks: NavLinkType[] = [
     {
@@ -81,7 +67,7 @@ const Header = () => {
 
       {/* DESKTOP NAV */}
       <header className="hidden md:block border border-gray-200 bg-white">
-        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4">
+        <div className="mx-auto 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4">
           <nav className="flex justify-between py-4 text-gray-700 font-medium">
             {navLinks.map((item, idx) => (
               <div key={idx} className="relative group">
@@ -99,7 +85,7 @@ const Header = () => {
                 {item.dropdown && item.dropdown.length > 0 && (
                   <div
                     className="
-                    absolute -left-1/4 top-full mt-3 w-[700px]
+                    absolute -left-1/4 top-full mt-3 w-175
                     bg-white border border-gray-200 shadow-lg rounded-md
                     opacity-0 invisible translate-y-2
                     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0

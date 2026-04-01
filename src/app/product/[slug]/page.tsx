@@ -1,4 +1,4 @@
-import { fetchProductBySlug } from "@/api/product";
+import { fetchProductBySlug, fetchFullProduct } from "@/api/product";
 import { ProductType } from "@/types/types";
 import { Metadata } from "next";
 import MainTemplates from "@/templates/MainTemplate";
@@ -22,12 +22,7 @@ export async function generateMetadata({
   const { slug } = await params;
 
   try {
-    const res = await api.get(`/product/${slug}`);
-
-    if (!res.status || res.status !== 200)
-      throw new Error("Product fetch failed");
-
-    const product = res.data;
+    const product = await fetchProductBySlug(slug);
 
     return {
       title: product.name,
@@ -64,10 +59,9 @@ export async function generateMetadata({
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  let product: ProductType | null = null;
-  product = await fetchProductBySlug(slug);
+  const fullProduct = await fetchFullProduct(slug);
 
-  if (!product) {
+  if (!fullProduct) {
     return (
       <MainTemplates>
         <h2 className="text-center text-red-500 py-20 text-xl">
@@ -76,16 +70,18 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
       </MainTemplates>
     );
   }
-  return (
     <MainTemplates>
       <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto px-4 md:py-10  flex flex-col gap-8">
-        <ProductDetails product={product} />
+        <ProductDetails 
+          product={fullProduct.selectedProduct} 
+          initialVariants={fullProduct.variants}
+          initialVariantOptions={fullProduct.variantOptions}
+        />
         <div className="w-full max-md:mb-6">
-          <RelatedProductSection slug={product.slug} />
+          <RelatedProductSection slug={fullProduct.selectedProduct.slug} />
         </div>
       </section>
     </MainTemplates>
-  );
 };
 
 export default page;
