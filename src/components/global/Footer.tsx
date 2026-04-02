@@ -78,8 +78,8 @@ export default function Footer() {
       <div className="absolute inset-0" />
 
       <div className="relative z-10 pb-6 pt-12">
-        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
+        <div className="section-container">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 rounded bg-white/10 backdrop-blur-md px-6 py-4 w-full">
             <p className="text-[17px] text-white">
               Get a call back within 15 minutes. WhatsApp us 24x7 <br />
               between 9:00 AM and 8:00 PM.
@@ -118,9 +118,9 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10">
-        <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4 pb-12 pt-6">
+        <div className="section-container pb-12 pt-6">
           <div className="text-gray-300">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 w-full">
               <div className="lg:col-span-3">
                 <Link href="/" className="block">
                   <Image
@@ -251,7 +251,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto 2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 lg:max-w-300 px-4">
+      <div className="section-container">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded bg-white/10 backdrop-blur-md px-6 py-4">
           <div className="flex items-center gap-3">
             <p className="text-white text-sm whitespace-nowrap">We Accept</p>

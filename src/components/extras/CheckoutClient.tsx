@@ -377,8 +377,8 @@ export default function CheckoutClient() {
           `coupon?min=${totalFinalPrice}&expire=${new Date().toISOString()}`,
         );
         const data = res.data;
-
-        setAvailableCoupons(data.coupons || []);
+        const allCoupons = data.coupons.filter((c: CouponType) => !c.usedBy.includes(customer?._id as any)) || [];
+        setAvailableCoupons(allCoupons);
       } catch (err) {
         console.error("Failed to fetch coupons", err);
       }

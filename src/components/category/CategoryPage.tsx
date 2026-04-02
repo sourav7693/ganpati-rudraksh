@@ -159,7 +159,7 @@ export default function CategoryPage({
 
   return (
     <section className="md:py-8 section-container flex flex-col">
-      <div className="flex justify-between items-start mb-4 p-2 ">
+      <div className="flex justify-between items-start mb-4">
         {/* SIDEBAR */}
         <div className="w-[20%] lg:w-[10%] bg-white h-full">
           <CategorySidebar categories={categories} />

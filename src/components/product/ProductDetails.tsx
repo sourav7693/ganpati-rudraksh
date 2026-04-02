@@ -536,7 +536,7 @@ const hasColor = allProducts.some((v) =>
               </span>
               <span className="text-[16px] text-gray-600">
                 {product.ratingCount.toLocaleString()} Ratings &{" "}
-                {product.reviews.length} Reviews
+                {product.reviews?.length || 0} Reviews
               </span>
             </Link>
 
@@ -834,9 +834,9 @@ const hasColor = allProducts.some((v) =>
                 averageRating={product.averageRating}
                 ratingCount={product.ratingCount}
                 ratingBreakdown={product.ratingBreakdown}
-                reviewsCount={product.reviews.length}
+                reviewsCount={product.reviews?.length || 0}
               />
-              {product.reviews.map((review: any) => (
+              {product.reviews?.map((review: any) => (
                 <ReviewCard key={review._id} review={review} />
               ))}
             </div>

@@ -1,20 +1,26 @@
 import MainTemplate from "@/templates/MainTemplate";
-import HomeSlider from "@/components/home/HomeSlider";
-import HomeSlider2 from "@/components/home/HomeSlider2";
 import { Suspense } from "react";
 import HomeCategory from "@/components/home/HomeCategory";
 import CardSkeleton from "@/ui/CardSkeleton";
+import Image from "next/image";
 export const dynamic = "force-dynamic";
 
 const page = async () => {
   return (
     <MainTemplate>
-      <HomeSlider />
-      <HomeSlider2 />
+      <div className="w-full h-auto pb-6">
+        <Image
+          src="/slider/subbanner.webp"
+          alt="Sub Banner"
+          width={1200}
+          height={300}
+          className="w-full h-auto object-cover"
+        />
+      </div>
       <Suspense
         fallback={
           <div className="py-6">
-            <div className="mx-auto 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4">
+            <div className="section-container">
               <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
                 <CardSkeleton />
                 <CardSkeleton />

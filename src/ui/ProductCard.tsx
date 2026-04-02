@@ -210,7 +210,7 @@ export default function ProductCard({
             />
           </button>
 
-          <div className="relative w-full h-[12rem]">
+          <div className="relative w-full h-[12rem] xxl:h-[15rem]">
             <Image
               src={coverImage.url}
               alt={coverImage.public_id}
@@ -260,7 +260,7 @@ export default function ProductCard({
           <div className="mt-2 flex justify-between items-center">
             <Link
               href={`/product/${slug}`}
-              className="text-xs  text-define-brown font-medium border rounded-full p-1 2xl:px-3 2xl:py-2 hover:bg-define-brown/10 hidden md:flex justify-center items-center gap-1"
+              className="text-xs xxl:text-[10px] xxl:p-2 text-define-brown font-medium border rounded-full p-1 2xl:px-3 2xl:py-2 hover:bg-define-brown/10 hidden md:flex justify-center items-center gap-1"
             >
               <PiWarningCircleLight size={18} />
               More Info
@@ -270,7 +270,7 @@ export default function ProductCard({
               onClick={handleCart}
               className={`cursor-pointer max-md:w-full relative z-20 
           group flex items-center justify-center gap-2
-          text-xs font-semibold p-2 2xl:px-3 2xl:py-2 rounded-full                     
+          text-xs xxl:text-[10px] xxl:p-2 font-semibold p-2 2xl:px-3 2xl:py-2 rounded-full                     
           ${isAnimating ? "scale-90" : "scale-100"} 
           ${
             isInCart

@@ -10,7 +10,7 @@ const TitleSection: React.FC<TextCenterSectionProps> = ({
   subtitle,
 }) => {
   return (
-    <section className="section-container py-2">
+    <section className="section-container w-full py-2">
       <div className="flex flex-col gap-1">
         <h2 className="text-2xl lg:text-3xl font-bold tracking-wide text-define-brown text-left">
           {title}

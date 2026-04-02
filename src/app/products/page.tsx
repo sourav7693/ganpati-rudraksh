@@ -1,8 +1,8 @@
 import MainTemplate from "@/templates/MainTemplate";
-import HomeSlider from "@/components/home/HomeSlider";
 import TitleSection from "@/components/home/TitleSection";
 import ImageSection from "@/components/home/ImageSection";
 import CategoryPage from "@/components/category/CategoryPage";
+import Image from "next/image";
 export const dynamic = "force-dynamic";
 const page = async ({
   searchParams,
@@ -17,8 +17,16 @@ const page = async ({
   const { category, brand, attribute, query } = await searchParams;
 
   return (
-    <MainTemplate>
-      <HomeSlider />      
+    <MainTemplate>      
+       <div className="w-full h-auto pb-6">
+              <Image
+                src="/slider/subbanner.webp"
+                alt="Sub Banner"
+                width={1200}
+                height={300}
+                className="w-full h-auto object-cover"
+              />
+            </div>
       <CategoryPage
         activeCategory={category || ""}
         activeBrand={brand || ""}

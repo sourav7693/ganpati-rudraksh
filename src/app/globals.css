@@ -28,7 +28,7 @@
   }
 
   .section-container {
-    @apply mx-auto w-full px-4 xlg:max-w-325;
+    @apply mx-auto 2xl:max-w-360 lg:max-w-300 xxl:max-w-380 px-4;
   }
 
 .custom-scroll::-webkit-scrollbar {

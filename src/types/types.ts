@@ -88,6 +88,7 @@ export interface CouponType {
   minOrderAmount: number;
   maxDiscountAmount: number;
   startDate: string;
+  usedBy: Customer[];
   status: boolean;
   expirationDate: string;
   usageLimit: number;

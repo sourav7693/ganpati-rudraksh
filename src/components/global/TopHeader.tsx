@@ -216,11 +216,26 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
       //  setShowLoader(false);
     }
   };
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+// useEffect(() => {
+//   let lastScrollY = window.scrollY;
+
+//   const handleScroll = () => {
+//     const currentScrollY = window.scrollY;
+
+//     if (currentScrollY > lastScrollY) {
+//       // scrolling DOWN → hide
+//       setScrolled(true);
+//     } else {
+//       // scrolling UP → show (no condition at all)
+//       setScrolled(false);
+//     }
+
+//     lastScrollY = currentScrollY;
+//   };
+
+//   window.addEventListener("scroll", handleScroll);
+//   return () => window.removeEventListener("scroll", handleScroll);
+// }, []);
 
   // const handleMobileBack = () => {
   //   setMobileSearchOpen(false);
@@ -235,7 +250,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
         </div>
       )}
       <div
-        className={`fixed md:hidden top-0 left-0 h-full w-[80%] bg-white z-[999]
+        className={`fixed lg:hidden top-0 left-0 h-full w-[80%] bg-white z-[999]
         transform transition-transform duration-300
         ${menuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
@@ -294,17 +309,15 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
         <div
           className={`
     w-full h-[4.5rem] md:h-[5rem] text-define-brown flex justify-between items-center px-4 md:px-10 
-    2xl:2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto z-[60] relative
-    transition-transform duration-300
-    md:translate-y-0
-    ${scrolled ? "-translate-y-full md:translate-y-0" : "translate-y-0"}
+   section-container z-[60] relative
+    transition-transform duration-300        
   `}
         >
           {/* LOGO */}
           <div className="flex gap-2 items-center justify-center">
             <button
               onClick={() => setMenuOpen(true)}
-              className="md:hidden size-10 rounded-full flex items-center justify-center bg-define-white"
+              className="lg:hidden size-10 rounded-full flex items-center justify-center bg-define-white"
             >
               <FiMenu className="text-define-red size-5" />
             </button>
@@ -320,7 +333,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
             </Link>
           </div>
 
-          <div ref={inputRef} className="hidden md:flex">
+          <div ref={inputRef} className="hidden lg:flex">
             <div
               className={`
                   flex items-center bg-define-white rounded-full shadow-sm overflow-hidden
@@ -550,7 +563,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
 
         <div
           className={`
-    md:hidden bg-white border-b border-gray-200 pb-4
+    lg:hidden bg-white border-b border-gray-200 pb-4
     transition-all duration-300 ease-in-out
     sticky top-0 z-[55]
     ${scrolled ? "-mt-[4rem]" : "mt-0"}

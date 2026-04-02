@@ -66,8 +66,8 @@ const Header = () => {
       <TopHeader navLinks={navLinks} />
 
       {/* DESKTOP NAV */}
-      <header className="hidden md:block border border-gray-200 bg-white">
-        <div className="mx-auto 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4">
+      <header className="hidden lg:block border border-gray-200 bg-white">
+        <div className="section-container">
           <nav className="flex justify-between py-4 text-gray-700 font-medium">
             {navLinks.map((item, idx) => (
               <div key={idx} className="relative group">

@@ -67,7 +67,7 @@ export default function HomeSlider() {
   }
 
   return (
-    <div className="relative mx-auto w-full">
+    <div className="relative mx-auto w-full pb-6">
       <Swiper
         modules={[Autoplay, Navigation]}
         autoplay={{
