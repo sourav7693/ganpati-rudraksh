@@ -59,8 +59,7 @@ export async function generateMetadata({
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const fullProduct = await fetchFullProduct(slug);
-  console.log("Fetched product details:", fullProduct);
+  const fullProduct = await fetchFullProduct(slug);  
 
   if (!fullProduct) {
     return (
@@ -73,7 +72,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   }
   return (
     <MainTemplates>
-      <section className="2xl:max-w-360 lg:max-w-300 xxl:max-w-460 mx-auto px-4 md:py-10  flex flex-col gap-8">
+      <section className="section-container md:py-10  flex flex-col gap-8">
         <ProductDetails 
           product={fullProduct.selectedProduct} 
           initialVariants={fullProduct.variants}

@@ -18,7 +18,7 @@ export default async function Layout({
 
   return (
     <MainTemplate>
-      <section className="flex justify-between items-center 2xl:max-w-360 lg:max-w-300 xxl:max-w-460 px-4 gap-4 mx-auto py-8 lg:pb-16">
+      <section className="flex justify-between items-center section-container gap-4 py-8 lg:pb-16">
         {/* sidebar */}
         <div className="lg:w-[30%] w-full self-start">
           <Sidebar />
