@@ -64,6 +64,12 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/apple-icon.png",
+      "regex": "^/apple\\-icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/apple\\-icon\\.png(?:/)?$"
+    },
+    {
       "page": "/categories",
       "regex": "^/categories(?:/)?$",
       "routeKeys": {},
@@ -82,6 +88,18 @@
       "namedRegex": "^/favicon\\.ico(?:/)?$"
     },
     {
+      "page": "/icon0.svg",
+      "regex": "^/icon0\\.svg(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon0\\.svg(?:/)?$"
+    },
+    {
+      "page": "/icon1.png",
+      "regex": "^/icon1\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon1\\.png(?:/)?$"
+    },
+    {
       "page": "/login",
       "regex": "^/login(?:/)?$",
       "routeKeys": {},
@@ -92,6 +110,12 @@
       "regex": "^/manage\\-address(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/manage\\-address(?:/)?$"
+    },
+    {
+      "page": "/manifest.json",
+      "regex": "^/manifest\\.json(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/manifest\\.json(?:/)?$"
     },
     {
       "page": "/my-account",
@@ -124,16 +148,40 @@
       "namedRegex": "^/my\\-wishlist(?:/)?$"
     },
     {
+      "page": "/privacy-policy",
+      "regex": "^/privacy\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy\\-policy(?:/)?$"
+    },
+    {
       "page": "/products",
       "regex": "^/products(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/products(?:/)?$"
     },
     {
+      "page": "/refund-policy",
+      "regex": "^/refund\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/refund\\-policy(?:/)?$"
+    },
+    {
       "page": "/review",
       "regex": "^/review(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/review(?:/)?$"
+    },
+    {
+      "page": "/shipping-policy",
+      "regex": "^/shipping\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/shipping\\-policy(?:/)?$"
+    },
+    {
+      "page": "/terms-conditions",
+      "regex": "^/terms\\-conditions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms\\-conditions(?:/)?$"
     },
     {
       "page": "/thank-you",
