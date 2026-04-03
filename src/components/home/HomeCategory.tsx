@@ -74,14 +74,14 @@ export default function HomeCategory({
           )}
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-8 place-items-stretch justify-items-stretch gap-2">
+        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 place-items-stretch justify-items-stretch gap-2">
           {categories.map((cat, index) => (
             <React.Fragment key={`${cat.parent.id}-${index}`}>
               <Link
                 href={`/products?category=${encodeURIComponent(cat.parent.name)}`}
                 className="text-center group"
               >
-                <div className="relative mx-auto size-[5.5rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
+                <div className="relative mx-auto size-[4.8rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
                   <Image
                     src={cat.parent.image}
                     alt={cat.parent.name}
@@ -102,7 +102,7 @@ export default function HomeCategory({
                     href={`/products?category=${encodeURIComponent(subCat.name)}`}
                     className="text-center group"
                   >
-                    <div className="relative mx-auto size-[5.5rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
+                    <div className="relative mx-auto size-[4.8rem] lg:size-[7rem] overflow-hidden rounded-md bg-gray-300">
                       <Image
                         src={subCat.image}
                         alt={subCat.name}

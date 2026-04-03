@@ -249,6 +249,13 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
           <LoadingAnimation />
         </div>
       )}
+      <div className="w-full">
+      <div
+        className={`fixed inset-0 z-[998] bg-black/40 transition-opacity duration-300 lg:hidden ${
+          menuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
       <div
         className={`fixed lg:hidden top-0 left-0 h-full w-[80%] bg-white z-[999]
         transform transition-transform duration-300
@@ -303,6 +310,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
             </div>
           ))}
         </div>
+      </div>
       </div>
 
       <header className="w-full bg-white">

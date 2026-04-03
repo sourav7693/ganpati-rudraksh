@@ -319,9 +319,9 @@ const reversedCart = cart.slice().reverse();
                       )}
                     </Link>
 
-                    <div className="md:flex hidden gap-2 lg:gap-4 lg:justify-evenly items-center lg:justify-start md:pb-1 max-lg:mt-3">
+                    <div className="md:flex hidden gap-2 lg:gap-4 lg:justify-evenly items-center md:pb-1 max-lg:mt-3">
                       <button
-                        className={`font-bold text-sm lg:text-base  ${
+                        className={`font-bold text-xs lg:text-base  ${
                           isOutOfStock
                             ? "text-gray-400 cursor-not-allowed"
                             : "hover:text-defined-green "

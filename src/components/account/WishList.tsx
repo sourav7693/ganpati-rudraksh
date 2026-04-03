@@ -76,7 +76,7 @@ const WishList = () => {
                     alt={item.product.coverImage?.public_id}
                     width={200}
                     height={200}
-                    className="aspect-square rounded object-cover"
+                    className="rounded object-cover"
                   />
                 </div>
                 <div className="flex flex-col justify-between w-full gap-4">
