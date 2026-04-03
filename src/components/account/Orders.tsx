@@ -461,14 +461,14 @@ export default function Orders() {
                       {isProductAvailable ? (
                         <Link
                           href={`/product/${order.product!.slug}`}
-                          className="lg:px-6 lg:py-4 p-3 text-sm lg:text-sm bg-yellow-400 rounded hover:bg-yellow-500 w-full md:w-fit text-center"
+                          className="lg:px-6 lg:py-4 p-3 text-sm lg:text-sm bg-yellow-400 rounded-full hover:bg-yellow-500 w-full md:w-fit text-center"
                         >
                           View Your Item
                         </Link>
                       ) : (
                         <button
                           disabled
-                          className="lg:px-6 lg:py-4 p-3 text-sm lg:text-xs bg-gray-200 text-gray-500 rounded w-full md:w-fit cursor-not-allowed"
+                          className="lg:px-6 lg:py-4 p-3 text-sm lg:text-xs bg-gray-200 text-gray-500 rounded-full w-full md:w-fit cursor-not-allowed"
                           title="Product no longer available"
                         >
                           Product Unavailable

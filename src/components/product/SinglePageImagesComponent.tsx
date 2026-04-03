@@ -98,166 +98,160 @@ const SinglePageImagesComponent: React.FC<Props> = ({ images = [],  isWishlisted
 
   return (
     <>
-    <div className="relative flex flex-col-reverse lg:flex-row gap-4">
-      {/* ---------- Thumbnails ---------- */}
-      <div className="flex lg:flex-col gap-4">
-        {visibleThumbs.map((img, i) => {
-          const index = thumbIndex + i;
-          return (
-            <div
-              key={index}
-              className={`relative w-16 h-16 cursor-pointer border ${
-                index === mainImageIndex
-                  ? "border-define-red shadow-sm"
-                  : "border-gray-300"
-              }`}
-              onClick={() => setMainImage(index)}
-            >
-              <Image
-                src={img}
-                alt={`Thumbnail ${index}`}
-                fill
-                sizes="64px"
-                className="object-cover"
-              />
-            </div>
-          );
-        })}
-      </div>
+      <div className="relative flex flex-col-reverse lg:flex-row gap-4">
+        {/* ---------- Thumbnails ---------- */}
+        <div className="flex lg:flex-col gap-4">
+          {visibleThumbs.map((img, i) => {
+            const index = thumbIndex + i;
+            return (
+              <div
+                key={index}
+                className={`relative w-16 h-16 cursor-pointer border ${
+                  index === mainImageIndex
+                    ? "border-define-red shadow-sm"
+                    : "border-gray-300"
+                }`}
+                onClick={() => setMainImage(index)}
+              >
+                <Image
+                  src={img}
+                  alt={`Thumbnail ${index}`}
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                />
+              </div>
+            );
+          })}
+        </div>
 
-      {/* ---------- Main Image ---------- */}
-      <div
-        className="relative w-full"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-      >
+        {/* ---------- Main Image ---------- */}
         <div
-          ref={mainRef}
-          className="relative w-full h-[25rem] md:h-[30rem] lg:h-[26rem] xl:h-[28rem] overflow-hidden border border-gray-50 cursor-crosshair"
-          onMouseEnter={() => setIsZoomed(true)}
-          onMouseLeave={() => setIsZoomed(false)}
-          onMouseMove={handleMouseMove}
+          className="relative w-full"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
         >
-                  <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
-            {/* Wishlist */}
-            <button
-              onClick={onWishlist}
-              className="bg-white rounded-full p-2 shadow hover:scale-105 transition"
-            >
-              <BiHeart
-                size={18}
-                className={
-                  isWishlisted ? "text-red-500 fill-red-500" : "text-gray-600"
-                }
-              />
-            </button>
+          <div
+            ref={mainRef}
+            className="relative w-full h-[25rem] md:h-[30rem] lg:h-[26rem] xl:h-[28rem] border border-gray-50 cursor-crosshair"
+            onMouseEnter={() => setIsZoomed(true)}
+            onMouseLeave={() => setIsZoomed(false)}
+            onMouseMove={handleMouseMove}
+          >
+            <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
+              {/* Wishlist */}
+              <button
+                onClick={onWishlist}
+                className="bg-white rounded-full p-2 shadow hover:scale-105 transition"
+              >
+                <BiHeart
+                  size={18}
+                  className={
+                    isWishlisted ? "text-red-500 fill-red-500" : "text-gray-600"
+                  }
+                />
+              </button>
 
-            {/* Share */}
-            <button
-              onClick={onShare}
-              className="bg-white rounded-full p-2 shadow hover:scale-105 transition"
-            >
-              <CiShare2 size={18} className="text-gray-600" />
-            </button>
+              {/* Share */}
+              <button
+                onClick={onShare}
+                className="bg-white rounded-full p-2 shadow hover:scale-105 transition"
+              >
+                <CiShare2 size={18} className="text-gray-600" />
+              </button>
+            </div>
+            <Image
+              src={images[mainImageIndex]}
+              alt="Main Image"
+              fill
+              priority
+              className="object-cover"
+              onClick={() => {
+                if (window.innerWidth < 768) {
+                  setIsMobilePreviewOpen(true);
+                }
+              }}
+            />
+            {isZoomed && (
+              <div
+                className="absolute pointer-events-none z-10 hidden md:block"
+                style={{
+                  top: `${zoomPos.y}%`,
+                  left: `${zoomPos.x}%`,
+                  transform: "translate(-50%, -50%)", // Centers lens on cursor
+                  width: "150px", // Adjust width of lens
+                  height: "150px", // Adjust height of lens
+                  backgroundColor: "rgba(0, 100, 255, 0.2)", // Blue transparent bg
+                  border: "1px solid rgba(0, 100, 255, 0.5)", // Blue border
+                }}
+              />
+            )}
           </div>
-          <Image
-            src={images[mainImageIndex]}
-            alt="Main Image"
-            fill
-            priority
-            className="object-cover"
-             onClick={() => {
-    if (window.innerWidth < 768) {
-      setIsMobilePreviewOpen(true);
-    }
-  }}
-          />
+
+          {/* ---------- Zoom Preview ---------- */}
           {isZoomed && (
             <div
-              className="absolute pointer-events-none z-10 hidden md:block"
+              className="hidden md:block absolute left-[105%] top-0 xlg:size-[30rem] lg:size-[28rem] xl:size-[34rem]  xxl:size-[36rem] bg-white shadow-lg z-[500]"
               style={{
-                top: `${zoomPos.y}%`,
-                left: `${zoomPos.x}%`,
-                transform: "translate(-50%, -50%)", // Centers lens on cursor
-                width: "150px", // Adjust width of lens
-                height: "150px", // Adjust height of lens
-                backgroundColor: "rgba(0, 100, 255, 0.2)", // Blue transparent bg
-                border: "1px solid rgba(0, 100, 255, 0.5)", // Blue border
+                backgroundImage: `url(${images[mainImageIndex]})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "1200px 1200px",
+                backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
               }}
             />
           )}
         </div>
+        {isMobilePreviewOpen && (
+          <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsMobilePreviewOpen(false)}
+              className="absolute top-[10rem] right-4 z-100 bg-gray-100 rounded-full size-9 flex items-center justify-center shadow"
+            >
+              ✕
+            </button>
 
-        {/* ---------- Zoom Preview ---------- */}
-        {isZoomed && (
-          <div
-            className="hidden md:block absolute left-[105%] top-0 xlg:size-[30rem] lg:size-[28rem] xl:size-[34rem]  xxl:size-[36rem] bg-white shadow-lg z-[500]"
-            style={{
-              backgroundImage: `url(${images[mainImageIndex]})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "1200px 1200px",
-              backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
-            }}
-          />
+            {/* Main Image */}
+            <div className="relative flex-1 flex items-center justify-center px-4">
+              <Image
+                src={images[mainImageIndex]}
+                alt="Preview Image"
+                fill
+                sizes="100vw"
+                className="object-contain"
+                priority
+              />
+            </div>
+
+            {/* Thumbnail Strip */}
+            <div className="w-full px-3 pb-4">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                {images.map((img, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setMainImage(index)}
+                    className={`relative min-w-[64px] h-16 border rounded cursor-pointer ${
+                      index === mainImageIndex
+                        ? "border-green-600"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`thumb-${index}`}
+                      fill
+                      sizes="64px"
+                      className="object-cover rounded"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </div>
- {isMobilePreviewOpen && (
-  <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
-    
-    {/* Close Button */}
-    <button
-      onClick={() => setIsMobilePreviewOpen(false)}
-      className="absolute top-[8rem] right-4 z-20 bg-gray-100 rounded-full size-9 flex items-center justify-center shadow"
-    >
-      ✕
-    </button>
-
-    {/* Main Image */}
-    <div className="relative flex-1 flex items-center justify-center px-4">
-      <Image
-        src={images[mainImageIndex]}
-        alt="Preview Image"
-        fill
-        sizes="100vw"
-        className="object-contain"
-        priority
-      />
-    </div>
-
-    {/* Thumbnail Strip */}
-    <div className="w-full px-3 pb-4">
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-        {images.map((img, index) => (
-          <div
-            key={index}
-            onClick={() => setMainImage(index)}
-            className={`relative min-w-[64px] h-16 border rounded cursor-pointer ${
-              index === mainImageIndex
-                ? "border-green-600"
-                : "border-gray-300"
-            }`}
-          >
-            <Image
-              src={img}
-              alt={`thumb-${index}`}
-              fill
-              sizes="64px"
-              className="object-cover rounded"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-
-  </div>
-)}
-
-
-    </div>
- 
-
     </>
   );
 };

@@ -154,8 +154,8 @@ const ProductDetails = ({
 
 const allProducts =
   variants.length > 0 ? variants : [currentProduct];
-console.log("all variants products",allProducts)
-console.log("all variants options",variantOptions)
+// console.log("all variants products",allProducts)
+// console.log("all variants options",variantOptions)
 
 
 // const colorGroups = groupByAttribute(allProducts, "Color");
@@ -472,6 +472,7 @@ const hasColor = allProducts.some((v) =>
   // };
 
   // const groupedVariables = getGroupedValues(allProducts);
+  // console.log("current product", product.categoryLevels)
 
   return (
     <>
@@ -488,12 +489,11 @@ const hasColor = allProducts.some((v) =>
                         href={`/products?category=${encodeURIComponent(cat.name)}`}
                         className="text-define-red hover:text-define-brown transition-colors text-sm md:text-xs font-bold tracking-widest"
                       >
-                        {cat.name} {">"}
+                        {cat.name}
                       </Link>
                     </div>
                   ))}
-                </span>{" "}
-                <span className="text-black"> {product.name}</span>
+                </span>{" "}                
               </p>
               <SinglePageImagesComponent
                 images={productImages}
@@ -539,12 +539,11 @@ const hasColor = allProducts.some((v) =>
                       href={`/products?category=${encodeURIComponent(cat.name)}`}
                       className="text-define-red hover:text-define-brown transition-colors text-[11px] md:text-xs font-bold tracking-widest"
                     >
-                      {cat.name} {">"}
+                      {cat.name}
                     </Link>
                   </div>
                 ))}
-              </span>{" "}
-              <span className="text-black"> {product.name}</span>
+              </span>{" "}              
             </p>
 
             {/* Title */}

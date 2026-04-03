@@ -512,12 +512,14 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                     <div className="rounded-md bg-white shadow-lg border-linear-to-r from-define-brown to-define-red shadow-define-brown/30 transition-all duration-300 hover:from-define-red hover:to-define-brown hover:shadow-lg hover:shadow-define-red/40 overflow-hidden">
                       <Link
                         href="/my-account"
+                        onClick={() => setAccountOpen(false)}
                         className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
                       >
                         My Account
                       </Link>
                       <Link
                         href="/manage-address"
+                        onClick={() => setAccountOpen(false)}
                         className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
                       >
                         Manage Address
@@ -525,6 +527,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
 
                       <Link
                         href="/my-orders"
+                        onClick={() => setAccountOpen(false)}
                         className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
                       >
                         My Orders
@@ -532,6 +535,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
 
                       <Link
                         href="/my-wishlist"
+                        onClick={() => setAccountOpen(false)}
                         className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
                       >
                         My Wishlist
@@ -539,6 +543,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
 
                       <Link
                         href="/my-cart"
+                        onClick={() => setAccountOpen(false)}
                         className="block px-4 py-3 text-sm text-defined-green hover:bg-define-red/20 border-b border-gray-200"
                       >
                         My Cart

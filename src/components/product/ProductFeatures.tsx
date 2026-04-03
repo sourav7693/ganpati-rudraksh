@@ -48,7 +48,7 @@ export default function FeaturesSection() {
         >
           {features.map((item, index) => (
             <SwiperSlide key={index}>
-              <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
+              <div className="flex flex-col items-center text-center flex-1 w-full">
                 <item.icon width={50} height={50} />
                 <p className="mt-2 font-medium">{item.title}</p>
               </div>

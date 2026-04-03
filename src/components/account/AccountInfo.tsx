@@ -226,7 +226,7 @@ const handleSaveMobile = async () => {
           </button>
         </div>
 
-        <div className="flex items-start gap-6 mb-6">
+        <div className="flex flex-col lg:flex-row items-start gap-6 mb-6">
           {/* Name inputs (SMALL WIDTH) */}
           <div className="flex gap-6">
             <input
@@ -276,7 +276,7 @@ const handleSaveMobile = async () => {
 
       {/* ================= Email Address ================= */}
       <section className="mb-14">
-        <div className="flex items-center gap-6 mb-6">
+        <div className="flex items-center  gap-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900">Email Address</h2>
 
           <button
@@ -289,7 +289,7 @@ const handleSaveMobile = async () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col lg:flex-row items-start gap-6">
           <input
             placeholder="Email Address"
             disabled={!editEmail}
@@ -324,7 +324,7 @@ const handleSaveMobile = async () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col lg:flex-row items-start gap-6">
           <input
             type="tel"
             maxLength={10}
