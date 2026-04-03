@@ -81,6 +81,7 @@ const ProductDetails = ({
   const [showShare, setShowShare] = useState(false);
 
   const [availableCoupons, setAvailableCoupons] = useState<any>([]);
+  const [isDelivered, setIsDelivered] = useState(false);
 
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
@@ -423,6 +424,32 @@ const hasColor = allProducts.some((v) =>
 
     fetchCoupons();
   }, []);
+
+  useEffect(() => {
+    const checkProductPurchase = async () => {
+      if (!customer?._id || !product?._id) {
+        setIsDelivered(false);
+        return;
+      }
+
+      try {
+        // Fetch orders for the current customer (checking first page with a reasonable limit)
+        const res = await api.get(`order/customers/${customer._id}?limit=50`);
+        if (res.data.success && Array.isArray(res.data.data)) {
+          const boughtAndDelivered = res.data.data.some((order: any) => {
+            const orderProductId = typeof order.product === 'object' ? order.product?._id : order.product;
+            return String(orderProductId) === String(product._id) && order.status === "Delivered";
+          });
+          setIsDelivered(boughtAndDelivered);
+        }
+      } catch (err) {
+        console.error("Failed to check product purchase status", err);
+        setIsDelivered(false);
+      }
+    };
+
+    checkProductPurchase();
+  }, [customer?._id, product?._id]);
 
   // const getGroupedValues = (products: ProductType[]) => {
   //   const result: Record<string, Set<string>> = {};
@@ -823,12 +850,16 @@ const hasColor = allProducts.some((v) =>
                 <h2 className="text-xl font-semibold text-define-brown mb-3">
                   Ratings and Reviews
                 </h2>
-                <button
-                  onClick={() => router.push(`/review?product=${product._id}`)}
-                  className="text-white bg-define-brown px-2"
-                >
-                  Rate this product
-                </button>
+                {isDelivered && (
+                  <button
+                    onClick={() =>
+                      router.push(`/review?product=${product._id}`)
+                    }
+                    className="text-white bg-define-brown px-2"
+                  >
+                    Rate this product
+                  </button>
+                )}
               </div>
               <ProductRatingSummary
                 averageRating={product.averageRating}

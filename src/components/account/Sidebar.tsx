@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { BiChevronDown } from "react-icons/bi";
+import { BiChevronDown, BiChevronLeft } from "react-icons/bi";
 import Link from "next/link";
 import { useCustomer } from "@/context/CustomerContext";
 import AccountPageRenderer from "./AccountPageRenderer";
@@ -87,6 +87,12 @@ const Sidebar = () => {
     }
   }, [pathname, isMobile]);
 
+  useEffect(() => {
+    if (isMobile && activePage) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [activePage, isMobile]);
+
   const linkClass = (href: string) => {
     const isActive = isMobile ? activePage === href : pathname === href;
 
@@ -108,12 +114,23 @@ const Sidebar = () => {
       <>      
 
         {/* Active Link Highlight */}
-        <div className="px-4 py-2 bg-define-pink text-define-brown font-semibold rounded-md">
-          {
-            sections
-              .flatMap((s) => s.links)
-              .find((l) => l.href === activePage)?.label
-          }
+        <div className="flex items-center gap-2 mb-4">
+          <button
+            onClick={() => setActivePage(null)}
+            className="p-2 bg-white rounded-md shadow-sm text-define-brown hover:bg-gray-50 flex items-center justify-center border border-gray-100"
+            title="Back to menu"
+          >
+            <BiChevronLeft size={24} />
+          </button>
+          <div className="flex-1 px-4 py-3 bg-define-pink text-define-brown font-semibold rounded-md shadow-sm flex items-center justify-between">
+            <span>
+              {
+                sections
+                  .flatMap((s) => s.links)
+                  .find((l) => l.href === activePage)?.label
+              }
+            </span>
+          </div>
         </div>
 
         {/* Inline Page */}

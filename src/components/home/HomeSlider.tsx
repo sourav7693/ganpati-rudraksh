@@ -50,7 +50,7 @@ export default function HomeSlider() {
   }, [sliders]);
 
   if (isMobile === null) return null;
-  
+
   const filtered = sliders.filter((item) => {
     if (item.target === "all") return true;
     if (item.target === "mobile") return isMobile;
@@ -120,6 +120,7 @@ export default function HomeSlider() {
                   muted
                   playsInline
                   autoPlay
+                  loop
                   preload="none"
                 />
               )}

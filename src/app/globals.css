@@ -99,3 +99,26 @@
   button {
     @apply cursor-pointer rounded-3xl hover:scale-105 transition-all duration-300 ease-in-out;
   }
+
+.theme-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.theme-scrollbar::-webkit-scrollbar-track {
+  background: var(--color-define-white, #EEEEEE);
+}
+
+.theme-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-define-brown, #4A180E);
+  border-radius: 10px;
+}
+
+.theme-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-define-red, #D42300);
+}
+
+/* Firefox */
+.theme-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-define-brown, #4A180E) var(--color-define-white, #EEEEEE);
+}

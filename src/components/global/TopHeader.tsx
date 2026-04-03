@@ -262,7 +262,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
           </button>
         </div>
 
-        <div className="overflow-y-auto h-[calc(100%-60px)]">
+        <div className="overflow-y-auto h-[calc(100%-60px)] theme-scrollbar">
           {navLinks?.map((item, idx) => (
             <div key={idx} className="border-b border-gray-200">
               <button
@@ -284,7 +284,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                 <div
                   className={`overflow-hidden transition-all duration-300 ${
                     openAccordion === idx
-                      ? "max-h-96 overflow-y-auto no-scrollbar"
+                      ? "max-h-96 overflow-y-auto theme-scrollbar"
                       : "max-h-0"
                   }`}
                 >
@@ -621,7 +621,7 @@ const TopHeader = ({ navLinks }: { navLinks: NavLinkType[] }) => {
                 ref={dropdownRef}
                 className="absolute left-0 w-full px-4 z-[999] "
               >
-                <div className="rounded-xl bg-white shadow-lg border border-gray-200 max-h-[350px] overflow-y-auto">
+                <div className="rounded-xl bg-white shadow-lg border border-gray-200 max-h-[350px] overflow-y-auto theme-scrollbar">
                   {list.map((item, idx) => (
                     <button
                       key={idx}

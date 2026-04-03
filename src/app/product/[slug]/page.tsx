@@ -4,7 +4,6 @@ import { Metadata } from "next";
 import MainTemplates from "@/templates/MainTemplate";
 import ProductDetails from "@/components/product/ProductDetails";
 import RelatedProductSection from "@/components/product/RelatedProductSection";
-import { api } from "@/api/customer";
 
 export const dynamic = "force-dynamic";
 function stripHtmlTags(html: string): string {
@@ -59,7 +58,7 @@ export async function generateMetadata({
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const fullProduct = await fetchFullProduct(slug);  
+  const fullProduct = await fetchFullProduct(slug);
 
   if (!fullProduct) {
     return (
@@ -73,8 +72,8 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   return (
     <MainTemplates>
       <section className="section-container md:py-10  flex flex-col gap-8">
-        <ProductDetails 
-          product={fullProduct.selectedProduct} 
+        <ProductDetails
+          product={fullProduct.selectedProduct}
           initialVariants={fullProduct.variants}
           initialVariantOptions={fullProduct.variantOptions}
         />
