@@ -1,6 +1,6 @@
 "use client";
 
-import { api, logout, updateCustomer } from "@/api/customer";
+import { api, logout, updateCustomer,verifyOtpUpdateMobile,sendOtp } from "@/api/customer";
 import { useCustomer } from "@/context/CustomerContext";
 import { allowOnlyNumbers, blockNumbersInText } from "@/utils/inputHandlers";
 import { useRouter } from "next/navigation";
@@ -12,14 +12,17 @@ export default function AccountInfo() {
   const [editPersonal, setEditPersonal] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [editMobile, setEditMobile] = useState(false);
+  const [isOtpStep, setIsOtpStep] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
-  const { customer, loading, logoutCustomer, clearCustomer, refreshCustomer } = useCustomer();
+  const { customer, loading, logoutCustomer, clearCustomer, refreshCustomer } =
+    useCustomer();
   const [gender, setGender] = useState(customer?.gender || "male");
   const [name, setName] = useState(customer?.name || "");
   const [email, setEmail] = useState(customer?.email || "");
   const [mobile, setMobile] = useState(customer?.mobile || "");
-
 
   const inputStyle = (editable: boolean) =>
     `border px-4 py-3 text-sm rounded-sm outline-none
@@ -29,49 +32,47 @@ export default function AccountInfo() {
          : "border-gray-200 bg-gray-50 cursor-not-allowed"
      }`;
 
-       const handleCancelEdit = (section: EditSection) => {
-         if (!customer) return;
+  const handleCancelEdit = (section: EditSection) => {
+    if (!customer) return;
 
-         // Reset values back to saved customer data
-         if (section === "personal") {
-           setName(customer.name || "");
-           setGender(customer.gender || "male");
-           setEditPersonal(false);
-         }
+    // Reset values back to saved customer data
+    if (section === "personal") {
+      setName(customer.name || "");
+      setGender(customer.gender || "male");
+      setEditPersonal(false);
+    }
 
-         if (section === "email") {
-           setEmail(customer.email || "");
-           setEditEmail(false);
-         }
+    if (section === "email") {
+      setEmail(customer.email || "");
+      setEditEmail(false);
+    }
 
-         if (section === "mobile") {
-           setMobile(customer.mobile || "");
-           setEditMobile(false);
-         }
-       };
+    if (section === "mobile") {
+      setMobile(customer.mobile || "");
+      setEditMobile(false);
+      setIsOtpStep(false);
+      setOtp("");
+    }
+  };
   const updateField = async (key: string, value: string) => {
     if (!customer?._id || !value.trim()) {
       console.log(customer?._id, value);
       console.warn("Invalid update attempt:", { key, value });
       return;
-    };
+    }
 
     if (key === "mobile" && !value.startsWith("91")) {
       value = "91" + value;
     }
 
     try {
-      const res = await api.put(
-        `customer/${customer._id}`,
-        { [key]: value },
-      );
+      const res = await api.put(`customer/${customer._id}`, { [key]: value });
 
       console.log("update res", res);
       if (!res.data.success) {
         toast.error(res.data.message || "Update failed");
         return;
       }
-
 
       toast.success(res.data.message);
       return res.data;
@@ -117,9 +118,9 @@ export default function AccountInfo() {
   useEffect(() => {
     if (!loading && customer) {
       setGender(customer?.gender || "male");
-       setName(customer.name || "");
-       setEmail(customer.email || "");
-       setMobile(customer.mobile || "");
+      setName(customer.name || "");
+      setEmail(customer.email || "");
+      setMobile(customer.mobile || "");
       setInitialized(true);
     }
   }, [customer, loading]);
@@ -145,52 +146,86 @@ export default function AccountInfo() {
     setEditEmail(false);
   };
 
-const handleSaveMobile = async () => {
-  let formattedMobile = mobile;
+  const handleRequestMobileOtp = async () => {
+    let formattedMobile = mobile;
 
-  if(!formattedMobile.trim()) {
-    toast.error("Mobile number cannot be empty");
-    return;
-  }
-  if(formattedMobile.length < 10) {
-    toast.error("Enter valid mobile number");
-    return;
-  }
+    if (!formattedMobile.trim()) {
+      toast.error("Mobile number cannot be empty");
+      return;
+    }
+    if (formattedMobile.length < 10) {
+      toast.error("Enter valid mobile number");
+      return;
+    }
+    if (!formattedMobile.startsWith("91")) {
+      formattedMobile = "91" + formattedMobile;
+    }
+    if (formattedMobile === customer?.mobile) {
+      toast.error("Already your current number");
+      return;
+    }
 
-  if (!formattedMobile.startsWith("91")) {
-    formattedMobile = "91" + formattedMobile;
-  }
+    setIsSendingOtp(true);
+    try {
+      // 1. Check if mobile exists
+      const res = await api.get(
+        `customer/check-mobile?mobile=${formattedMobile}`,
+      );
+      if (!res.data.success) {
+        toast.error(res.data.message || "Something went wrong");
+        return;
+      }
+      if (res.data.exists) {
+        toast.error("Mobile already registered with another account");
+        return;
+      }
 
-  // Same number check
-  if (formattedMobile === customer?.mobile) {
-    toast.error("Already your current number");
-    return;
-  }
+      // 2. Send OTP
+      const otpRes = await sendOtp(formattedMobile);
+      if (otpRes.success) {
+        toast.success("OTP sent to new mobile number");
+        setIsOtpStep(true);
+      } else {
+        toast.error(otpRes.message || "Failed to send OTP");
+      }
+    } catch (error: any) {
+      toast.error("Failed to process request");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
-  // Step 1: Check if mobile exists
-  const res = await api.get(
-    `customer/check-mobile?mobile=${formattedMobile}`,    
-  );
+  const handleVerifyAndUpdateMobile = async () => {
+    if (otp.length !== 6) {
+      toast.error("Enter a valid 6-digit OTP");
+      return;
+    }
 
-  if (!res.data.success) {
-    toast.error(res.data.message || "Something went wrong");
-    return;
-  }
+    const formattedMobile = mobile.startsWith("91") ? mobile : "91" + mobile;
 
-  const data = res.data;
+    try {
+      setIsSendingOtp(true);
+      const res = await verifyOtpUpdateMobile(
+        formattedMobile,
+        otp,
+        "update-mobile",
+      );
 
-  if (data.exists) {
-    toast.error("Mobile already registered with another account");
-    return;
-  }
-
-  // Step 2: Redirect to login OTP screen
-  toast.success("OTP verification required");
-
-  router.push(`/login?mode=update-mobile&mobile=${formattedMobile}`);
-};
-
-
+      if (res.success) {
+        await refreshCustomer();
+        toast.success("Mobile number updated successfully!");
+        setEditMobile(false);
+        setIsOtpStep(false);
+        setOtp("");
+      } else {
+        toast.error(res.message || "Invalid OTP");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to verify OTP");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
   if (loading || !initialized) {
     return (
@@ -313,11 +348,8 @@ const handleSaveMobile = async () => {
       <section>
         <div className="flex items-center gap-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900">Mobile Number</h2>
-
           <button
-            onClick={() =>
-              editMobile ? handleCancelEdit("mobile") : setEditMobile(true)
-            }
+            onClick={() => editMobile ? handleCancelEdit("mobile") : setEditMobile(true)}
             className="text-sm font-bold text-define-brown"
           >
             {editMobile ? "Cancel" : "Edit"}
@@ -325,23 +357,50 @@ const handleSaveMobile = async () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-start gap-6">
-          <input
-            type="tel"
-            maxLength={10}
-            placeholder="Mobile No"
-            disabled={!editMobile}
-            value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
-            onKeyDown={allowOnlyNumbers}
-            className={`${inputStyle(editMobile)} w-[260px]`}
-          />
+          <div className="flex flex-col gap-2">
+            <input
+              type="tel"
+              maxLength={10}
+              placeholder="Mobile No"
+              disabled={!editMobile || isOtpStep}
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              onKeyDown={allowOnlyNumbers}
+              className={`${inputStyle(editMobile && !isOtpStep)} w-[260px]`}
+            />
 
-          {editMobile && (
+            {/* Inline OTP Input Field */}
+            {isOtpStep && (
+              <input
+                type="tel"
+                maxLength={6}
+                placeholder="Enter 6-digit OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                onKeyDown={allowOnlyNumbers}
+                className={`${inputStyle(true)} w-[260px] mt-2 border-define-brown`}
+                autoFocus
+              />
+            )}
+          </div>
+
+          {editMobile && !isOtpStep && (
             <button
-              onClick={handleSaveMobile}
-              className="h-[46px] px-10 bg-define-brown text-white text-sm font-medium rounded-sm"
+              onClick={handleRequestMobileOtp}
+              disabled={isSendingOtp}
+              className="h-[46px] px-10 bg-define-brown text-white text-sm font-medium rounded-sm disabled:opacity-50"
             >
-              SAVE
+              {isSendingOtp ? "SENDING..." : "UPDATE"}
+            </button>
+          )}
+
+          {isOtpStep && (
+            <button
+              onClick={handleVerifyAndUpdateMobile}
+              disabled={isSendingOtp || otp.length !== 6}
+              className="h-[46px] px-10 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-sm disabled:opacity-50 mt-auto"
+            >
+              {isSendingOtp ? "VERIFYING..." : "VERIFY OTP"}
             </button>
           )}
         </div>

@@ -15,7 +15,6 @@ import { FaPlus, FaRupeeSign } from "react-icons/fa";
 import AddAddressModal from "@/components/account/AddAddressModal";
 import { checkPinCodeServiceability } from "@/api/product";
 
-
 interface RazorpayInstance {
   open: () => void;
   on: (event: string, callback: () => void) => void;
@@ -73,10 +72,12 @@ export default function CheckoutClient() {
   const [isServiceable, setIsServiceable] = useState<boolean | null>(null);
   const [isCheckingServiceability, setIsCheckingServiceability] =
     useState(false);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   const router = useRouter();
   const [showAddAddress, setShowAddAddress] = useState(false);
-  const { customer, refreshCustomer } = useCustomer();
+  const { customer, refreshCustomer, logoutCustomer, clearCustomer } =
+    useCustomer();
 
   const customerId = customer?._id;
   const [coupon, setCoupon] = useState("");
@@ -200,6 +201,38 @@ export default function CheckoutClient() {
 
   /* ================= FINAL PRICE ================= */
   const totalFinalPrice = totalMRP - totalDiscount;
+
+  useEffect(() => {
+    if (!appliedCoupon) return;
+
+    // 1. If the cart total drops below the coupon's minimum requirement
+    if (totalFinalPrice < (appliedCoupon.minOrderAmount || 0)) {
+      setAppliedCoupon(null);
+      setCouponDiscount(0);
+      setCoupon("");
+      setCouponMessage(`Coupon removed: Minimum order of ₹${appliedCoupon.minOrderAmount} required.`);
+      
+      // Optional: Wait a tick to prevent toast spam if multiple things change at once
+      setTimeout(() => {
+         toast.error(`Coupon removed: Minimum order value not met`);
+      }, 100);
+      return;
+    }
+
+    // 2. If the coupon is still valid, dynamically recalculate the discount 
+    if (appliedCoupon.discountType === "percentage") {
+      let newDiscountAmount = Math.round((totalFinalPrice * appliedCoupon.discountValue) / 100);
+      
+      if (appliedCoupon.maxDiscountAmount) {
+        newDiscountAmount = Math.min(newDiscountAmount, appliedCoupon.maxDiscountAmount);
+      }
+      
+      setCouponDiscount(newDiscountAmount);
+    } else {
+      // For fixed amount coupons, ensure the discount doesn't exceed the cart total
+      setCouponDiscount(Math.min(appliedCoupon.discountValue, totalFinalPrice));
+    }
+  }, [totalFinalPrice, appliedCoupon]);
 
   /* ================= TOTAL ITEMS ================= */
   const totalItems = availableCheckoutItems.reduce(
@@ -377,7 +410,10 @@ export default function CheckoutClient() {
           `coupon?min=${totalFinalPrice}&expire=${new Date().toISOString()}`,
         );
         const data = res.data;
-        const allCoupons = data.coupons.filter((c: CouponType) => !c.usedBy.includes(customer?._id as any)) || [];
+        const allCoupons =
+          data.coupons.filter(
+            (c: CouponType) => !c.usedBy.includes(customer?._id as any),
+          ) || [];
         setAvailableCoupons(allCoupons);
       } catch (err) {
         console.error("Failed to fetch coupons", err);
@@ -388,8 +424,14 @@ export default function CheckoutClient() {
   }, [totalFinalPrice]);
 
   const handleLogoutAndRedirect = async () => {
-    await logout();
-    router.replace("/");
+    try {
+      await logoutCustomer();
+      toast.success("Logged out successfully!");
+      clearCustomer();
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   useEffect(() => {
@@ -397,25 +439,6 @@ export default function CheckoutClient() {
       setSelectedAddressId(selectedAddress._id);
     }
   }, [selectedAddress, selectedAddressId]);
-
-  const handleCouponSelect = (c: CouponType) => {
-    const now = new Date();
-    const startDate = new Date(c.startDate);
-    const expirationDate = new Date(c.expirationDate);
-
-    if (now < startDate) {
-      setCouponMessage("Coupon is not active yet");
-      return;
-    }
-
-    if (now > expirationDate) {
-      setCouponMessage("Coupon has expired");
-      return;
-    }
-
-    setCoupon(c.code);
-    applyCoupon(c);
-  };
 
   const applyCoupon = (found: CouponType) => {
     let discountAmount = 0;
@@ -467,7 +490,6 @@ export default function CheckoutClient() {
     }
   }, [selectedAddress]);
 
-
   const payableAmount = Math.max(
     Math.round(totalFinalPrice - couponDiscount),
     0,
@@ -483,37 +505,55 @@ export default function CheckoutClient() {
     }
   }, [addresses]);
 
+  const validateAndApply = async (codeToValidate: string) => {
+    if (!codeToValidate.trim()) {
+      setCouponMessage("Please enter a coupon code");
+      setAppliedCoupon(null);
+      setCouponDiscount(0);
+      return;
+    }
+
+    setIsApplyingCoupon(true);
+    setCouponMessage(""); // Clear previous messages
+
+    try {
+      const res = await api.post(`coupon/validate`, {
+        code: codeToValidate,
+        orderValue: totalFinalPrice,
+        customerId: customerId, // Pass this to check if they already used it!
+      });
+
+      const data = res.data;
+
+      if (data.success) {
+        // Validation passed! Apply the coupon using your existing logic
+        applyCoupon(data.coupon);
+        setCouponMessage(`Coupon '${codeToValidate}' applied successfully!`);
+      } else {
+        // Backend said it's invalid (e.g., expired, usage limit reached, wrong user)
+        setAppliedCoupon(null);
+        setCouponDiscount(0);
+        setCouponMessage(data.message || "Invalid coupon code");
+      }
+    } catch (err: any) {
+      // Catch network or 400/500 errors from backend
+      setAppliedCoupon(null);
+      setCouponDiscount(0);
+      setCouponMessage(
+        err.response?.data?.message || "Failed to apply coupon. Try again.",
+      );
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
   const handleApplyCoupon = () => {
-    const found = availableCoupons.find(
-      (c) => c.code.toLowerCase() === coupon.toLowerCase(),
-    );
+    validateAndApply(coupon);
+  };
 
-    if (!found) {
-      setCouponMessage("Invalid or ineligible coupon");
-      setCouponDiscount(0);
-      setAppliedCoupon(null);
-      return;
-    }
-
-    const now = new Date();
-    const startDate = new Date(found.startDate);
-    const expirationDate = new Date(found.expirationDate);
-
-    if (now < startDate) {
-      setCouponMessage("Coupon is not active yet");
-      setCouponDiscount(0);
-      setAppliedCoupon(null);
-      return;
-    }
-
-    if (now > expirationDate) {
-      setCouponMessage("Coupon has expired");
-      setCouponDiscount(0);
-      setAppliedCoupon(null);
-      return;
-    }
-
-    applyCoupon(found);
+  const handleCouponSelect = (c: CouponType) => {
+    setCoupon(c.code);
+    validateAndApply(c.code); // Safe: Validates even if they click from the list
   };
 
   if (!checkoutItems.length) {
@@ -869,6 +909,7 @@ export default function CheckoutClient() {
               onChange={(e) => setCoupon(e.target.value)}
               placeholder="Enter coupon code"
               className="flex-1 border text-define-black placeholder:text-define-black border-gray-200 rounded-full px-4 py-2 text-sm outline-none"
+              disabled={isApplyingCoupon} // Disable input while loading
             />
 
             <button
@@ -882,16 +923,31 @@ export default function CheckoutClient() {
                   handleApplyCoupon();
                 }
               }}
-              className={`rounded-full px-6 py-2 text-sm font-medium whitespace-nowrap transition
-    ${
-      appliedCoupon
-        ? "border border-red-500 text-red-500 hover:bg-red-50"
-        : "border border-define-brown text-define-brown hover:bg-red-50"
-    }`}
+              disabled={isApplyingCoupon}
+              className={`rounded-full px-6 py-2 text-sm font-medium whitespace-nowrap transition disabled:opacity-50
+              ${
+                appliedCoupon
+                  ? "border border-red-500 text-red-500 hover:bg-red-50"
+                  : "border border-define-brown text-define-brown hover:bg-red-50"
+              }`}
             >
-              {appliedCoupon ? "Remove" : "Apply"}
+              {isApplyingCoupon
+                ? "Applying..."
+                : appliedCoupon
+                  ? "Remove"
+                  : "Apply"}
             </button>
           </div>
+
+          {couponMessage && (
+            <p
+              className={`text-sm mt-2 font-medium ${
+                appliedCoupon ? "text-green-600" : "text-red-500"
+              }`}
+            >
+              {couponMessage}
+            </p>
+          )}
         </div>
         {availableCoupons.length > 0 && (
           <div className="relative mt-3">
@@ -973,7 +1029,6 @@ export default function CheckoutClient() {
               : "btn-grad"
           }`}
         >
-
           {hasOutOfStockItems ? (
             <>
               <span className="w-5 h-5 mr-2">
@@ -1006,7 +1061,6 @@ export default function CheckoutClient() {
               Now
             </>
           )}
-
         </button>
       </div>
       {showAddAddress && (

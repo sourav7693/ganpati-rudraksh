@@ -1,8 +1,10 @@
 import { api } from "@/api/customer";
-import ReviewPage from "@/components/account/Review"
+import ReviewPage from "@/components/account/Review";
 import MainTemplate from "@/templates/MainTemplate";
 import { ProductType } from "@/types/types";
+
 export const dynamic = "force-dynamic";
+
 const page = async ({
   searchParams,
 }: {
@@ -14,18 +16,16 @@ const page = async ({
   let productDetails: ProductType | null = null;
 
   try {
-    const res = await api.get(
-      `/product/${product}`,      
-    );
+    const res = await api.get(`/product/${product}`);
 
     if (!res.status || res.status !== 200) throw new Error("Product fetch failed");
 
-    productDetails = res.data.product;
+    productDetails = res.data; 
   } catch (error) {
     console.error("Product fetch failed:", error);
   }
 
-  if (!product) {
+  if (!product || !productDetails) {
     return (
       <MainTemplate>
         <div className="p-5 text-center text-define-red">Invalid product</div>
@@ -34,11 +34,9 @@ const page = async ({
   }
 
   return (
-    <>
-      <MainTemplate>
-        <ReviewPage productDetails={productDetails} />
-      </MainTemplate>
-    </>
+    <MainTemplate>
+      <ReviewPage productDetails={productDetails} />
+    </MainTemplate>
   );
 };
 
