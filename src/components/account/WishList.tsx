@@ -7,7 +7,7 @@ import { WishlistType } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CgShoppingCart } from "react-icons/cg";
 import { FaIndianRupeeSign } from "react-icons/fa6";
@@ -34,6 +34,11 @@ const WishList = () => {
      setLoading(false);
    }
  };
+
+ useEffect(() => {
+    refreshCustomer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
  const handleMoveToCart = async (item: WishlistType) => {
    // Implement move to cart functionality here
