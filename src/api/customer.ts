@@ -20,12 +20,12 @@ export type ApiErrorResponse = {
   message: string;
 };
 
-const isServer = typeof window === "undefined";
-const baseURL = isServer
-  ? process.env.NEXT_PUBLIC_API_URL?.endsWith("/")
-    ? process.env.NEXT_PUBLIC_API_URL
-    : `${process.env.NEXT_PUBLIC_API_URL}/`
-  : "/api/";
+const rawBaseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+
+// const isServer = typeof window === "undefined";
+const baseURL = rawBaseURL.endsWith("/") 
+  ? rawBaseURL.slice(0, -1) 
+  : rawBaseURL;
 
 export const api = axios.create({
   baseURL: baseURL,
