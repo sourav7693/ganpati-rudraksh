@@ -11,21 +11,25 @@ export default function ShowReview() {
   const { customer } = useCustomer();
 
   const [allReviews, setAllReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function getAllReviews() {
+ async function getAllReviews() {
+    if (!customer?._id) {
+      setIsLoading(false);
+      setAllReviews([]);
+      return;
+    }
+
     try {
-      const { data, status } = await api.get(
-        `/review?user=${customer?._id}`,
-      );
-
-      if (status === 200) {
-        setAllReviews(data.reviews);
-      }
+      setIsLoading(true);
+      const res = await api.get(`/review?user=${customer._id}`);
+      setAllReviews(res.data.reviews || []);
     } catch (error) {
-      console.log(error);
+      setAllReviews([]); //
+    } finally {
+      setIsLoading(false);
     }
   }
-
   async function deleteReview(id: string) {
     try {
       const { status } = await api.delete(
@@ -47,10 +51,27 @@ export default function ShowReview() {
 
   useEffect(() => {
     getAllReviews();
-  }, []);
+  }, [customer?._id]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-[1300px] mx-auto pt-4">
+        <p className="text-center text-gray-500 py-10">Loading reviews...</p>
+      </div>
+    );
+  }
+
+  // 5. Wrap the empty state in the SAME container so it doesn't get hidden behind navbars!
+  if (!allReviews || allReviews.length === 0) {
+    return (
+      <div className="max-w-[1300px] mx-auto pt-4">
+        <p className="text-center text-gray-500 py-10">No review found</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-[1300px] mx-auto pt-4">
+    <div className="max-w-[1300px] mx-auto pt-4 pb-28 overflow-y-auto no-scrollbar">
       {/* MAIN GRID */}
       {allReviews.map(
         (review: {
@@ -67,7 +88,7 @@ export default function ShowReview() {
           createdAt: string | number | Date;
         }) => (
           <div
-            className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 bg-white shadow-sm px-4 rounded-md py-6 md:py-8"
+            className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 bg-white shadow-sm px-4 rounded-md py-6 md:py-8 mb-4"
             key={review._id}
           >
             {/* IMAGE */}
@@ -95,7 +116,7 @@ export default function ShowReview() {
 
               {/* RATING */}
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
+                {[1,2,3,4,5].map((star) => (
                   <IoMdStar
                     key={star}
                     size={18}
@@ -140,7 +161,7 @@ export default function ShowReview() {
               </div>
             </div>
           </div>
-        ),
+        )
       )}
     </div>
   );
