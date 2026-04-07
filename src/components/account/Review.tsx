@@ -29,11 +29,11 @@ export default function ReviewPage({
   const [hover, setHover] = useState(0);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  
+
   // States for media
   const [supportingFiles, setSupportingFiles] = useState<FileWithPreview[]>([]);
   const [existingFiles, setExistingFiles] = useState<ExistingImage[]>([]);
-  
+
   // State to track if we are updating
   const [existingReviewId, setExistingReviewId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,19 +52,23 @@ export default function ReviewPage({
 
       try {
         const res = await api.get(
-          `/review?user=${customer._id}&product=${productDetails._id}`
+          `/review?user=${customer._id}&product=${productDetails._id}`,
         );
 
-        if (res.data.success && res.data.reviews && res.data.reviews.length > 0) {
-          const myReview = res.data.reviews;
-          
-          setExistingReviewId(myReview[0]._id);
-          setRating(myReview[0].rating);
-          setTitle(myReview[0].title);
-          setDescription(myReview[0].description);
-          
+        if (
+          res.data.success &&
+          res.data.reviews &&
+          res.data.reviews.length > 0
+        ) {
+          const myReview = res.data.reviews[0];
+
+          setExistingReviewId(myReview._id);
+          setRating(myReview.rating);
+          setTitle(myReview.title);
+          setDescription(myReview.description);
+
           if (myReview.supporting_files) {
-            setExistingFiles(myReview[0].supporting_files);
+            setExistingFiles(myReview.supporting_files);
           }
         }
       } catch (error) {
@@ -75,7 +79,7 @@ export default function ReviewPage({
     };
 
     fetchExistingReview();
-  }, [customer, productDetails, productDetails]);
+  }, [customer, productDetails]); // Removed the duplicate productDetails dependency here too
 
   // Handle new files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +155,7 @@ export default function ReviewPage({
       });
 
       if (existingReviewId) {
-        formData.append("images", JSON.stringify(existingFiles));
+        formData.append("existingImages", JSON.stringify(existingFiles));
       }
 
       let status, data;
@@ -171,7 +175,11 @@ export default function ReviewPage({
       }
 
       if (status === 201 || status === 200) {
-        toast.success(existingReviewId ? "Review updated successfully" : "Review submitted successfully");
+        toast.success(
+          existingReviewId
+            ? "Review updated successfully"
+            : "Review submitted successfully",
+        );
         nav.push("/my-orders");
         return;
       }
@@ -205,7 +213,9 @@ export default function ReviewPage({
           </div>
           <div>
             <p className="font-medium text-gray-800">{productDetails?.name}</p>
-            <p className="text-sm text-gray-500">{productDetails?.brand?.name}</p>
+            <p className="text-sm text-gray-500">
+              {productDetails?.brand?.name}
+            </p>
           </div>
         </div>
 
@@ -275,12 +285,14 @@ export default function ReviewPage({
             />
             📷 Upload Photos / Videos
           </label>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4">
-            
             {/* RENDER EXISTING CLOUD IMAGES */}
             {existingFiles.map((file, index) => (
-              <div key={file.public_id} className="relative group border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+              <div
+                key={file.public_id}
+                className="relative group border border-gray-200 rounded-lg overflow-hidden bg-gray-50"
+              >
                 <button
                   type="button"
                   onClick={() => removeExistingFile(index)}
@@ -289,14 +301,21 @@ export default function ReviewPage({
                   <IoMdClose />
                 </button>
                 <div className="aspect-square flex items-center justify-center">
-                   <img src={file.url} alt="existing" className="w-full h-full object-cover" />
+                  <img
+                    src={file.url}
+                    alt="existing"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             ))}
 
             {/* RENDER NEW LOCAL FILES */}
             {supportingFiles.map((file, index) => (
-              <div key={`${file.name}-${index}`} className="relative group border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+              <div
+                key={`${file.name}-${index}`}
+                className="relative group border border-gray-200 rounded-lg overflow-hidden bg-gray-50"
+              >
                 <button
                   type="button"
                   onClick={() => removeFile(index)}
@@ -306,11 +325,20 @@ export default function ReviewPage({
                 </button>
                 <div className="aspect-square flex items-center justify-center">
                   {file.type.startsWith("image/") && file.preview ? (
-                    <img src={file.preview} alt={file.name} className="w-full h-full object-cover" />
+                    <img
+                      src={file.preview}
+                      alt={file.name}
+                      className="w-full h-full object-cover"
+                    />
                   ) : file.type.startsWith("video/") && file.preview ? (
                     <div className="relative w-full h-full bg-black">
-                      <video src={file.preview} className="w-full h-full object-cover opacity-70" />
-                      <div className="absolute inset-0 flex items-center justify-center text-3xl">🎬</div>
+                      <video
+                        src={file.preview}
+                        className="w-full h-full object-cover opacity-70"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center text-3xl">
+                        🎬
+                      </div>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center p-4">
@@ -320,7 +348,6 @@ export default function ReviewPage({
                 </div>
               </div>
             ))}
-            
           </div>
         </div>
 
