@@ -76,7 +76,8 @@ export default function CheckoutClient() {
 
   const router = useRouter();
   const [showAddAddress, setShowAddAddress] = useState(false);
-  const { customer, refreshCustomer } = useCustomer();
+  const { customer, refreshCustomer, logoutCustomer, clearCustomer } =
+    useCustomer();
 
   const customerId = customer?._id;
   const [coupon, setCoupon] = useState("");
@@ -391,8 +392,14 @@ export default function CheckoutClient() {
   }, [totalFinalPrice]);
 
   const handleLogoutAndRedirect = async () => {
-    await logout();
-    router.replace("/");
+    try {
+      await logoutCustomer();
+      toast.success("Logged out successfully!");
+      clearCustomer();
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   useEffect(() => {
