@@ -202,6 +202,38 @@ export default function CheckoutClient() {
   /* ================= FINAL PRICE ================= */
   const totalFinalPrice = totalMRP - totalDiscount;
 
+  useEffect(() => {
+    if (!appliedCoupon) return;
+
+    // 1. If the cart total drops below the coupon's minimum requirement
+    if (totalFinalPrice < (appliedCoupon.minOrderAmount || 0)) {
+      setAppliedCoupon(null);
+      setCouponDiscount(0);
+      setCoupon("");
+      setCouponMessage(`Coupon removed: Minimum order of ₹${appliedCoupon.minOrderAmount} required.`);
+      
+      // Optional: Wait a tick to prevent toast spam if multiple things change at once
+      setTimeout(() => {
+         toast.error(`Coupon removed: Minimum order value not met`);
+      }, 100);
+      return;
+    }
+
+    // 2. If the coupon is still valid, dynamically recalculate the discount 
+    if (appliedCoupon.discountType === "percentage") {
+      let newDiscountAmount = Math.round((totalFinalPrice * appliedCoupon.discountValue) / 100);
+      
+      if (appliedCoupon.maxDiscountAmount) {
+        newDiscountAmount = Math.min(newDiscountAmount, appliedCoupon.maxDiscountAmount);
+      }
+      
+      setCouponDiscount(newDiscountAmount);
+    } else {
+      // For fixed amount coupons, ensure the discount doesn't exceed the cart total
+      setCouponDiscount(Math.min(appliedCoupon.discountValue, totalFinalPrice));
+    }
+  }, [totalFinalPrice, appliedCoupon]);
+
   /* ================= TOTAL ITEMS ================= */
   const totalItems = availableCheckoutItems.reduce(
     (acc, item) => acc + item.quantity,
