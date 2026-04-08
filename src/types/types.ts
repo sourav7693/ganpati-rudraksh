@@ -50,7 +50,21 @@ export interface OrderType {
     | "OutForDelivery"
     | "Delivered"
     | "Cancelled"
-    | "RTO";
+    | "RTO"
+    | "ReturnRequested"      
+    | "ReplacementRequested" 
+    | "Returned"             
+    | "Replaced"             
+    | "ReturnRejected"       
+    | "ReplacementRejected"; 
+
+  returnDetails?: {
+    type: "Return" | "Replacement";
+    reason: string;
+    images: ImageType[];
+    requestDate: Date;
+    adminComment?: string;
+  };
 
   paymentStatus: "Paid" | "Unpaid" | "Refunded";
 
@@ -200,6 +214,12 @@ export type ProductType = {
   price: number;
   discount: number;
   stock: number;
+
+  returnPolicy?: 
+    | "RETURN_ONLY" 
+    | "REPLACEMENT_ONLY" 
+    | "RETURN_AND_REPLACEMENT" 
+    | "NO_RETURN_NO_REPLACEMENT";
 
   reviews: {
     _id: string;

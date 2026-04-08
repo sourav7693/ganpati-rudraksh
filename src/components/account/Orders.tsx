@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { api } from "@/api/customer";
+import ReturnReplaceModal from "./ReturnReplaceModal";
 export const STATUS_COLORS: Record<string, string> = {
   Processing: "bg-yellow-500",
   Confirmed: "bg-amber-600",
@@ -49,6 +50,21 @@ export default function Orders() {
     isLoading: false,
   });
   const router = useRouter();
+
+  const [returnModal, setReturnModal] = useState<{ isOpen: boolean; order: OrderType | null }>({
+    isOpen: false,
+    order: null,
+  });
+
+  // Function to re-fetch orders after a successful return request
+  const refreshOrders = async () => {
+    if (!customer?._id) return;
+    const res = await api(`order/customers/${customer._id}?page=${page}&limit=10`);
+    if (res.data.success) {
+      setOrders(res.data.data);
+    }
+  };
+
   useEffect(() => {
     if (!customer?._id) return;
 
@@ -480,12 +496,14 @@ export default function Orders() {
               </div>
 
               {/* RIGHT ACTIONS */}
+              {/* RIGHT ACTIONS */}
               <div className="flex flex-col gap-3 md:gap-2 w-full md:w-56">
                 <button
-                  className={`w-full md:px-4 md:py-2 p-3 text-sm bg-define-brown text-white rounded hover:bg-define-red capitalize ${STATUS_COLORS[order.status]}`}
+                  className={`w-full md:px-4 md:py-2 p-3 text-sm bg-define-brown text-white rounded capitalize ${STATUS_COLORS[order.status] || "bg-gray-500"}`}
                 >
                   {order.status}
                 </button>
+
                 <button
                   onClick={() => {
                     setSelectedOrderForTracking(order);
@@ -496,9 +514,32 @@ export default function Orders() {
                   Track Your Order
                 </button>
 
-                <button className="w-full md:px-4 md:py-2 p-3 text-sm bg-define-brown text-white rounded hover:bg-define-red">
-                  View Return / Replacement
-                </button>
+                {/* ================= NEW DYNAMIC RETURN BUTTON ================= */}
+                {order.status === "Delivered" && (
+                  <button 
+                    onClick={() => setReturnModal({ isOpen: true, order })}
+                    className="w-full md:px-4 md:py-2 p-3 text-sm border border-define-brown text-define-brown font-medium rounded hover:bg-orange-50 transition-colors"
+                  >
+                    Request Return / Replace
+                  </button>
+                )}
+
+                {[
+                  "ReturnRequested",
+                  "ReplacementRequested",
+                  "Returned",
+                  "Replaced",
+                  "ReturnRejected",
+                  "ReplacementRejected"
+                ].includes(order.status) && (
+                  <button 
+                    onClick={() => setReturnModal({ isOpen: true, order })}
+                    className="w-full md:px-4 md:py-2 p-3 text-sm border border-blue-500 text-blue-600 font-medium rounded hover:bg-blue-50 transition-colors"
+                  >
+                    View Return Status
+                  </button>
+                )}
+                {/* ============================================================= */}
 
                 {order.status === "Delivered" && (
                   <Link href={`/review?product=${order.product?.slug}`}>
@@ -566,6 +607,14 @@ export default function Orders() {
           setTrackerOpen(false);
           setSelectedOrderForTracking(null);
         }}
+      />
+
+      {/* RETURN / REPLACE MODAL */}
+      <ReturnReplaceModal 
+        isOpen={returnModal.isOpen}
+        order={returnModal.order}
+        onClose={() => setReturnModal({ isOpen: false, order: null })}
+        onSuccess={refreshOrders}
       />
     </div>
   );
