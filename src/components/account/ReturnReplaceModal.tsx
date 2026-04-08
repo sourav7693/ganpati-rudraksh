@@ -76,7 +76,9 @@ export default function ReturnReplaceModal({
       formData.append("reason", reason);
       images.forEach((img) => formData.append("images", img));
 
-      const res = await api.post(`/order/${order._id}/return-replace`, formData);
+      const res = await api.post(`/order/${order._id}/return-replace`, formData,{headers: {
+          "Content-Type": "multipart/form-data",
+        },});
       
       if (res.status === 200) {
         toast.success("Request submitted successfully");
