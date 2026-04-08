@@ -71,6 +71,7 @@ const ProductDetails = ({
     variants: initialVariants
   });
 
+
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
 
@@ -90,6 +91,35 @@ const ProductDetails = ({
     size?: string[];
   }>(initialVariantOptions);
 
+  const [reviewsList, setReviewsList] = useState<any[]>([]);
+  const [reviewPage, setReviewPage] = useState(1);
+  const [reviewTotalPages, setReviewTotalPages] = useState(1);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const REVIEW_LIMIT = 5;
+
+  const [totalReviewsCount, setTotalReviewsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPaginatedReviews = async () => {
+      if (!product?._id) return;
+      setLoadingReviews(true);
+      try {
+        const res = await api.get(
+          `/review/product/${product._id}?page=${reviewPage}&limit=${REVIEW_LIMIT}`
+        );
+        setReviewsList(res.data.reviews || []);
+        setReviewTotalPages(res.data.pagination?.pages || 1);
+        
+        setTotalReviewsCount(res.data.pagination?.total || 0); 
+      } catch (error) {
+        console.error("Failed to fetch paginated reviews", error);
+      } finally {
+        setLoadingReviews(false);
+      }
+    };
+
+    fetchPaginatedReviews();
+  }, [product?._id, reviewPage]);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -854,21 +884,57 @@ const hasColor = allProducts.some((v) =>
                     onClick={() =>
                       router.push(`/review?product=${product._id}`)
                     }
-                    className="text-white bg-define-brown px-2"
+                    className="text-white bg-define-brown px-3 py-1 rounded text-sm transition-opacity hover:opacity-90"
                   >
                     Rate this product
                   </button>
                 )}
               </div>
+              
               <ProductRatingSummary
                 averageRating={product.averageRating}
                 ratingCount={product.ratingCount}
                 ratingBreakdown={product.ratingBreakdown}
-                reviewsCount={product.reviews?.length || 0}
+                reviewsCount={totalReviewsCount}
               />
-              {product.reviews?.map((review: any) => (
-                <ReviewCard key={review._id} review={review} />
-              ))}
+
+              {/* PAGINATED REVIEWS LIST */}
+              <div className="mt-4 flex flex-col gap-4">
+                {loadingReviews ? (
+                  <div className="text-center py-6 text-gray-500 animate-pulse">
+                    Loading reviews...
+                  </div>
+                ) : reviewsList.length > 0 ? (
+                  reviewsList.map((review: any) => (
+                    <ReviewCard key={review._id} review={review} />
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm">No reviews yet.</p>
+                )}
+              </div>
+
+              {/* PAGINATION CONTROLS */}
+              {reviewTotalPages > 1 && (
+                <div className="flex justify-between items-center mt-6 border-t pt-4">
+                  <button
+                    onClick={() => setReviewPage((p) => Math.max(1, p - 1))}
+                    disabled={reviewPage === 1 || loadingReviews}
+                    className="px-4 py-2 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-sm text-gray-600 font-medium">
+                    Page {reviewPage} of {reviewTotalPages}
+                  </span>
+                  <button
+                    onClick={() => setReviewPage((p) => Math.min(reviewTotalPages, p + 1))}
+                    disabled={reviewPage === reviewTotalPages || loadingReviews}
+                    className="px-4 py-2 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
