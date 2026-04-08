@@ -71,6 +71,7 @@ const ProductDetails = ({
     variants: initialVariants
   });
 
+
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
 
@@ -90,6 +91,114 @@ const ProductDetails = ({
     size?: string[];
   }>(initialVariantOptions);
 
+  const [reviewsList, setReviewsList] = useState<any[]>([]);
+  const [reviewPage, setReviewPage] = useState(1);
+  const [reviewTotalPages, setReviewTotalPages] = useState(1);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const REVIEW_LIMIT = 5;
+
+  const [totalReviewsCount, setTotalReviewsCount] = useState(0);
+
+  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
+
+  // 1. Initialize selected attributes when the current product loads
+  useEffect(() => {
+    if (!currentProduct.variables) return;
+    
+    const initial: Record<string, string> = {};
+    currentProduct.variables.forEach((v) => {
+      const name = v.name.trim().toLowerCase() === "colour" ? "color" : v.name.trim().toLowerCase();
+      initial[name] = v.values[0]; // The current product's value for this attribute
+    });
+    setSelectedAttributes(initial);
+  }, [currentProduct._id]);
+
+  // 2. Check if an option is available based on OTHER selected attributes
+  const isOptionAvailable = (targetName: string, targetValue: string) => {
+    const normalizedTargetName = targetName.toLowerCase() === "colour" ? "color" : targetName.toLowerCase();
+
+    // Look through ALL variants to see if ANY of them match the newly clicked value
+    // AND the other currently selected values.
+    return allProducts.some((variant) => {
+      // First, does this variant even have the target value? (e.g. Size M)
+      const hasTargetValue = variant.variables?.some((v) => {
+        const vName = v.name.trim().toLowerCase() === "colour" ? "color" : v.name.trim().toLowerCase();
+        return vName === normalizedTargetName && v.values.includes(targetValue);
+      });
+
+      if (!hasTargetValue) return false;
+
+      // Next, does it match the OTHER currently selected attributes? (e.g. Color Pink)
+      return Object.entries(selectedAttributes).every(([key, val]) => {
+        if (key === normalizedTargetName) return true; // Skip the one we are changing
+        
+        const attr = variant.variables?.find((a) => {
+          const aName = a.name.trim().toLowerCase() === "colour" ? "color" : a.name.trim().toLowerCase();
+          return aName === key;
+        });
+        return attr?.values.includes(val);
+      });
+    });
+  };
+
+  // 3. Handle clicking a variant button
+  const handleVariantClick = (attrName: string, attrValue: string) => {
+    const normalizedName = attrName.toLowerCase() === "colour" ? "color" : attrName.toLowerCase();
+    
+    // If they clicked the one that's already selected, do nothing
+    if (selectedAttributes[normalizedName] === attrValue) return;
+
+    const nextSelection = { ...selectedAttributes, [normalizedName]: attrValue };
+
+    // Find the exact variant that matches this new combination
+    let targetVariant = allProducts.find((variant) => {
+      return Object.entries(nextSelection).every(([k, val]) => {
+        const attr = variant.variables?.find((a) => {
+          const aName = a.name.trim().toLowerCase() === "colour" ? "color" : a.name.trim().toLowerCase();
+          return aName === k;
+        });
+        return attr?.values.includes(val);
+      });
+    });
+
+    // If an exact combination doesn't exist, just find the FIRST variant that has the clicked value
+    // (e.g. if they clicked Size M, but Pink M doesn't exist, it will auto-select Red M)
+    if (!targetVariant) {
+      targetVariant = allProducts.find((variant) => {
+        const attr = variant.variables?.find((a) => {
+          const aName = a.name.trim().toLowerCase() === "colour" ? "color" : a.name.trim().toLowerCase();
+          return aName === normalizedName;
+        });
+        return attr?.values.includes(attrValue);
+      });
+    }
+
+    if (targetVariant) {
+       router.push(`/product/${targetVariant.slug}`);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPaginatedReviews = async () => {
+      if (!product?._id) return;
+      setLoadingReviews(true);
+      try {
+        const res = await api.get(
+          `/review/product/${product._id}?page=${reviewPage}&limit=${REVIEW_LIMIT}`
+        );
+        setReviewsList(res.data.reviews || []);
+        setReviewTotalPages(res.data.pagination?.pages || 1);
+        
+        setTotalReviewsCount(res.data.pagination?.total || 0); 
+      } catch (error) {
+        console.error("Failed to fetch paginated reviews", error);
+      } finally {
+        setLoadingReviews(false);
+      }
+    };
+
+    fetchPaginatedReviews();
+  }, [product?._id, reviewPage]);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -638,26 +747,29 @@ const hasColor = allProducts.some((v) =>
             )}
 
             {/* COLOR */}
-            {variantOptions?.color && variantOptions?.color?.length > 0 && (
+            {variantOptions?.color && variantOptions.color.length > 0 && (
               <div>
                 <p className="font-medium mb-2">Color</p>
-
                 <div className="flex gap-3 flex-wrap">
                   {variantOptions.color.map((color) => {
-                    const variant = findVariant("Color", color);
+                    const isSelected = selectedAttributes["color"] === color;
+                    const isAvailable = isOptionAvailable("Color", color);
 
                     return (
-                      <Link
+                      <button
                         key={color}
-                        href={variant ? `/product/${variant.slug}` : "#"}
-                        className={`px-3 py-2 border rounded-md text-sm ${
-                          variant?._id === currentProduct._id
-                            ? "border-define-red text-define-red"
-                            : "border-gray-300 hover:border-define-red"
+                        onClick={() => handleVariantClick("Color", color)}
+                        // REMOVED: disabled attribute so it can always be clicked
+                        className={`px-3 py-2 border rounded-md text-sm transition-all relative overflow-hidden ${
+                          isSelected
+                            ? "border-define-red text-define-red bg-red-50 font-medium shadow-sm"
+                            : isAvailable
+                              ? "border-gray-300 hover:border-define-red hover:text-define-red text-gray-700 cursor-pointer"
+                              : "border-gray-200 text-gray-400 bg-gray-100 opacity-70 hover:border-gray-400 cursor-pointer" // Greyed out but clickable
                         }`}
                       >
-                        {color}
-                      </Link>
+                        <span className="relative z-10">{color}</span>
+                      </button>
                     );
                   })}
                 </div>
@@ -665,26 +777,29 @@ const hasColor = allProducts.some((v) =>
             )}
 
             {/* SIZE */}
-            {variantOptions?.size && variantOptions?.size?.length > 0 && (
-              <div>
+            {variantOptions?.size && variantOptions.size.length > 0 && (
+              <div className="mt-4">
                 <p className="font-medium mb-2">Size</p>
-
                 <div className="flex gap-2 flex-wrap">
                   {variantOptions.size.map((size) => {
-                    const variant = findVariant("Size", size);
+                    const isSelected = selectedAttributes["size"] === size;
+                    const isAvailable = isOptionAvailable("Size", size);
 
                     return (
-                      <Link
+                      <button
                         key={size}
-                        href={variant ? `/product/${variant.slug}` : "#"}
-                        className={`px-4 py-2 border rounded-md text-sm ${
-                          variant?._id === currentProduct._id
-                            ? "border-define-red text-define-red"
-                            : "border-gray-300 hover:border-define-red"
+                        onClick={() => handleVariantClick("Size", size)}
+                        // REMOVED: disabled attribute
+                        className={`min-w-[3rem] px-4 py-2 border rounded-md text-sm transition-all relative overflow-hidden ${
+                          isSelected
+                            ? "border-define-red text-define-red bg-red-50 font-medium shadow-sm"
+                            : isAvailable
+                              ? "border-gray-300 hover:border-define-red hover:text-define-red text-gray-700 cursor-pointer"
+                              : "border-gray-200 text-gray-400 bg-gray-100 opacity-70 hover:border-gray-400 cursor-pointer" // Greyed out but clickable
                         }`}
                       >
-                        {size}
-                      </Link>
+                        <span className="relative z-10">{size}</span>
+                      </button>
                     );
                   })}
                 </div>
@@ -854,21 +969,57 @@ const hasColor = allProducts.some((v) =>
                     onClick={() =>
                       router.push(`/review?product=${product._id}`)
                     }
-                    className="text-white bg-define-brown px-2"
+                    className="text-white bg-define-brown px-3 py-1 rounded text-sm transition-opacity hover:opacity-90"
                   >
                     Rate this product
                   </button>
                 )}
               </div>
+              
               <ProductRatingSummary
                 averageRating={product.averageRating}
                 ratingCount={product.ratingCount}
                 ratingBreakdown={product.ratingBreakdown}
-                reviewsCount={product.reviews?.length || 0}
+                reviewsCount={totalReviewsCount}
               />
-              {product.reviews?.map((review: any) => (
-                <ReviewCard key={review._id} review={review} />
-              ))}
+
+              {/* PAGINATED REVIEWS LIST */}
+              <div className="mt-4 flex flex-col gap-4">
+                {loadingReviews ? (
+                  <div className="text-center py-6 text-gray-500 animate-pulse">
+                    Loading reviews...
+                  </div>
+                ) : reviewsList.length > 0 ? (
+                  reviewsList.map((review: any) => (
+                    <ReviewCard key={review._id} review={review} />
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm">No reviews yet.</p>
+                )}
+              </div>
+
+              {/* PAGINATION CONTROLS */}
+              {reviewTotalPages > 1 && (
+                <div className="flex justify-between items-center mt-6 border-t pt-4">
+                  <button
+                    onClick={() => setReviewPage((p) => Math.max(1, p - 1))}
+                    disabled={reviewPage === 1 || loadingReviews}
+                    className="px-4 py-2 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-sm text-gray-600 font-medium">
+                    Page {reviewPage} of {reviewTotalPages}
+                  </span>
+                  <button
+                    onClick={() => setReviewPage((p) => Math.min(reviewTotalPages, p + 1))}
+                    disabled={reviewPage === reviewTotalPages || loadingReviews}
+                    className="px-4 py-2 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
