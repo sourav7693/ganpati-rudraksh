@@ -99,6 +99,85 @@ const ProductDetails = ({
 
   const [totalReviewsCount, setTotalReviewsCount] = useState(0);
 
+  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
+
+  // 1. Initialize selected attributes when the current product loads
+  useEffect(() => {
+    if (!currentProduct.variables) return;
+    
+    const initial: Record<string, string> = {};
+    currentProduct.variables.forEach((v) => {
+      const name = v.name.trim().toLowerCase() === "colour" ? "color" : v.name.trim().toLowerCase();
+      initial[name] = v.values[0]; // The current product's value for this attribute
+    });
+    setSelectedAttributes(initial);
+  }, [currentProduct._id]);
+
+  // 2. Check if an option is available based on OTHER selected attributes
+  const isOptionAvailable = (targetName: string, targetValue: string) => {
+    const normalizedTargetName = targetName.toLowerCase() === "colour" ? "color" : targetName.toLowerCase();
+
+    // Look through ALL variants to see if ANY of them match the newly clicked value
+    // AND the other currently selected values.
+    return allProducts.some((variant) => {
+      // First, does this variant even have the target value? (e.g. Size M)
+      const hasTargetValue = variant.variables?.some((v) => {
+        const vName = v.name.trim().toLowerCase() === "colour" ? "color" : v.name.trim().toLowerCase();
+        return vName === normalizedTargetName && v.values.includes(targetValue);
+      });
+
+      if (!hasTargetValue) return false;
+
+      // Next, does it match the OTHER currently selected attributes? (e.g. Color Pink)
+      return Object.entries(selectedAttributes).every(([key, val]) => {
+        if (key === normalizedTargetName) return true; // Skip the one we are changing
+        
+        const attr = variant.variables?.find((a) => {
+          const aName = a.name.trim().toLowerCase() === "colour" ? "color" : a.name.trim().toLowerCase();
+          return aName === key;
+        });
+        return attr?.values.includes(val);
+      });
+    });
+  };
+
+  // 3. Handle clicking a variant button
+  const handleVariantClick = (attrName: string, attrValue: string) => {
+    const normalizedName = attrName.toLowerCase() === "colour" ? "color" : attrName.toLowerCase();
+    
+    // If they clicked the one that's already selected, do nothing
+    if (selectedAttributes[normalizedName] === attrValue) return;
+
+    const nextSelection = { ...selectedAttributes, [normalizedName]: attrValue };
+
+    // Find the exact variant that matches this new combination
+    let targetVariant = allProducts.find((variant) => {
+      return Object.entries(nextSelection).every(([k, val]) => {
+        const attr = variant.variables?.find((a) => {
+          const aName = a.name.trim().toLowerCase() === "colour" ? "color" : a.name.trim().toLowerCase();
+          return aName === k;
+        });
+        return attr?.values.includes(val);
+      });
+    });
+
+    // If an exact combination doesn't exist, just find the FIRST variant that has the clicked value
+    // (e.g. if they clicked Size M, but Pink M doesn't exist, it will auto-select Red M)
+    if (!targetVariant) {
+      targetVariant = allProducts.find((variant) => {
+        const attr = variant.variables?.find((a) => {
+          const aName = a.name.trim().toLowerCase() === "colour" ? "color" : a.name.trim().toLowerCase();
+          return aName === normalizedName;
+        });
+        return attr?.values.includes(attrValue);
+      });
+    }
+
+    if (targetVariant) {
+       router.push(`/product/${targetVariant.slug}`);
+    }
+  };
+
   useEffect(() => {
     const fetchPaginatedReviews = async () => {
       if (!product?._id) return;
@@ -668,26 +747,29 @@ const hasColor = allProducts.some((v) =>
             )}
 
             {/* COLOR */}
-            {variantOptions?.color && variantOptions?.color?.length > 0 && (
+            {variantOptions?.color && variantOptions.color.length > 0 && (
               <div>
                 <p className="font-medium mb-2">Color</p>
-
                 <div className="flex gap-3 flex-wrap">
                   {variantOptions.color.map((color) => {
-                    const variant = findVariant("Color", color);
+                    const isSelected = selectedAttributes["color"] === color;
+                    const isAvailable = isOptionAvailable("Color", color);
 
                     return (
-                      <Link
+                      <button
                         key={color}
-                        href={variant ? `/product/${variant.slug}` : "#"}
-                        className={`px-3 py-2 border rounded-md text-sm ${
-                          variant?._id === currentProduct._id
-                            ? "border-define-red text-define-red"
-                            : "border-gray-300 hover:border-define-red"
+                        onClick={() => handleVariantClick("Color", color)}
+                        // REMOVED: disabled attribute so it can always be clicked
+                        className={`px-3 py-2 border rounded-md text-sm transition-all relative overflow-hidden ${
+                          isSelected
+                            ? "border-define-red text-define-red bg-red-50 font-medium shadow-sm"
+                            : isAvailable
+                              ? "border-gray-300 hover:border-define-red hover:text-define-red text-gray-700 cursor-pointer"
+                              : "border-gray-200 text-gray-400 bg-gray-100 opacity-70 hover:border-gray-400 cursor-pointer" // Greyed out but clickable
                         }`}
                       >
-                        {color}
-                      </Link>
+                        <span className="relative z-10">{color}</span>
+                      </button>
                     );
                   })}
                 </div>
@@ -695,26 +777,29 @@ const hasColor = allProducts.some((v) =>
             )}
 
             {/* SIZE */}
-            {variantOptions?.size && variantOptions?.size?.length > 0 && (
-              <div>
+            {variantOptions?.size && variantOptions.size.length > 0 && (
+              <div className="mt-4">
                 <p className="font-medium mb-2">Size</p>
-
                 <div className="flex gap-2 flex-wrap">
                   {variantOptions.size.map((size) => {
-                    const variant = findVariant("Size", size);
+                    const isSelected = selectedAttributes["size"] === size;
+                    const isAvailable = isOptionAvailable("Size", size);
 
                     return (
-                      <Link
+                      <button
                         key={size}
-                        href={variant ? `/product/${variant.slug}` : "#"}
-                        className={`px-4 py-2 border rounded-md text-sm ${
-                          variant?._id === currentProduct._id
-                            ? "border-define-red text-define-red"
-                            : "border-gray-300 hover:border-define-red"
+                        onClick={() => handleVariantClick("Size", size)}
+                        // REMOVED: disabled attribute
+                        className={`min-w-[3rem] px-4 py-2 border rounded-md text-sm transition-all relative overflow-hidden ${
+                          isSelected
+                            ? "border-define-red text-define-red bg-red-50 font-medium shadow-sm"
+                            : isAvailable
+                              ? "border-gray-300 hover:border-define-red hover:text-define-red text-gray-700 cursor-pointer"
+                              : "border-gray-200 text-gray-400 bg-gray-100 opacity-70 hover:border-gray-400 cursor-pointer" // Greyed out but clickable
                         }`}
                       >
-                        {size}
-                      </Link>
+                        <span className="relative z-10">{size}</span>
+                      </button>
                     );
                   })}
                 </div>
