@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { IoMdClose, IoMdStar } from "react-icons/io";
 import { api } from "@/api/customer";
+import { useRouter } from "next/navigation";
 
 interface FileWithPreview extends File {
   preview?: string;
@@ -33,11 +33,13 @@ export default function ReviewEdit({
   onClose?: () => void;
   onUpdate?: (updatedReview: ReviewData) => void;
 }) {
-  // Initialize state with existing review data
+  const router = useRouter(); // Initialize router
+  // States
   const [rating, setRating] = useState(review.rating);
   const [hover, setHover] = useState(0);
   const [title, setTitle] = useState(review.title);
   const [description, setDescription] = useState(review.description);
+  
   const [supportingFiles, setSupportingFiles] = useState<FileWithPreview[]>([]);
   const [existingFiles, setExistingFiles] = useState<ExistingFile[]>(
     review.supporting_files.map((file) => ({
@@ -46,11 +48,9 @@ export default function ReviewEdit({
       type: getFileTypeFromUrl(file.url),
     })),
   );
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const nav = useRouter();
 
   // Helper function to determine file type from URL
   function getFileTypeFromUrl(url: string): string {
@@ -66,6 +66,7 @@ export default function ReviewEdit({
     return "application/octet-stream";
   }
 
+  // Handle new files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (!selectedFiles) return;
@@ -91,11 +92,9 @@ export default function ReviewEdit({
   // Remove newly uploaded file
   const removeNewFile = (index: number) => {
     const fileToRemove = supportingFiles[index];
-
     if (fileToRemove.preview) {
       URL.revokeObjectURL(fileToRemove.preview);
     }
-
     setSupportingFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -117,68 +116,8 @@ export default function ReviewEdit({
     return "name" in file ? file.name : file.name || "file";
   };
 
+  // Handle Form Submission
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!title.trim() || !description.trim() || rating === 0) {
-      alert("Please fill in all required fields and provide a rating");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("rating", rating.toString());
-
-      // Append existing files that should remain
-      // The backend expects existing files with public_id to be included
-      const remainingFiles = existingFiles.map((file) => ({
-        url: file.url,
-        public_id: file.public_id,
-      }));
-
-      // Convert to JSON string since FormData can't handle arrays directly
-      formData.append("images", JSON.stringify(remainingFiles));
-
-      // Append new files as images (matches backend expectation)
-      supportingFiles.forEach((file) => {
-        formData.append("images", file); // Note: same field name as existing files JSON
-      });
-
-      const response = await api.put(
-        `review/${review._id}`,
-       formData
-      );
-
-      if(response.status !== 200) {
-        console.error("Error updating review:", response);
-        toast.error("Failed to update review. Please try again.");
-        throw new Error("Failed to update review. Please try again.");
-      }
-
-      const updatedReview = response.data;
-
-      toast.success("Review updated successfully!");
-
-      // Cleanup preview URLs
-      supportingFiles.forEach((file) => {
-        if (file.preview) {
-          URL.revokeObjectURL(file.preview);
-        }
-      });
-    } catch (error: any) {
-      console.error("Error updating review:", error);
-      alert(error.message || "Failed to update review. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Alternative handleSubmit for backend expecting different format
-  const handleSubmitAlternative = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !description.trim() || rating === 0 ) {
@@ -194,36 +133,30 @@ export default function ReviewEdit({
       formData.append("description", description);
       formData.append("rating", rating.toString());
 
-      // Since your backend looks for req.files.images, we need to append new files
+      // 1. Append NEW files exactly like the working ReviewPage
       supportingFiles.forEach((file) => {
         formData.append("images", file);
       });
 
-      // For existing files, we need to append them differently
-      // Your backend looks for req.body.images for existing files
-      // Let's send them as a JSON string
-      if (existingFiles.length > 0) {
-        const existingFilesData = existingFiles.map((file) => ({
-          url: file.url,
-          public_id: file.public_id,
-        }));
-        formData.append("images", JSON.stringify(existingFilesData));
-      }
+      // 2. Append EXISTING files (using existingImages key for the backend fix)
+      // Even if empty, we send it so the backend knows to delete them all
+      const existingFilesData = existingFiles.map((file) => ({
+        url: file.url,
+        public_id: file.public_id,
+      }));
+      formData.append("existingImages", JSON.stringify(existingFilesData));
 
-      const response = await api.put(
-        `review/${review._id}`,
-     formData
-      );
+      const response = await api.put(`/review/${review._id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
-      if(response.status !== 200) {
-        console.error("Error updating review:", response);
-        toast.error("Failed to update review. Please try again.");
+      if(response.status !== 200 && response.status !== 201) {
         throw new Error("Failed to update review. Please try again.");
       }
 
-      const updatedReview = response.data;
-
+      const updatedReview = response.data.review || response.data;
       toast.success("Review updated successfully!");
+      router.refresh();
 
       if (onUpdate) {
         onUpdate(updatedReview);
@@ -239,8 +172,7 @@ export default function ReviewEdit({
           URL.revokeObjectURL(file.preview);
         }
       });
-
-      nav.push("/my-reviews");
+      
     } catch (error: any) {
       console.error("Error updating review:", error);
       toast.error(
@@ -262,7 +194,7 @@ export default function ReviewEdit({
     };
   }, []);
 
-  // Reset form when review changes
+  // Reset form when review prop changes
   useEffect(() => {
     setRating(review.rating);
     setTitle(review.title);
@@ -280,7 +212,7 @@ export default function ReviewEdit({
   return (
     <form
       className="max-w-225 mx-auto bg-white px-4 rounded-md shadow-sm py-8 md:my-6"
-      onSubmit={handleSubmitAlternative} // Using alternative for testing
+      onSubmit={handleSubmit}
     >
       {/* RATING */}
       <div className="mt-6">
@@ -313,7 +245,7 @@ export default function ReviewEdit({
         <input
           type="text"
           placeholder="Eg: Very good product"
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
           onChange={(e) => setTitle(e.target.value)}
           value={title}
           required
@@ -328,7 +260,7 @@ export default function ReviewEdit({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Share details of your experience"
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
           required
         />
       </div>
@@ -349,7 +281,7 @@ export default function ReviewEdit({
                 <button
                   type="button"
                   onClick={() => removeExistingFile(file.public_id)}
-                  className="absolute top-1 right-1 z-10 w-6 h-6 text-red-500 rounded-full flex items-center justify-center text-xs hover:text-red-600 transition-colors"
+                  className="absolute top-1 right-1 z-10 w-6 h-6 text-red-500 bg-white/80 rounded-full flex items-center justify-center text-xs hover:text-red-600 hover:bg-white transition-colors"
                   aria-label={`Remove ${getFileName(file)}`}
                 >
                   <IoMdClose />
@@ -362,7 +294,11 @@ export default function ReviewEdit({
                       className="w-full h-full object-cover"
                     />
                   ) : file.type?.startsWith("video/") ? (
-                    <div className="relative w-full h-full">
+                    <div className="relative w-full h-full bg-black">
+                      <video 
+                        src={file.url}
+                        className="w-full h-full object-cover opacity-70"
+                      />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-3xl">🎬</span>
                       </div>
@@ -408,14 +344,15 @@ export default function ReviewEdit({
                   key={`new-${file.name}-${index}`}
                   className="relative group border border-gray-200 rounded-lg overflow-hidden bg-gray-50 hover:bg-gray-100 transition-all"
                 >
-                  {/* <button
+                  {/* PERFECTLY MATCHING DELETE BUTTON */}
+                  <button
                     type="button"
                     onClick={() => removeNewFile(index)}
-                    className="absolute top-1 right-1 z-10 w-6 h-6 text-red-500 flex items-center justify-center text-xs hover:text-red-600 transition-colors"
+                    className="absolute top-1 right-1 z-10 w-6 h-6 text-red-500 bg-white/80 flex items-center justify-center rounded-full text-xs hover:text-red-600 hover:bg-white transition-colors"
                     aria-label={`Remove ${file.name}`}
                   >
-                    <X />
-                  </button> */}
+                    <IoMdClose />
+                  </button>
                   <div className="aspect-square flex items-center justify-center">
                     {file.type.startsWith("image/") && file.preview ? (
                       <img
@@ -424,10 +361,10 @@ export default function ReviewEdit({
                         className="w-full h-full object-cover"
                       />
                     ) : file.type.startsWith("video/") && file.preview ? (
-                      <div className="relative w-full h-full">
+                      <div className="relative w-full h-full bg-black">
                         <video
                           src={file.preview}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover opacity-70"
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="text-3xl">🎬</span>
@@ -463,27 +400,17 @@ export default function ReviewEdit({
             Cancel
           </button>
         )}
+        
+        {/* MATCHING SUBMIT BUTTON WITH SPINNER */}
         <button
           type="submit"
           disabled={isSubmitting}
           className={`
-             mt-3 sm:mt-auto flex items-center justify-center gap-2
-              text-white font-semibold
-              text-xs sm:text-sm md:text-[15px]
-              px-3 py-1.5 sm:px-4 sm:py-2 md:px-5
-              rounded-full
-              bg-linear-to-r
-              shadow-md shadow-green-500/30
-              transition-all duration-300
-              hover:from-emerald-600 hover:to-green-500
-              hover:shadow-lg hover:scale-[1.03]
-              active:scale-95
-              w-full sm:w-fit
-            ${
-              isSubmitting
-                ? "from-emerald-600 hover:to-green-500 cursor-not-allowed"
-                : "from-green-500 to-emerald-600"
-            }
+            mt-3 sm:mt-auto flex items-center justify-center gap-2 
+            text-white font-semibold text-xs sm:text-sm md:text-[15px] 
+            px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 rounded-full btn-grad 
+            active:scale-95 w-full sm:w-fit transition-all
+            ${isSubmitting ? "opacity-70 cursor-not-allowed" : "hover:shadow-md"}
           `}
         >
           {isSubmitting ? (
