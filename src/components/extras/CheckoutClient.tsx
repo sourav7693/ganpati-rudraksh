@@ -210,23 +210,30 @@ export default function CheckoutClient() {
       setAppliedCoupon(null);
       setCouponDiscount(0);
       setCoupon("");
-      setCouponMessage(`Coupon removed: Minimum order of ₹${appliedCoupon.minOrderAmount} required.`);
-      
+      setCouponMessage(
+        `Coupon removed: Minimum order of ₹${appliedCoupon.minOrderAmount} required.`,
+      );
+
       // Optional: Wait a tick to prevent toast spam if multiple things change at once
       setTimeout(() => {
-         toast.error(`Coupon removed: Minimum order value not met`);
+        toast.error(`Coupon removed: Minimum order value not met`);
       }, 100);
       return;
     }
 
-    // 2. If the coupon is still valid, dynamically recalculate the discount 
+    // 2. If the coupon is still valid, dynamically recalculate the discount
     if (appliedCoupon.discountType === "percentage") {
-      let newDiscountAmount = Math.round((totalFinalPrice * appliedCoupon.discountValue) / 100);
-      
+      let newDiscountAmount = Math.round(
+        (totalFinalPrice * appliedCoupon.discountValue) / 100,
+      );
+
       if (appliedCoupon.maxDiscountAmount) {
-        newDiscountAmount = Math.min(newDiscountAmount, appliedCoupon.maxDiscountAmount);
+        newDiscountAmount = Math.min(
+          newDiscountAmount,
+          appliedCoupon.maxDiscountAmount,
+        );
       }
-      
+
       setCouponDiscount(newDiscountAmount);
     } else {
       // For fixed amount coupons, ensure the discount doesn't exceed the cart total
@@ -259,7 +266,7 @@ export default function CheckoutClient() {
       const res = await api.post(`order/razorpay/create`, {
         amount: Math.max(totalFinalPrice - couponDiscount, 0),
         currency: "INR",
-        checkoutMode:"cart",
+        checkoutMode: "cart",
       });
 
       const data = res.data;
@@ -954,18 +961,18 @@ export default function CheckoutClient() {
         </div>
         {availableCoupons.length > 0 && (
           <div className="relative mt-3">
-            <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory custom-scroll py-2 gap-2">
+            <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar  py-2 gap-3 px-1">
               {availableCoupons
                 .filter((c) => c.status !== false && c.usageLimit > 0)
                 .map((c) => (
-                  <div key={c.code} className="min-w-full snap-center px-1">
+                  // Added shrink-0, w-[70%], and snap-start
+                  <div key={c.code} className="w-[70%] shrink-0 snap-start">
                     <button
                       onClick={() => handleCouponSelect(c)}
-                      className="w-full border  flex flex-col gap-2 justify-between border-define-red text-define-red rounded-xl px-4 py-3 text-sm font-medium hover:bg-red-50 transition text-center"
+                      className="w-full border flex flex-col gap-1 justify-between border-define-red text-define-red rounded-xl px-4 py-2 text-sm font-medium hover:bg-red-50 transition text-center"
                     >
                       <span>{c.name}</span>
-                      {/* {c.code} */}
-                      <span className="text-xs text-gray-500 ml-2">
+                      <span className="text-xs text-gray-500">
                         Tap to apply
                       </span>
                     </button>
