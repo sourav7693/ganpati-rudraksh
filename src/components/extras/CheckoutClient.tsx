@@ -259,6 +259,7 @@ export default function CheckoutClient() {
       const res = await api.post(`order/razorpay/create`, {
         amount: Math.max(totalFinalPrice - couponDiscount, 0),
         currency: "INR",
+        checkoutMode:"cart",
       });
 
       const data = res.data;
@@ -302,6 +303,9 @@ export default function CheckoutClient() {
 
           if (verifyData.success) {
             toast.success("Payment successful & verified!");
+
+            localStorage.setItem("CART_SYNC", Date.now().toString());
+
             if (checkoutMode === "buy-now") {
               await removeBuyNowItemFromCart();
             }
@@ -328,7 +332,6 @@ export default function CheckoutClient() {
       );
       razorpay.open();
     } catch (err) {
-      console.error(err);
       alert("Payment failed");
     }
   };
