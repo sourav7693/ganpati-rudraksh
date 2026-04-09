@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 const page = () => {
   return (
-    <div className="h-screen flex">
+    <div className="min-h-screen flex flex-col">
       <Suspense fallback={<LoadingAnimation />}>
         <CartList />
       </Suspense>

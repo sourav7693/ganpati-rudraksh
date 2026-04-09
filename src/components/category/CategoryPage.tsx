@@ -161,12 +161,12 @@ export default function CategoryPage({
     <section className="md:py-8 section-container flex flex-col">
       <div className="flex justify-between items-start mb-4">
         {/* SIDEBAR */}
-        <div className="w-[20%] lg:w-[10%] bg-white h-full">
+        <div className="w-[20%] lg:w-[10%] bg-white h-[100dvh] sticky top-0 overflow-y-auto no-scrollbar">
           <CategorySidebar categories={categories} />
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="w-[90%] flex flex-col h-screen">
+        <div className="w-[90%] flex flex-col h-full">
           <div className="md:hidden flex  items-center   md:px-0">
             <div className="relative w-fit rounded border border-gray-200 bg-white">
               {/* 1. Icons are now visually 'under' the select, but visible because select is transparent */}
@@ -215,7 +215,7 @@ export default function CategoryPage({
             ))}
           </div>
 
-          <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4 xxl:grid-cols-4 lg:px-4 px-2 py-4 content-start no-scrollbar bg-white">
+          <div className="w-full grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4 xxl:grid-cols-4 lg:px-4 px-2 py-4 content-start bg-white">
             {loading ? (
               <>
                 {Array.from({ length: 24 }).map((_, i) => (

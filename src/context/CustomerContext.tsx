@@ -37,9 +37,26 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // ✅ Run once on app load
   useEffect(() => {
     refreshCustomer();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "CART_SYNC") {
+        refreshCustomer();
+      }
+    };
+
+    const handleFocus = () => {
+      refreshCustomer();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("focus", handleFocus);
+    };
   }, []);
 
   // ✅ Logout

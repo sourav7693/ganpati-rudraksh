@@ -195,7 +195,7 @@ const CartList = () => {
 const reversedCart = cart.slice().reverse();
 
   return (
-    <div className="w-full flex flex-col lg:flex-row justify-between items-center h-[calc(100vh-100px)] overflow-y-auto no-scrollbar">
+    <div className="w-full flex flex-col lg:flex-row justify-between items-start min-h-full gap-8 pb-20 lg:pb-10">
       {/* Cart  */}
       <div className="flex flex-col gap-6 lg:px-2 px-0 self-start basis-full w-full">
         <div>
@@ -448,7 +448,7 @@ const reversedCart = cart.slice().reverse();
             >
               {availableCartItems.length === 0
                 ? "No Available Items"
-                : `Proceed To Checkout (${totalItems} items)`}
+                : `Proceed To Checkout`}
             </button>
 
             {hasOutOfStockItems && (
