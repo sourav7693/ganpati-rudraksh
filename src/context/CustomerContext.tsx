@@ -46,16 +46,18 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    const handleFocus = () => {
-      refreshCustomer();
+   const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refreshCustomer(); 
+      }
     };
 
     window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("focus", handleFocus);
+    window.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
